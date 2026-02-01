@@ -37,8 +37,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex justify-between items-center p-4">
-            <HeaderLogo/>
+          <div className="flex justify-between items-center p-4 m-auto">
+            <HeaderLogo />
             <NavigationBar />
             <ThemeSwitch />
           </div>

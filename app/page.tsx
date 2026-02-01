@@ -2,9 +2,14 @@ import HeaderSection from "./components/sections/HeaderSection";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center font-sans">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 sm:items-start">
-        <HeaderSection title="Velkommen til Disckos" text="Her kan du følge med på hva som skjer i Disckos."/>
+    <div className="flex justify-center font-sans">
+      <main className="flex w-full max-w-3xl flex-col items-center justify-between py-32 px-16 sm:items-start">
+        <div className="flex w-full justify-center items-center">
+          <HeaderSection
+            title="Velkommen til Disckos"
+            text="Her kan du følge med på hva som skjer i Disckos."
+          />
+        </div>
         {/* <TextImage orientation="text-left" imageUrl="/Disckos-bilde-chat.png" heading="Welcome to Disckos" paragraph="Discover the best of our services and products. We're here to help you achieve your goals with innovative solutions."/> */}
       </main>
     </div>
