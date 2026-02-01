@@ -4,6 +4,7 @@ import "./globals.css";
 import NavigationBar from "./components/navigation";
 import { ThemeProvider } from "next-themes";
 import ThemeSwitch from "./features/theme_switch/ThemeSwitch";
+import HeaderLogo from "./components/logo/HeaderLogo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +38,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="flex justify-between items-center p-4">
+            <HeaderLogo/>
             <NavigationBar />
             <ThemeSwitch />
           </div>
