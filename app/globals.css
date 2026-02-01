@@ -82,8 +82,8 @@
 }
 
 .dark {
-  --background: oklch(0.147 0.004 49.25);
-  --foreground: oklch(0.985 0.001 106.423);
+  --background: #2d3047;
+  --foreground: #419d78;
   --card: oklch(0.216 0.006 56.043);
   --card-foreground: oklch(0.985 0.001 106.423);
   --popover: oklch(0.216 0.006 56.043);
@@ -113,6 +113,16 @@
   --sidebar-accent-foreground: oklch(0.985 0.001 106.423);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.553 0.013 58.071);
+}
+
+.seaweed{
+  --background: #419d78;
+  --foreground: #2d3047;
+}
+
+.space-indigo{
+  --background: #2d3047;
+  --foreground: #419d78;
 }
 
 @layer base {
