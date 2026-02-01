@@ -14,7 +14,6 @@ export default function Home() {
           />
         </div>
         <section className="flex justify-center items-center w-full text-background bg-foreground p-4 md:p-16">
-          {/* Seksjon som inneholder informasjon om neste runde */}
           <Bubble className="md:text-foreground md:bg-background">
             <TextImage
               orientation="text-left"
@@ -25,19 +24,16 @@ export default function Home() {
           </Bubble>
         </section>
         <section className="flex justify-center items-center w-full p-4 md:p-16">
-          {/* Seksjon som inneholder leaderboard */}
-          <Bubble className="md:bg-foreground md:text-background">
-            <TextImage
-              orientation="text-right"
-              textCenter
-              heading="Leaderboard"
-              paragraph="Se hvem som leder an i Disckos! Hold deg oppdatert på de beste prestasjonene og konkurrer om toppen av listen."
-            />
-          </Bubble>
+          {/* <Bubble className="md:bg-foreground md:text-background"> */}
+          <TextImage
+            orientation="text-right"
+            textCenter
+            heading="Leaderboard"
+            paragraph="Se hvem som leder an i Disckos! Hold deg oppdatert på de beste prestasjonene og konkurrer om toppen av listen."
+          />
+          {/* </Bubble> */}
         </section>
         <section className="flex justify-center items-center w-full text-background bg-foreground p-4 md:p-16">
-          {/* Seksjon som inneholder quote fra nåværende vinner */}
-
           <TextImage
             orientation="text-left"
             textCenter
