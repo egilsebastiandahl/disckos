@@ -19,7 +19,7 @@ const DiscFinderPage = () => {
         text="Bruk input feltene for å finne din perfekte disc!"
       />
       <main className="flex w-full flex-col items-center justify-between sm:items-start gap-4 md:gap-8">
-        <div className="grid grid-cols-2 gap-4 w-full p-4 md:p-16 md:grid-cols-4">
+        <section className="grid grid-cols-2 gap-4 w-full p-4 md:p-16 md:grid-cols-4">
           <DiscInput
             min={1}
             max={14}
@@ -52,13 +52,13 @@ const DiscFinderPage = () => {
             value={fade}
             onChange={(value) => setFade(value)}
           />
-        </div>
-        <div className="flex w-full h-16 items-center justify-center">
+        </section>
+        <section className="flex w-full h-16 items-center justify-center">
           {/* Her kan vi legge til en knapp for å søke etter disker basert på input verdier */}
           <button className="px-4 py-2 bg-foreground text-background rounded-md hover:bg-background hover:text-foreground hover:cursor-pointer border border-foreground transition">
             Finn Discer
           </button>
-        </div>
+        </section>
       </main>
     </>
   );
