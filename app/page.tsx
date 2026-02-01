@@ -1,8 +1,17 @@
+import Image from "next/image";
+
 export default function Home() {
   return (
     <div className="flex min-h-screen items-center justify-center font-sans">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 sm:items-start">
-        Dette kommer til å være discgolf siden vår
+        <Image
+          className="rounded-2xl"
+          src="/Disckos-bilde-chat.png"
+          alt="Disckos header bilde"
+          width={400}
+          height={100}
+          priority
+        />
       </main>
     </div>
   );
