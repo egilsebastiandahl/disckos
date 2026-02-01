@@ -5,6 +5,7 @@ interface TextImageProps {
   imageUrl?: string;
   heading?: string;
   paragraph?: string;
+  textCenter?: boolean;
 }
 
 export default function TextImage({
@@ -12,10 +13,11 @@ export default function TextImage({
   imageUrl,
   heading,
   paragraph,
+  textCenter,
 }: TextImageProps) {
   return (
     <div
-      className={`flex flex-col md:flex-row ${orientation === "text-right" ? "md:flex-row-reverse" : ""}  gap-8`}
+      className={`flex flex-col md:flex-row ${orientation === "text-right" ? "" : "md:flex-row-reverse"}  gap-8 ${textCenter ? "items-center" : ""} max-w-3xl`}
     >
       <div className="w-full md:w-1/2">
         {imageUrl ? (
