@@ -1,4 +1,4 @@
-interface Player {
+export interface Player {
     id: number;
     name: string;
     singleBogeyCount?: number;
