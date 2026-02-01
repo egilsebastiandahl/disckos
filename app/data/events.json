@@ -1,5 +1,34 @@
 [
   {
+    "id": 0,
+    "date": "2026-01-01T10:15:30Z",
+    "title": "Arrangement - Nyttårscup",
+    "description": "Ingen vil spille i Januar, så dette blir et rent sosialt arrangement for å starte året. Ta med noe å bite i og drikke, så stiller vi med litt snacks og varme drikker.",
+    "location": "Ikke-spesifisert",
+    "teamEvent": true,
+    "rounds": 1,
+    "placements": [
+      {
+        "position": 1,
+        "players": ["Ola Nordmann", "Kari Nordmann"],
+        "score": "E",
+        "quote": "Vi vant fordi vi er best!"
+      },
+      {
+        "position": 2,
+        "players": ["Per Hansen", "Lise Hansen"],
+        "score": "+2",
+        "quote": "Vi kom på andreplass."
+      },
+      {
+        "position": 3,
+        "players": ["Nina Nilsen", "Knut Nilsen"],
+        "score": "+3",
+        "quote": "Tredjeplass er ikke så verst!"
+      }
+    ]
+  },
+  {
     "id": 1,
     "date": "2026-04-01T10:15:30Z",
     "title": "Første arrangement",
