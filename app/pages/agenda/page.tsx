@@ -1,7 +1,12 @@
+import HeaderSection from "@/app/components/sections/HeaderSection";
+
 export default function AgendaPage() {
   return (
-    <div>
-      <h1>Agenda</h1>
-    </div>
+    <>
+      <HeaderSection title="Agenda" text="Her er agendaen for arrangementet." />
+      <main>
+        <section>Her er neste seksjonen</section>
+      </main>
+    </>
   );
 }

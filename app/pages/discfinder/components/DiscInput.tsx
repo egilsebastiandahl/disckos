@@ -30,7 +30,7 @@ export default function DiscInput({
   onChange,
 }: DiscInputProps) {
   return (
-    <Card className="min-w-2xs">
+    <Card className="min-w-32 md:min-w-3xs">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription className="text-background">
@@ -45,7 +45,7 @@ export default function DiscInput({
               : "text-2xl text-background"
           }
         >
-          {value == FlightNumber.NO_RATING ? "Ingen rating valgt" : value}
+          {value == FlightNumber.NO_RATING ? "Velg" : value}
         </h1>
       </CardContent>
       <CardFooter>

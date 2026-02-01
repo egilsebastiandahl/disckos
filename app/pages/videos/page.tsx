@@ -1,7 +1,15 @@
+import HeaderSection from "@/app/components/sections/HeaderSection";
+
 export default function VideosPage() {
   return (
-    <div>
-      <h1>Videos</h1>
-    </div>
+    <>
+      <HeaderSection
+        title="Videoer"
+        text="Her er videoer fra tidligere arrangementer, samt tips til spilling!"
+      />
+      <main>
+        <section>Her er neste seksjonen</section>
+      </main>
+    </>
   );
 }

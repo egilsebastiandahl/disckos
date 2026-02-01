@@ -13,20 +13,18 @@ const DiscFinderPage = () => {
   //   TODO: Legg til funksjonalitet for å finne disker basert på input verdier.
 
   return (
-    <div className="flex justify-center font-sans">
-      <main className="flex w-full flex-col items-center justify-between pt-32 sm:items-start gap-4 md:gap-8">
-        <div className="flex w-full justify-center items-center px-4 md:px-0">
-          <HeaderSection
-            title="DiscFinder"
-            text="Bruk input feltene for å finne din perfekte disc!"
-          />
-        </div>
-        <div className="flex justify-center items-center w-full p-4 md:p-16 gap-4">
+    <>
+      <HeaderSection
+        title="DiscFinder"
+        text="Bruk input feltene for å finne din perfekte disc!"
+      />
+      <main className="flex w-full flex-col items-center justify-between sm:items-start gap-4 md:gap-8">
+        <div className="grid grid-cols-2 gap-4 w-full p-4 md:p-16 md:grid-cols-4">
           <DiscInput
             min={1}
             max={14}
             title={"Speed"}
-            description={"Hvor hardt du må kaste discen"}
+            description={"Styrke"}
             value={speed}
             onChange={(value) => setSpeed(value)}
           />
@@ -34,7 +32,7 @@ const DiscFinderPage = () => {
             min={1}
             max={7}
             title={"Glide"}
-            description={"Hvor bra discen glir"}
+            description={"Glid"}
             value={glide}
             onChange={(value) => setGlide(value)}
           />
@@ -42,7 +40,7 @@ const DiscFinderPage = () => {
             min={-5}
             max={1}
             title={"Turn"}
-            description={"Hvor mye discen vil svinge"}
+            description={"Sving i starten"}
             value={turn}
             onChange={(value) => setTurn(value)}
           />
@@ -50,13 +48,19 @@ const DiscFinderPage = () => {
             min={0}
             max={5}
             title={"Fade"}
-            description={"Hvor den går når spinnen stopper"}
+            description={"Spinn på slutten"}
             value={fade}
             onChange={(value) => setFade(value)}
           />
         </div>
+        <div className="flex w-full h-16 items-center justify-center">
+          {/* Her kan vi legge til en knapp for å søke etter disker basert på input verdier */}
+          <button className="px-4 py-2 bg-foreground text-background rounded-md hover:bg-background hover:text-foreground hover:cursor-pointer border border-foreground transition">
+            Finn Discer
+          </button>
+        </div>
       </main>
-    </div>
+    </>
   );
 };
 

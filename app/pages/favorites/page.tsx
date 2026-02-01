@@ -1,7 +1,15 @@
+import HeaderSection from "@/app/components/sections/HeaderSection";
+
 export default function FavoritesPage() {
   return (
-    <div>
-      <h1>Favorites</h1>
-    </div>
+    <>
+      <HeaderSection
+        title="Favoritter"
+        text="Her er favoritt-discene til hele gjengen!"
+      />
+      <main>
+        <section>Her er neste seksjonen</section>
+      </main>
+    </>
   );
 }

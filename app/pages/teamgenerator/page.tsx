@@ -1,7 +1,15 @@
+import HeaderSection from "@/app/components/sections/HeaderSection";
+
 export default function TeamGeneratorPage() {
   return (
-    <div>
-      <h1>Team Generator</h1>
-    </div>
+    <>
+      <HeaderSection
+        title="Lagbygger"
+        text="Her er lagbyggeren for å velge lag!"
+      />
+      <main>
+        <section>Her er neste seksjonen</section>
+      </main>
+    </>
   );
 }
