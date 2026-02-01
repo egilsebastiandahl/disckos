@@ -1,0 +1,52 @@
+export interface Event{
+    id: number;
+    date: string;
+    title: string;
+    description: string;
+    location: string;
+    teamEvent: boolean;
+    rounds: number;
+}
+
+// [
+//   {
+//     "date": "2026-04-01T10:15:30Z",
+//     "title": "Første arrangement",
+//     "description": "Vårt aller første discgolf arrangement for 2026! Her skal utdelingen av årets vandrepokal skje.",
+//     "location": "Holmenkollen Discgolf Park",
+//     "teamEvent": false,
+//     "rounds": 1
+//   },
+//   {
+//     "date": "2026-05-01T10:15:30Z",
+//     "title": "Mai-cuppen",
+//     "description": "Vårt første team event for sesongen. Ta med lagkameratene dine for en morsom dag på banen! Vi spiller to runder, med annenhver tee-off.",
+//     "location": "Kadettangen Discgolf Park",
+//     "teamEvent": true,
+//     "rounds": 2
+//   },
+//   {
+//     "date": "2026-05-14T10:15:30Z",
+//     "title": "Vollen-Open",
+//     "description": "Denne gangen spiller vi først individuelt, før vi deler inn i lag for runde to. Nærmere tidspunkt kommer.",
+//     "location": "Vollen Discgolf Park",
+//     "teamEvent": true,
+//     "rounds": 2
+//   },
+//   {
+//     "date": "2026-05-28T12:00:00Z",
+//     "title": "Sommerturnering",
+//     "description": "En spennende sommerturnering med både individuelle og lagbaserte konkurranser.",
+//     "location": "Holmenkollen Discgolf Park",
+//     "teamEvent": true,
+//     "rounds": 2
+//   },
+//   {
+//     "date": "2026-10-10T11:00:00Z",
+//     "title": "Høstcupen",
+//     "description": "Avslutning av sesongen med Høstcupen. Her blir årets vinner kåret!",
+//     "location": "Ekeberg Discgolf Park",
+//     "teamEvent": false,
+//     "rounds": 1
+//   }
+// ]

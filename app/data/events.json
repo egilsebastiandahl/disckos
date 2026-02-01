@@ -1,5 +1,6 @@
 [
   {
+    "id": 1,
     "date": "2026-04-01T10:15:30Z",
     "title": "Første arrangement",
     "description": "Vårt aller første discgolf arrangement for 2026! Her skal utdelingen av årets vandrepokal skje.",
@@ -8,6 +9,7 @@
     "rounds": 1
   },
   {
+    "id": 2,
     "date": "2026-05-01T10:15:30Z",
     "title": "Mai-cuppen",
     "description": "Vårt første team event for sesongen. Ta med lagkameratene dine for en morsom dag på banen! Vi spiller to runder, med annenhver tee-off.",
@@ -16,6 +18,7 @@
     "rounds": 2
   },
   {
+    "id": 3,
     "date": "2026-05-14T10:15:30Z",
     "title": "Vollen-Open",
     "description": "Denne gangen spiller vi først individuelt, før vi deler inn i lag for runde to. Nærmere tidspunkt kommer.",
@@ -24,6 +27,7 @@
     "rounds": 2
   },
   {
+    "id": 4,
     "date": "2026-05-28T12:00:00Z",
     "title": "Sommerturnering",
     "description": "En spennende sommerturnering med både individuelle og lagbaserte konkurranser.",
@@ -32,6 +36,7 @@
     "rounds": 2
   },
   {
+    "id": 5,
     "date": "2026-10-10T11:00:00Z",
     "title": "Høstcupen",
     "description": "Avslutning av sesongen med Høstcupen. Her blir årets vinner kåret!",
