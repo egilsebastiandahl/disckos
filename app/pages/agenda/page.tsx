@@ -6,9 +6,23 @@ import { Event } from "@/app/types/event.model";
 
 export default function AgendaPage() {
   const events: Event[] = eventsData ?? [];
+
+  const onGoToNextEventClick = () => {
+    const now = new Date();
+    const nextIndex = events.findIndex((e) => new Date(e.date) > now);
+    const targetIndex =
+      nextIndex !== -1 ? nextIndex : Math.max(0, events.length - 1);
+    const el = document.getElementById(`agenda-item-${targetIndex}`);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
   return (
     <>
-      <HeaderSection title="Agenda" text="Her er agendaen for arrangementet." />
+      <HeaderSection
+        title="Agenda"
+        text="Her er agendaen for arrangementet."
+        buttonText="Neste event"
+        buttonClick={onGoToNextEventClick}
+      />
       <main className="flex max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 justify-center">
         <AgendaList events={events} />
       </main>

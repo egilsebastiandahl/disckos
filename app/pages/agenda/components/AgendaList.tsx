@@ -12,11 +12,27 @@ export default function AgendaList({ events }: AgendaListProps) {
   const nextEventIndex = agendaItems.findIndex(
     (event) => new Date(event.date) > currentTime,
   );
+  const isFirstItemPast =
+    agendaItems.length > 0
+      ? new Date(agendaItems[0].date) < currentTime
+      : false;
+
+  const stylingForFirstItem = isFirstItemPast
+    ? {
+        WebkitMaskImage:
+          "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1))",
+        maskImage: "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1))",
+      }
+    : {};
 
   return (
     <section className="flex flex-col gap-y-4">
       {agendaItems.map((item, index) => (
-        <div key={item.id}>
+        <div
+          key={item.id}
+          id={`agenda-item-${index}`}
+          style={index === 0 ? stylingForFirstItem : {}}
+        >
           <TimelineRow
             event={item}
             orientation={index % 2 === 0 ? "left" : "right"}
