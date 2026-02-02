@@ -1,6 +1,6 @@
 "use client";
 import { Event } from "@/app/types/event.model";
-import AgendaItem from "./AgendaItem";
+import TimelineRow from "./TimelineRow";
 
 interface AgendaListProps {
   events: Event[];
@@ -17,7 +17,7 @@ export default function AgendaList({ events }: AgendaListProps) {
     <section className="flex flex-col">
       {agendaItems.map((item, index) => (
         <div key={item.id}>
-          <AgendaItem
+          <TimelineRow
             event={item}
             orientation={index % 2 === 0 ? "left" : "right"}
             isNextEvent={index === nextEventIndex}
