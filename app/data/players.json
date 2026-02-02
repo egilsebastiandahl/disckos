@@ -1,66 +1,82 @@
 [
   {
     "id": 1,
-    "name": "Paolous"
+    "name": "Paolous",
+    "gender": "male"
   },
   {
     "id": 2,
-    "name": "Sofie"
+    "name": "Sofie",
+    "gender": "female"
   },
   {
     "id": 3,
-    "name": "Lars Einar"
+    "name": "Lars Einar",
+    "gender": "male"
   },
   {
     "id": 4,
-    "name": "Dag Martin"
+    "name": "Dag Martin",
+    "gender": "male"
   },
   {
     "id": 5,
-    "name": "Thor"
+    "name": "Thor",
+    "gender": "male"
   },
   {
     "id": 6,
-    "name": "Lasse"
+    "name": "Lasse",
+    "gender": "male"
   },
   {
     "id": 7,
-    "name": "Ingrid"
+    "name": "Ingrid",
+    "gender": "female"
   },
   {
     "id": 8,
-    "name": "Lotte Lise"
+    "name": "Lotte Lise",
+    "gender": "female"
   },
   {
     "id": 9,
-    "name": "Sebastian"
+    "name": "Sebastian",
+    "gender": "male"
   },
   {
     "id": 10,
-    "name": "Henning"
+    "name": "Henning",
+    "gender": "male"
   },
   {
     "id": 11,
-    "name": "Martin B"
+    "name": "Martin B",
+    "gender": "male"
   },
   {
     "id": 12,
-    "name": "Martin D"
+    "name": "Martin D",
+    "gender": "male"
   },
   {
     "id": 13,
-    "name": "Mariann"
+    "name": "Mariann",
+    "gender": "female"
   },
   {
     "id": 14,
-    "name": "Eirik"
+    "name": "Eirik",
+    "gender": "male"
   },
   {
     "id": 15,
-    "name": "Marie"
+    "name": "Marie",
+    "gender": "female"
   },
   {
     "id": 16,
-    "name": "Inger Helene"
+    "name": "Inger Helene",
+    "gender": "female"
   }
 ]
