@@ -14,7 +14,7 @@ export default function AgendaList({ events }: AgendaListProps) {
   );
 
   return (
-    <section className="flex flex-col">
+    <section className="flex flex-col gap-y-4">
       {agendaItems.map((item, index) => (
         <div key={item.id}>
           <TimelineRow

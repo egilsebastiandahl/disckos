@@ -1,6 +1,5 @@
 "use client";
 import HeaderSection from "@/app/components/sections/HeaderSection";
-import AgendaTimeline from "./components/AgendaTimeline";
 import AgendaList from "./components/AgendaList";
 import eventsData from "@/app/data/events.json";
 import { Event } from "@/app/types/event.model";

@@ -31,9 +31,9 @@ export default function TimelineItem({
 
   return (
     <div
-      className={`flex border-r-4 border-foreground mr-4 ml-4 w-24 items-center flex-col ${isPastEvent ? "opacity-50" : ""}`}
+      className={`hidden md:flex border-r-4 border-foreground mr-4 ml-4 w-24 items-center flex-col ${isPastEvent ? "opacity-50" : ""}`}
     >
-      <div className="text-xl">{eventDateFormatted}</div>
+      <div className="text-xs md:text-xl">{eventDateFormatted}</div>
       {icon}
     </div>
   );
