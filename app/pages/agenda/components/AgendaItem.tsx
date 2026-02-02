@@ -2,6 +2,7 @@ import { Event } from "@/app/types/event.model";
 import "../styles/agenda-item.css";
 import { Separator } from "@/components/ui/separator";
 import AgendaItemDetailedInformation from "./AgendaItemDetailedInformation";
+import Podium from "@/app/components/podium/Podium";
 
 interface AgendaItemProps {
   event: Event;
@@ -39,6 +40,15 @@ export default function AgendaItem({
       />
       <p className="mb-4">{event.description}</p>
       <AgendaItemDetailedInformation event={event} />
+      {event?.placements && (
+        <div>
+          <Separator className="my-4 bg-foreground" />
+          <div className="flex flex-col justify-center items-center">
+            <h3 className="text-lg font-semibold">Podium</h3>
+            <Podium placements={event.placements} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
