@@ -11,10 +11,10 @@ export default function AgendaPage() {
     <>
       <HeaderSection title="Agenda" text="Her er agendaen for arrangementet." />
       <main className="flex max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="w-2/5">
+        <div className="hidden md:block md:w-2/5">
           <AgendaTimeline events={events} />
         </div>
-        <div className="w-3/5">
+        <div className="w-full md:w-3/5">
           <AgendaList events={events} />
         </div>
       </main>

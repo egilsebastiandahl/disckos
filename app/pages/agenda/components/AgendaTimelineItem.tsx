@@ -30,7 +30,7 @@ export default function AgendaTimelineItem({
     <TimelineItem>
       {isPastEvent ? (
         <TimelineOppositeContent
-          className={isPastEvent ? "text-gray-400" : "text-foreground"}
+          className={isPastEvent ? "opacity-50" : "text-foreground"}
         >
           <s>{eventDateFormatted}</s>
         </TimelineOppositeContent>
@@ -44,7 +44,7 @@ export default function AgendaTimelineItem({
       </TimelineSeparator>
       {isPastEvent ? (
         <TimelineContent
-          className={isPastEvent ? "text-gray-400" : "text-foreground"}
+          className={isPastEvent ? "opacity-50" : "text-foreground"}
         >
           <s>{event.title}</s>
         </TimelineContent>

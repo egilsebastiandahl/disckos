@@ -1,5 +1,6 @@
 "use client";
 import { Event } from "@/app/types/event.model";
+import AgendaItem from "./AgendaItem";
 
 interface AgendaListProps {
   events: Event[];
@@ -7,19 +8,22 @@ interface AgendaListProps {
 
 export default function AgendaList({ events }: AgendaListProps) {
   const agendaItems: Event[] = events;
+  const currentTime = new Date();
+  const nextEventIndex = agendaItems.findIndex(
+    (event) => new Date(event.date) > currentTime,
+  );
 
   return (
-    <ul>
-      {agendaItems.map((item) => (
-        <li key={item.id}>
-          <h3>{item.title}</h3>
-          <p>{new Date(item.date).toLocaleDateString()}</p>
-          <p>{item.description}</p>
-          <p>Lokasjon: {item.location}</p>
-          <p>Lagspill: {item.teamEvent ? "Ja" : "Nei"}</p>
-          <p>Antall runder: {item.rounds}</p>
-        </li>
+    <section className="flex flex-col">
+      {agendaItems.map((item, index) => (
+        <div key={item.id}>
+          <AgendaItem
+            event={item}
+            orientation={index % 2 === 0 ? "left" : "right"}
+            isNextEvent={index === nextEventIndex}
+          />
+        </div>
       ))}
-    </ul>
+    </section>
   );
 }
