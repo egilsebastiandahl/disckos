@@ -1,8 +1,12 @@
-import eventsData from "@/app/data/events.json";
+"use client";
 import { Event } from "@/app/types/event.model";
 
-export default function AgendaList() {
-  const agendaItems: Event[] = eventsData;
+interface AgendaListProps {
+  events: Event[];
+}
+
+export default function AgendaList({ events }: AgendaListProps) {
+  const agendaItems: Event[] = events;
 
   return (
     <ul>
