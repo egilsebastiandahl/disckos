@@ -3,6 +3,7 @@ import HeaderSection from "@/app/components/sections/HeaderSection";
 import DiscInput from "./components/DiscInput";
 import { useState } from "react";
 import { FlightNumber } from "@/app/types/flight-number.enum";
+import Button from "@/app/components/button/Button";
 
 const DiscFinderPage = () => {
   const [speed, setSpeed] = useState<number>(FlightNumber.NO_RATING);
@@ -55,9 +56,7 @@ const DiscFinderPage = () => {
         </section>
         <section className="flex w-full h-16 items-center justify-center">
           {/* Her kan vi legge til en knapp for å søke etter disker basert på input verdier */}
-          <button className="px-4 py-2 bg-foreground text-background rounded-md hover:bg-background hover:text-foreground hover:cursor-pointer border border-foreground transition">
-            Finn Discer
-          </button>
+          <Button>Finn Discer</Button>
         </section>
       </main>
     </>

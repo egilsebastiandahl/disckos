@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/app/components/button/Button";
 import { FlightNumber } from "@/app/types/flight-number.enum";
 import {
   Card,
@@ -45,7 +46,7 @@ export default function DiscInput({
               : "text-2xl text-background"
           }
         >
-          {value == FlightNumber.NO_RATING ? "Velg" : value}
+          {value == FlightNumber.NO_RATING ? "-" : value}
         </h1>
       </CardContent>
       <CardFooter>
@@ -57,9 +58,12 @@ export default function DiscInput({
             value={[value ?? FlightNumber.NO_RATING]}
             onValueChange={(v) => onChange?.(v[0])}
           />
-          <button onClick={() => onChange?.(FlightNumber.NO_RATING)}>
+          <Button
+            className="bg-background text-foreground hover:bg-foreground hover:text-background border-foreground hover:border-background hover:shadow"
+            onClick={() => onChange?.(FlightNumber.NO_RATING)}
+          >
             Nullstill
-          </button>
+          </Button>
         </div>
       </CardFooter>
     </Card>
