@@ -1,6 +1,5 @@
-import Bubble from "./components/bubble/Bubble";
 import HeaderSection from "./components/sections/HeaderSection";
-import TextImage from "./components/sections/TextImage";
+import UpcomingEvent from "./components/sections/UpcomingEvent";
 
 export default function Home() {
   return (
@@ -12,6 +11,9 @@ export default function Home() {
             text="Her kan du følge med på hva som skjer i Disckos."
           />
         </div>
+        <section className="flex justify-center items-center w-full p-4 md:p-16">
+          <UpcomingEvent />
+        </section>
         {/* <section className="flex justify-center items-center w-full text-background bg-foreground p-4 md:p-16">
           <Bubble className="md:text-foreground md:bg-background">
             <TextImage
