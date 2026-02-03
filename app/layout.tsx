@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import NavigationBar from "./components/navigation";
 import { ThemeProvider } from "next-themes";
-import ThemeSwitch from "./features/theme_switch/ThemeSwitch";
-import Link from "next/link";
+import NavigationHeader from "./components/navigation/NavigationHeader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,13 +35,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex justify-between p-4 m-auto border-b-2 border-foreground items-baseline">
-            <Link href={"/"} className="text-foreground text-2xl font-bold">
-              Disckos
-            </Link>
-            <NavigationBar />
-            <ThemeSwitch />
-          </div>
+          <NavigationHeader />
           {children}
         </ThemeProvider>
       </body>

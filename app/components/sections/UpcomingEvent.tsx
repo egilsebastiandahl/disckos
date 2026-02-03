@@ -14,7 +14,7 @@ export default function UpcomingEvent() {
     (e) => new Date(e.date) > currentTime,
   );
   const nextEvent = events[nextEventIndex];
-  const nextEventId = `pages/agenda#agenda-item-${nextEventIndex}`;
+  const nextEventLink = `pages/agenda#agenda-item-${nextEventIndex}`;
 
   if (!nextEvent) {
     return (
@@ -27,7 +27,7 @@ export default function UpcomingEvent() {
   }
 
   return (
-    <Link href={`${nextEventId}`} className="cursor-pointer">
+    <Link href={`${nextEventLink}`} className="cursor-pointer">
       <AgendaItem event={nextEvent} orientation={"left"} isNextEvent={true} />
     </Link>
   );
