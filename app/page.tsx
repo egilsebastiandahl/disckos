@@ -6,14 +6,13 @@ export default function Home() {
   return (
     <div className="flex justify-center font-sans">
       <main className="flex w-full flex-col items-center justify-between pt-32 sm:items-start gap-4 md:gap-8">
-        {/* <main className="flex w-full max-w-3xl flex-col items-center justify-between py-32 px-16 sm:items-start gap-4 md:gap-8"> */}
         <div className="flex w-full justify-center items-center px-4 md:px-0">
           <HeaderSection
             title="Velkommen til Disckos"
             text="Her kan du følge med på hva som skjer i Disckos."
           />
         </div>
-        <section className="flex justify-center items-center w-full text-background bg-foreground p-4 md:p-16">
+        {/* <section className="flex justify-center items-center w-full text-background bg-foreground p-4 md:p-16">
           <Bubble className="md:text-foreground md:bg-background">
             <TextImage
               orientation="text-left"
@@ -24,14 +23,12 @@ export default function Home() {
           </Bubble>
         </section>
         <section className="flex justify-center items-center w-full p-4 md:p-16">
-          {/* <Bubble className="md:bg-foreground md:text-background"> */}
           <TextImage
             orientation="text-right"
             textCenter
             heading="Leaderboard"
             paragraph="Se hvem som leder an i Disckos! Hold deg oppdatert på de beste prestasjonene og konkurrer om toppen av listen."
           />
-          {/* </Bubble> */}
         </section>
         <section className="flex justify-center items-center w-full text-background bg-foreground p-4 md:p-16">
           <TextImage
@@ -40,8 +37,7 @@ export default function Home() {
             heading="Siste vinner: Mayoo"
             paragraph="Livet er et lære, man må alltid lære."
           />
-        </section>
-        {/* <TextImage orientation="text-left" imageUrl="/Disckos-bilde-chat.png" heading="Welcome to Disckos" paragraph="Discover the best of our services and products. We're here to help you achieve your goals with innovative solutions."/> */}
+        </section> */}
       </main>
     </div>
   );
