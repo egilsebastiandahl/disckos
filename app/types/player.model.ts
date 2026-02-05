@@ -16,4 +16,5 @@ export interface Player {
     aceCount?: number;
     eagleCount?: number;
     throws?: number;
+    catchphrase?: string;
 }
