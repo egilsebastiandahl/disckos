@@ -35,7 +35,6 @@ export default function AgendaList({ events }: AgendaListProps) {
         >
           <TimelineRow
             event={item}
-            orientation={index % 2 === 0 ? "left" : "right"}
             isNextEvent={index === nextEventIndex}
           />
         </div>
