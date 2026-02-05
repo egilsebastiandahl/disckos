@@ -1,7 +1,7 @@
 import { Gender } from "./gender.enum";
 
 export interface Player {
-    id: number;
+    id: string;
     name: string;
     gender: Gender;
     roundsPlayed?: number;
