@@ -6,15 +6,10 @@ import Podium from "@/app/components/podium/Podium";
 
 interface AgendaItemProps {
   event: Event;
-  orientation: "left" | "right";
   isNextEvent: boolean;
 }
 
-export default function AgendaItem({
-  event,
-  orientation,
-  isNextEvent,
-}: AgendaItemProps) {
+export default function AgendaItem({ event, isNextEvent }: AgendaItemProps) {
   const eventDateFormatted = new Date(event.date).toLocaleDateString("no", {
     year: "numeric",
     month: "short",
@@ -27,7 +22,7 @@ export default function AgendaItem({
 
   return (
     <div
-      className={`border border-foreground shadow p-4 mb-4 rounded-lg w-full md:min-w-sm md:max-w-xl ${orientation === "left" ? "" : ""} ${isPastEvent ? "opacity-50" : ""} ${isNextEvent ? "bg-foreground text-background" : ""}`}
+      className={`border border-foreground shadow p-4 mb-4 rounded-lg w-full md:min-w-sm md:max-w-xl ${isPastEvent ? "opacity-50" : ""} ${isNextEvent ? "bg-foreground text-background" : ""}`}
       // className={`border border-foreground p-4 mb-4 rounded-lg max-w-sm ${orientation === "left" ? "ml-auto" : "mr-auto"} ${isPastEvent ? "opacity-50" : ""} ${isNextEvent ? "bg-foreground text-background" : ""}`}
     >
       <h2 className="text-xl font-bold">{event.title}</h2>
