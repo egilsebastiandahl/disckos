@@ -28,7 +28,7 @@ export default function UpcomingEvent() {
 
   return (
     <Link href={`${nextEventLink}`} className="cursor-pointer">
-      <AgendaItem event={nextEvent} orientation={"left"} isNextEvent={true} />
+      <AgendaItem event={nextEvent} isNextEvent={true} />
     </Link>
   );
 }
