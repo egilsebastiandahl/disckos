@@ -1,6 +1,10 @@
 "use client";
 import { useState } from "react";
 import { Gender } from "@/app/types/gender.enum";
+/**
+ * Disclaimer: AdminUI has been vibe-coded, for experimental purposes.
+ * @returns a vibe coded Admin UI.
+ */
 
 export default function AdminUI() {
   const [pName, setPName] = useState("");
