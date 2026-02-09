@@ -5,6 +5,7 @@ import ThemeSwitch from "@/app/features/theme_switch/ThemeSwitch";
 import { useScreenSize } from "@/app/hooks/useScreenSize";
 import { ScreenSize } from "@/app/types/screen-size.enum";
 import NavigationHeaderMobile from "./NavigationHeaderMobile";
+import NewLogo from "../logo/NewLogo";
 
 export default function NavigationHeader() {
   const screenSize = useScreenSize();
@@ -17,7 +18,7 @@ export default function NavigationHeader() {
   return (
     <div className="sticky top-0 bg-background z-50 flex justify-between p-4 m-auto border-b-2 border-foreground items-baseline">
       <Link href={"/"} className="text-foreground text-2xl font-bold">
-        Disckos
+        <NewLogo />
       </Link>
       <NavigationBar />
       <ThemeSwitch />

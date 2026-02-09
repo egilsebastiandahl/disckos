@@ -1,3 +1,4 @@
+import NewLogo from "./components/logo/NewLogo";
 import HeaderSection from "./components/sections/HeaderSection";
 import UpcomingEvent from "./components/sections/UpcomingEvent";
 
@@ -14,6 +15,7 @@ export default function Home() {
         <section className="flex justify-center items-center w-full p-4 md:p-16">
           <UpcomingEvent />
         </section>
+
         {/* <section className="flex justify-center items-center w-full text-background bg-foreground p-4 md:p-16">
           <Bubble className="md:text-foreground md:bg-background">
             <TextImage
