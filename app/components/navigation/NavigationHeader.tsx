@@ -16,8 +16,8 @@ export default function NavigationHeader() {
   }
 
   return (
-    <div className="sticky top-0 bg-background z-50 flex justify-between p-4 m-auto border-b-2 border-foreground items-baseline">
-      <Link href={"/"} className="text-foreground text-2xl font-bold">
+    <div className="sticky top-0 bg-background z-50 flex justify-between p-4 pb-2 m-auto border-b-2 border-foreground items-center">
+      <Link href={"/"} className="text-foreground text-2xl font-bold -mt-2">
         <NewLogo />
       </Link>
       <NavigationBar />
