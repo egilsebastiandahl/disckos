@@ -54,7 +54,7 @@ export default function AdminUI() {
         credentials: "include",
         body: JSON.stringify({
           title: eTitle,
-          date: eDate,
+          date: new Date(eDate).toISOString(),
           location: eLocation,
           description: eDescription,
           teamEvent: eTeamEvent,
