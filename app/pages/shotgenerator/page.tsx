@@ -1,10 +1,10 @@
 import HeaderSection from "@/app/components/sections/HeaderSection";
 
-const ShotshaperPage = () => {
+const ShotgeneratorPage = () => {
   return (
     <>
       <HeaderSection
-        title="Shotshaper"
+        title="Shotgenerator"
         text="Her kan du rulle om hvilket kast du skal bruke!"
       />
       <main>
@@ -14,4 +14,4 @@ const ShotshaperPage = () => {
   );
 };
 
-export default ShotshaperPage;
+export default ShotgeneratorPage;
