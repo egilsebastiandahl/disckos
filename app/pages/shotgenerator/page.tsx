@@ -4,7 +4,7 @@ const ShotgeneratorPage = () => {
   return (
     <>
       <HeaderSection
-        title="Shotgenerator"
+        title="Shot-generator"
         text="Her kan du rulle om hvilket kast du skal bruke!"
       />
       <main>
