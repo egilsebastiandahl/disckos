@@ -20,6 +20,10 @@ export const navigationData: {url: string, name: string}[] = [
         name: "Lag-generator"
     },
     {
+        url: "/pages/shotgenerator",
+        name: "Shot-generator"
+    },
+    {
         url: "/pages/videos",
         name: "Videoer"
     },
