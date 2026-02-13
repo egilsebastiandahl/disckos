@@ -1,20 +1,19 @@
 "use client";
 
-import { playersApi } from "@/app/api/public/playersApi";
+import { getAllPlayers } from "@/app/api/public/playersApi";
 import { Player } from "@/app/types/player.model";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function AdminPlayerPage() {
-  const { getAllPlayers } = playersApi();
+
+  const [players, setPlayers] = useState<Player[]>([])
+
 
   useEffect(() => {
-    // getAllPlayers();
-    async function getplayers() {
-      await fetch("/api/player").then((res) => res.json());
-    }
+    getAllPlayers().then((res) => {
+      setPlayers(res ?? [])
+    })
 
-    getplayers();
-    getAllPlayers();
   }, []);
 
   return (

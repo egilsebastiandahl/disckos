@@ -1,15 +1,15 @@
+import { Player } from "@/app/types/player.model";
 import { httpGet } from "./apiPublicHelper";
 
 
-async function getAllPlayers() {
-    const url = "/api/player"
-    return httpGet({ url })
+export async function getAllPlayers(): Promise<Player[]> {
+    const res = await fetch("/api/player");
+    if (!res.ok) throw new Error("Failed to fetch players");
+    return res.json();
 }
 
-
-export function playersApi() {
-    return {
-        getAllPlayers,
-
-    }
+export async function getPlayerById(id: string) {
+    const res = await fetch(`/api/player/${id}`);
+    if (!res.ok) throw new Error("Failed to fetch player");
+    return res.json();
 }
