@@ -8,7 +8,7 @@ export default async function AdminPage() {
   if (!session) redirect("/api/auth/signin?callbackUrl=/admin");
 
   return (
-    <main className="container mx-auto p-6">
+    <main className="container">
       <h1 className="text-2xl font-bold">Admin</h1>
       <p className="mt-2">
         Welcome, {session.user?.name ?? session.user?.email}

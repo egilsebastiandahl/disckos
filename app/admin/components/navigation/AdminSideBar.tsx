@@ -5,10 +5,10 @@ export default function AdminSideBar() {
 
 
     return (
-        <div className="flex flex-col gap-4">
+        <nav className="flex flex-col gap-4 p-4 border rounded-md">
             {sideBarNavigationData.map((e) => {
                 return <Link key={e.url} href={e.url}>{e.name}</Link>
             })}
-        </div>
+        </nav>
     )
 }

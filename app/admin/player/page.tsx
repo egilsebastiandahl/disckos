@@ -1,9 +1,8 @@
 "use client";
 
-import playersApi from "@/app/api/public/playersApi";
 import useFetch from "@/app/hooks/useFetch";
 import { Player } from "@/app/types/player.model";
-import { useEffect, useState } from "react";
+import CreatePlayer from "./components/CreatePlayer";
 
 export default function AdminPlayerPage() {
 
@@ -19,10 +18,11 @@ export default function AdminPlayerPage() {
   // }, []);
 
   return (
-    <section className="p-4 border rounded">
+    <>
       This will be the admin player page. This will fetch all players and show
       them in a list, to easily remove/edit them.
-    </section>
+      <CreatePlayer />
+    </>
 
   );
 }
