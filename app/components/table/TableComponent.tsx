@@ -1,13 +1,5 @@
 import { Column } from "@/app/types/table/column.data"
 import { Row } from "@/app/types/table/row.data"
-import { Button } from "@/components/ui/button"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import {
     Table,
     TableBody,
@@ -16,17 +8,16 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { MoreHorizontalIcon } from "lucide-react"
 import { useMemo } from "react"
 
 
 
-interface TableComponentProps {
-    columnData: Column[]
+interface TableComponentProps<T> {
+    columnData: Column<T>[]
     rowData: Row[]
 }
 
-export default function TableComponent({ columnData, rowData }: TableComponentProps) {
+export default function TableComponent<T>({ columnData, rowData }: TableComponentProps<T>) {
 
     useMemo(() => {
         rowData.forEach((row) => {

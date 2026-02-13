@@ -21,17 +21,21 @@ export default function EventsTable() {
         }
     };
 
-    const columns: Column[] = [
+    const columns: Column<Event>[] = [
         {
+            id: "id",
             title: "ID",
         },
         {
+            id: "title",
             title: "Tittel"
         },
         {
+            id: "location",
             title: "Sted"
         },
         {
+            id: "date",
             title: "Dato",
             className: "text-right"
         },
