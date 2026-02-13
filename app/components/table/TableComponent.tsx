@@ -1,3 +1,5 @@
+import { Column } from "@/app/types/table/column.data"
+import { Row } from "@/app/types/table/row.data"
 import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
@@ -17,20 +19,11 @@ import {
 import { MoreHorizontalIcon } from "lucide-react"
 import { useMemo } from "react"
 
-interface ColumnData {
-    title: string
-    valueProp: string
-    className?: string
-}
 
-interface RowData {
-    rowId: string
-    cells: React.ReactNode[]
-}
 
 interface TableComponentProps {
-    columnData: ColumnData[]
-    rowData: RowData[]
+    columnData: Column[]
+    rowData: Row[]
 }
 
 export default function TableComponent({ columnData, rowData }: TableComponentProps) {

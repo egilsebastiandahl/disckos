@@ -7,7 +7,7 @@ import EventsTable from "./components/EventsTable";
 export default function AdminEventPage() {
 
     // const [players, setPlayers] = useState<Player[]>([])
-    const { data: events } = useFetch<Event[]>("/api/event")
+
 
 
     // useEffect(() => {
