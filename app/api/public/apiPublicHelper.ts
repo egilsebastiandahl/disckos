@@ -11,6 +11,7 @@ interface HttpGetProps{
  * @param param0 the path. Example: /events/all
  */
 export async function httpGet({url}: HttpGetProps): Promise<Response>{
+    console.log(`Fetching: ${BACKEND}${url}`)
     const res = await fetch(`${BACKEND}${url}`, {
     method: "GET",
   });

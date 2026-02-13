@@ -1,7 +1,9 @@
-const BASE_URL = process.env.BACKEND_API_URL;
+import { httpGet } from "./apiPublicHelper";
 
-function getAllPlayers(){
-    const url = BASE_URL + "/player"
+
+async function getAllPlayers(){
+    const url = "/api/player"
+    return httpGet({url})
 }
 
 
