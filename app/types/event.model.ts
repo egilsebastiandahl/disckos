@@ -1,9 +1,5 @@
-export interface Placement {
-    position: number;
-    players: string[];
-    score: string;
-    quote?: string;
-}
+import { Placement } from "./placement.model";
+
 export interface Event {
     id: number;
     date: string; // ISO 8601 format
@@ -13,6 +9,7 @@ export interface Event {
     teamEvent: boolean;
     rounds: number;
     placements?: Placement[];
+    published?: boolean
 }
 
 /**
