@@ -1,9 +1,9 @@
 import { httpGet } from "./apiPublicHelper";
 
 
-async function getAllPlayers(){
+async function getAllPlayers() {
     const url = "/api/player"
-    return httpGet({url})
+    return httpGet({ url })
 }
 
 

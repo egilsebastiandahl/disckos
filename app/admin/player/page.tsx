@@ -10,10 +10,11 @@ export default function AdminPlayerPage() {
   useEffect(() => {
     // getAllPlayers();
     async function getplayers() {
-      await fetch("api/player").then((res) => res.json());
+      await fetch("/api/player").then((res) => res.json());
     }
 
     getplayers();
+    getAllPlayers();
   }, []);
 
   return (
