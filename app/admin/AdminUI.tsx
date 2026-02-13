@@ -1,116 +1,19 @@
 "use client";
-import { useState } from "react";
-import { Gender } from "@/app/types/gender.enum";
+import HeaderSection from "../components/sections/HeaderSection";
 /**
  * Disclaimer: AdminUI has been vibe-coded, for experimental purposes.
  * @returns a vibe coded Admin UI.
  */
 
 export default function AdminUI() {
-  const [eTitle, setETitle] = useState("");
-  const [eDate, setEDate] = useState("");
-  const [eLocation, setELocation] = useState("");
-  const [eDescription, setEDescription] = useState("");
-  const [eTeamEvent, setETeamEvent] = useState(false);
-  const [loadingEvent, setLoadingEvent] = useState(false);
-  const [eventMsg, setEventMsg] = useState<string | null>(null);
 
-
-  async function handleCreateEvent(e: React.FormEvent) {
-    e.preventDefault();
-    setLoadingEvent(true);
-    setEventMsg(null);
-    try {
-      const res = await fetch(`/api/admin/events`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          title: eTitle,
-          date: new Date(eDate).toISOString(),
-          location: eLocation,
-          description: eDescription,
-          teamEvent: eTeamEvent,
-          rounds: 1,
-        }),
-      });
-      if (!res.ok) throw new Error(await res.text());
-      setEventMsg("Event created successfully");
-      setETitle("");
-      setEDate("");
-      setELocation("");
-      setEDescription("");
-      setETeamEvent(false);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      setEventMsg(`Error: ${err.message || String(err)}`);
-    } finally {
-      setLoadingEvent(false);
-    }
-  }
 
   return (
     <>
-      <section className="p-4 border rounded">
-        <h2 className="text-lg font-semibold mb-2">Create Event</h2>
-        <form onSubmit={handleCreateEvent} className="space-y-3">
-          <div>
-            <label className="block text-sm">Title</label>
-            <input
-              className="w-full border px-2 py-1"
-              value={eTitle}
-              onChange={(e) => setETitle(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm">Date</label>
-            <input
-              type="datetime-local"
-              className="w-full border px-2 py-1"
-              value={eDate}
-              onChange={(e) => setEDate(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm">Location</label>
-            <input
-              className="w-full border px-2 py-1"
-              value={eLocation}
-              onChange={(e) => setELocation(e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="block text-sm">Description</label>
-            <textarea
-              className="w-full border px-2 py-1"
-              value={eDescription}
-              onChange={(e) => setEDescription(e.target.value)}
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <input
-              id="teamEvent"
-              type="checkbox"
-              checked={eTeamEvent}
-              onChange={(e) => setETeamEvent(e.target.checked)}
-            />
-            <label htmlFor="teamEvent" className="text-sm">
-              Team Event
-            </label>
-          </div>
-          <div>
-            <button
-              className="px-3 py-1 bg-slate-800 text-white rounded"
-              disabled={loadingEvent}
-            >
-              {loadingEvent ? "Creating…" : "Create Event"}
-            </button>
-          </div>
-          {eventMsg && <div className="text-sm mt-1">{eventMsg}</div>}
-        </form>
-      </section>
+      <HeaderSection
+        title="Admin"
+        text="Bruk sidenavigasjonen til å lage, lagre, slette og endre diverse data."
+      />
     </>
   );
 }

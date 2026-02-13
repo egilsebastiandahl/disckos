@@ -3,6 +3,7 @@
 import useFetch from "@/app/hooks/useFetch";
 import { Player } from "@/app/types/player.model";
 import CreatePlayer from "./components/CreatePlayer";
+import HeaderSection from "@/app/components/sections/HeaderSection";
 
 export default function AdminPlayerPage() {
 
@@ -19,8 +20,10 @@ export default function AdminPlayerPage() {
 
   return (
     <>
-      This will be the admin player page. This will fetch all players and show
-      them in a list, to easily remove/edit them.
+      <HeaderSection
+        title="Spillere"
+        text="Her kan du lage, slette og endre spillere."
+      />
       <CreatePlayer />
     </>
 

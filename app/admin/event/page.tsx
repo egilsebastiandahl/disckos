@@ -1,8 +1,8 @@
 "use client";
 
 import useFetch from "@/app/hooks/useFetch";
-import { Player } from "@/app/types/player.model";
-import CreateEvent from "./components/CreateEvent";
+import HeaderSection from "@/app/components/sections/HeaderSection";
+import EventsTable from "./components/EventsTable";
 
 export default function AdminEventPage() {
 
@@ -19,10 +19,11 @@ export default function AdminEventPage() {
 
     return (
         <>
-            This will be the admin event page. This will fetch all players and show
-            them in a list, to easily remove/edit them.
-            <CreateEvent />
+            <HeaderSection
+                title="Eventer"
+                text="Her kan du lage, endre, publisere og slette eventer"
+            />
+            <EventsTable />
         </>
-
     );
 }
