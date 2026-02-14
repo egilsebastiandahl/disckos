@@ -1,9 +1,27 @@
-import { Hole } from "./hole.model"
-import { Player } from "./player.model"
-
 export interface Round {
     roundId: string
     eventId: string
-    participants: Player[]
     holes: Hole[]
+}
+
+export interface Hole {
+    holeNumber: number
+    par: number
+    playerScores: PlayerScore[] | TeamPlayerScore[]
+}
+
+export interface PlayerScore {
+    playerId: string
+    throws: number
+}
+
+export interface TeamPlayerScore {
+    playerIds: string[]
+    throws: number
+    throwsPerPlayerId: HoleThrowsById[]
+}
+
+export interface HoleThrowsById {
+    playerId: string,
+    throws: number
 }

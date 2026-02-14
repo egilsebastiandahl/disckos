@@ -13,7 +13,13 @@ import { useMemo } from "react"
 
 
 interface TableComponentProps<T> {
+    /**
+     * The headers which will be displayed in the table. Type is only used as a way to get help with property values.
+     */
     columnData: Column<T>[]
+    /**
+     * The rows of the table. Each row needs cells that matches the length of the headers.
+     */
     rowData: Row[]
 }
 
