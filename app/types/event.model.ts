@@ -1,5 +1,7 @@
 import { Placement } from "./placement.model";
 
+export type { Placement } from "./placement.model";
+
 export interface Event {
   id: string;
   date: string; // ISO 8601 format

@@ -12,12 +12,13 @@ export default function EventsTable() {
     const { data: events } = useFetch<Event[]>("/api/event")
 
     const handleCopy = async (event: Event) => {
+        const idStr = String(event.id);
         try {
-            await navigator.clipboard.writeText(event.id).then(() => {
-                console.log(event.id + " copied!")
+            await navigator.clipboard.writeText(idStr).then(() => {
+                console.log(idStr + " copied!")
             })
         } catch (e) {
-            console.log("couldnt copy: " + event.id, e)
+            console.log("couldnt copy: " + idStr, e)
         }
     };
 
@@ -45,14 +46,15 @@ export default function EventsTable() {
     ]
 
     const rowData = events ? events.map((event) => {
+        const idStr = String(event.id);
         const row: Row = {
-            rowId: event.id,
+            rowId: idStr,
             cells: [
-                <p key={event.id + "- id"} className="cursor-pointer" onClick={() => handleCopy(event)}>{event.id}</p>,
+                <p key={idStr + "- id"} className="cursor-pointer" onClick={() => handleCopy(event)}>{idStr}</p>,
                 <p key={event.title + "- title"}>{event.title}</p>,
                 <p key={event.location + "- location"}>{event.location}</p>,
                 <p key={event.date + "- date"}>{event.date}</p>,
-                <EventTableActions key={event.id + "- actions"} event={event} />
+                <EventTableActions key={idStr + "- actions"} event={event} />
             ]
         }
         return row
