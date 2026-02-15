@@ -15,7 +15,7 @@ export default function CreateEvent() {
         setLoadingEvent(true);
         setEventMsg(null);
         try {
-            const res = await fetch(`/api/admin/events`, {
+            const res = await fetch(`/api/admin/event`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",

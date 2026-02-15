@@ -9,7 +9,8 @@ import EventTableActions from "./EventTableActions"
 
 export default function EventsTable() {
 
-    const { data: events } = useFetch<Event[]>("/api/event")
+    const { data: events } = useFetch<Event[]>("/api/admin/event")
+
 
     const handleCopy = async (event: Event) => {
         const idStr = String(event.id);
@@ -53,7 +54,7 @@ export default function EventsTable() {
                 <p key={idStr + "- id"} className="cursor-pointer" onClick={() => handleCopy(event)}>{idStr}</p>,
                 <p key={event.title + "- title"}>{event.title}</p>,
                 <p key={event.location + "- location"}>{event.location}</p>,
-                <p key={event.date + "- date"}>{event.date}</p>,
+                <p key={event.date + "- date"}>{new Date(event.date).toLocaleDateString("no-NB")}</p>,
                 <EventTableActions key={idStr + "- actions"} event={event} />
             ]
         }
