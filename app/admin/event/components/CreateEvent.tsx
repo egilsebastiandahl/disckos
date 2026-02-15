@@ -1,16 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { clientPost } from "@/lib/clientApi";
+import { locationApi } from "@/app/api/admin/location/locationApi";
+import { Location } from "@/app/types/location.model";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 
 export default function CreateEvent() {
     const [eTitle, setETitle] = useState("");
     const [eDate, setEDate] = useState("");
-    const [eLocation, setELocation] = useState("");
+    const [selectedLocationId, setSelectedLocationId] = useState("");
     const [eDescription, setEDescription] = useState("");
     const [eTeamEvent, setETeamEvent] = useState(false);
     const [ePublished, setEPublished] = useState(false);
     const [loadingEvent, setLoadingEvent] = useState(false);
     const [eventMsg, setEventMsg] = useState<string | null>(null);
+    const [locations, setLocations] = useState<Location[]>([]);
 
+    useEffect(() => {
+        async function fetchLocations() {
+            const locations = await locationApi.getLocations();
+            setLocations(locations);
+        }
+
+        fetchLocations();
+    }, [])
 
     async function handleCreateEvent(e: React.FormEvent) {
         e.preventDefault();
@@ -20,7 +32,7 @@ export default function CreateEvent() {
             const res = await clientPost(`/api/admin/event`, {
                 title: eTitle,
                 date: new Date(eDate).toISOString(),
-                location: eLocation,
+                locationId: selectedLocationId,
                 description: eDescription,
                 teamEvent: eTeamEvent,
                 published: ePublished,
@@ -30,7 +42,7 @@ export default function CreateEvent() {
             setEventMsg("Event created successfully");
             setETitle("");
             setEDate("");
-            setELocation("");
+            setSelectedLocationId("");
             setEDescription("");
             setETeamEvent(false);
             setEPublished(false);
@@ -68,11 +80,20 @@ export default function CreateEvent() {
                     </div>
                     <div>
                         <label className="block text-sm">Location</label>
-                        <input
-                            className="w-full border px-2 py-1"
-                            value={eLocation}
-                            onChange={(e) => setELocation(e.target.value)}
-                        />
+                        <Select value={selectedLocationId} onValueChange={(value) => setSelectedLocationId(value)}>
+                            <SelectTrigger className="w-full border px-2 py-1">
+                                {selectedLocationId
+                                    ? locations.find((loc) => loc.id === selectedLocationId)?.name || "Velg lokasjon"
+                                    : "Velg lokasjon"}
+                            </SelectTrigger>
+                            <SelectContent>
+                                {locations.map((loc) => (
+                                    <SelectItem key={loc.id} value={loc.id}>
+                                        {loc.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
                     <div>
                         <label className="block text-sm">Description</label>

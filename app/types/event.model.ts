@@ -1,3 +1,4 @@
+import { Location } from "./location.model";
 import { Placement } from "./placement.model";
 
 export type { Placement } from "./placement.model";
@@ -7,7 +8,7 @@ export interface Event {
   date: string; // ISO 8601 format
   title: string;
   description: string;
-  location: string;
+  location: Location;
   teamEvent: boolean;
   rounds: number;
   placements?: Placement[];
