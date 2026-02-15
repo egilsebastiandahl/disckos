@@ -4,6 +4,10 @@ export const sideBarNavigationData = [
         name: "Spiller"
     },
     {
+        url: "/admin/location",
+        name: "Lokasjon"
+    },
+    {
         url: "/admin/team",
         name: "Lag"
     },
