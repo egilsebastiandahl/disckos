@@ -1,12 +1,32 @@
 import { useState } from "react";
 import { locationApi } from "@/app/api/admin/location/locationApi";
+import { Input } from "@/components/ui/input";
+import Button from "@/app/components/button/Button";
 
 export default function CreateLocation() {
 
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
     const [lat, setLat] = useState(0)
+    const [latString, setLatString] = useState("0")
     const [lon, setLon] = useState(0)
+    const [lonString, setLonString] = useState("0")
+
+    const onChangeLatString = (latString: string) => {
+        setLatString(latString)
+        const parsed = parseFloat(latString)
+        if (!isNaN(parsed)) {
+            setLat(parsed)
+        }
+    }
+
+    const onChangeLonString = (lonString: string) => {
+        setLonString(lonString)
+        const parsed = parseFloat(lonString)
+        if (!isNaN(parsed)) {
+            setLon(parsed)
+        }
+    }
 
     const onCreateClick = () => {
         locationApi.createLocation({
@@ -27,14 +47,13 @@ export default function CreateLocation() {
         })
     }
 
-    return (<>
-        <p>Create location</p>
-        <input type="text" placeholder="Navn" value={name} onChange={(e) => setName(e.target.value)} />
-        <input type="text" placeholder="Beskrivelse" value={description} onChange={(e) => setDescription(e.target.value)} />
-        <input type="number" placeholder="Latitude" value={lat} onChange={(e) => setLat(parseFloat(e.target.value))} />
-        <input type="number" placeholder="Longitude" value={lon} onChange={(e) => setLon(parseFloat(e.target.value))} />
-        <button onClick={onCreateClick}>Create</button>
-    </>)
+    return (<div className="flex flex-col max-w-sm p-16">
+        <Input type="text" placeholder="Navn" value={name} onChange={(e) => setName(e.target.value)} />
+        <Input type="text" placeholder="Beskrivelse" value={description} onChange={(e) => setDescription(e.target.value)} />
+        <Input type="number" placeholder="Latitude" value={latString} onChange={(e) => onChangeLatString(e.target.value)} />
+        <Input type="number" placeholder="Longitude" value={lonString} onChange={(e) => onChangeLonString(e.target.value)} />
+        <Button onClick={onCreateClick}>Lag</Button>
+    </div>)
 
 
 
