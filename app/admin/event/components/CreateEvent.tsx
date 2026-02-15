@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { clientPost } from "@/lib/clientApi";
 
 export default function CreateEvent() {
     const [eTitle, setETitle] = useState("");
@@ -16,19 +17,14 @@ export default function CreateEvent() {
         setLoadingEvent(true);
         setEventMsg(null);
         try {
-            const res = await fetch(`/api/admin/event`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify({
-                    title: eTitle,
-                    date: new Date(eDate).toISOString(),
-                    location: eLocation,
-                    description: eDescription,
-                    teamEvent: eTeamEvent,
-                    published: ePublished,
-                    rounds: 1,
-                }),
+            const res = await clientPost(`/api/admin/event`, {
+                title: eTitle,
+                date: new Date(eDate).toISOString(),
+                location: eLocation,
+                description: eDescription,
+                teamEvent: eTeamEvent,
+                published: ePublished,
+                rounds: 1,
             });
             if (!res.ok) throw new Error(await res.text());
             setEventMsg("Event created successfully");

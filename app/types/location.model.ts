@@ -1,5 +1,5 @@
 export interface Location {
-    locationId: string;
+    id: string;
     name: string;
     description: string;
     coordinates: {

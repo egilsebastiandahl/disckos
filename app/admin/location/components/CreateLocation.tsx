@@ -12,10 +12,8 @@ export default function CreateLocation() {
         locationApi.createLocation({
             name,
             description,
-            coordinates: {
-                lat,
-                lon
-            }
+            lat,
+            lon
         }).then((res) => {
             if (res.ok) {
                 alert("Location created successfully!")

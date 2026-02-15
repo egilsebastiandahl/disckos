@@ -1,7 +1,8 @@
-'use client'
+"use client"
 
 import { Gender } from "@/app/types/gender.enum";
 import { useState } from "react";
+import { clientPost } from "@/lib/clientApi";
 
 export default function CreatePlayer() {
 
@@ -16,12 +17,7 @@ export default function CreatePlayer() {
         setLoadingPlayer(true);
         setPlayerMsg(null);
         try {
-            const res = await fetch(`/api/admin/players`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify({ name: pName, gender: pGender }),
-            });
+            const res = await clientPost(`/api/admin/players`, { name: pName, gender: pGender });
             if (!res.ok) throw new Error(await res.text());
             setPlayerMsg("Player created successfully");
             setPName("");
