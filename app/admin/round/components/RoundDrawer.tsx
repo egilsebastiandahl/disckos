@@ -17,8 +17,8 @@ export default function RoundDrawer({ selectedEvent, selectedRound, isOpen, setI
     return (
         <Drawer direction="bottom" onOpenChange={setIsOpen} open={isOpen}>
             <DrawerTrigger className="hover:cursor-pointer">
-                <div className="flex justify-center w-full bg-foreground text-background border border-background hover:bg-background hover:text-foreground hover:border-foreground p-4 rounded-lg" >
-                    <PlusIcon />
+                <div className="flex justify-center w-full bg-foreground text-background border border-background hover:bg-background hover:text-foreground hover:border-foreground p-2 rounded-lg" >
+                    <span className="font-bold">NY RUNDE &nbsp;</span><PlusIcon />
                 </div>
             </DrawerTrigger>
 
