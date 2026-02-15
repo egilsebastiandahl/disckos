@@ -6,6 +6,7 @@ import { Event } from "@/app/types/event.model"
 import { Column } from "@/app/types/table/column.data"
 import { Row } from "@/app/types/table/row.data"
 import EventTableActions from "./EventTableActions"
+import { dateStringToDateTimeFormatter } from "@/app/utils/dateFormatters"
 
 export default function EventsTable() {
 
@@ -54,7 +55,7 @@ export default function EventsTable() {
                 <p key={idStr + "- id"} className="cursor-pointer" onClick={() => handleCopy(event)}>{idStr}</p>,
                 <p key={event.title + "- title"}>{event.title}</p>,
                 <p key={event.location + "- location"}>{event.location}</p>,
-                <p key={event.date + "- date"}>{new Date(event.date).toLocaleDateString("no-NB")}</p>,
+                <p key={event.date + "- date"}>{dateStringToDateTimeFormatter(event.date)}</p>,
                 <EventTableActions key={idStr + "- actions"} event={event} />
             ]
         }
