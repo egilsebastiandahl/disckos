@@ -6,6 +6,7 @@ export default function CreateEvent() {
     const [eLocation, setELocation] = useState("");
     const [eDescription, setEDescription] = useState("");
     const [eTeamEvent, setETeamEvent] = useState(false);
+    const [ePublished, setEPublished] = useState(false);
     const [loadingEvent, setLoadingEvent] = useState(false);
     const [eventMsg, setEventMsg] = useState<string | null>(null);
 
@@ -25,6 +26,7 @@ export default function CreateEvent() {
                     location: eLocation,
                     description: eDescription,
                     teamEvent: eTeamEvent,
+                    published: ePublished,
                     rounds: 1,
                 }),
             });
@@ -35,6 +37,7 @@ export default function CreateEvent() {
             setELocation("");
             setEDescription("");
             setETeamEvent(false);
+            setEPublished(false);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             setEventMsg(`Error: ${err.message || String(err)}`);
@@ -92,6 +95,15 @@ export default function CreateEvent() {
                         />
                         <label htmlFor="teamEvent" className="text-sm">
                             Team Event
+                        </label>
+                        <input
+                            id="published"
+                            type="checkbox"
+                            checked={ePublished}
+                            onChange={(e) => setEPublished(e.target.checked)}
+                        />
+                        <label htmlFor="published" className="text-sm">
+                            Publiser
                         </label>
                     </div>
                     <div>
