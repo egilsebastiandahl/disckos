@@ -4,9 +4,10 @@ import { useState } from "react";
 import CreateRoundScoringFormatRadio from "./CreateRoundScoringFormatRadio";
 import PlayersInRoundChooser from "./PlayersInRoundChooser";
 import { SimplePlayer } from "@/app/types/player.model";
-import PlayersInRoundDialog from "./PlayersInRoundDialog";
+import HoleSection from "./HoleSection";
+import { holeDefaultData } from "../data/holeDefaultData";
 
-type HoleInput = {
+export type HoleInput = {
   holeNumber: number;
   par: number;
   playerScores?: PlayerScore[]; // for individual rounds
@@ -25,7 +26,7 @@ export default function CreateRound({ selectedEvent }: CreateRoundProps) {
 
   const [scoringFormat, setScoringFormat] = useState<ScoringFormat>("stroke");
   const eventType = isTeamEvent ? "team" : "individual";
-  const [holes, setHoles] = useState<HoleInput[]>([]);
+  const [holes, setHoles] = useState<HoleInput[]>(holeDefaultData);
   const [activePlayers, setActivePlayers] = useState<SimplePlayer[]>([]); // For individual rounds
   const [activeTeamIds, setActiveTeamIds] = useState<string[]>([]); // For team rounds
 
@@ -64,12 +65,18 @@ export default function CreateRound({ selectedEvent }: CreateRoundProps) {
   return (
     <div className="flex flex-col gap-4 w-full max-w-4xl mx-auto p-4">
       <h2 className="text-lg font-semibold self-center">Lag runde for {selectedEvent?.title}</h2>
-      <section className="border rounded-lg p-4">
-        <CreateRoundScoringFormatRadio scoringFormat={scoringFormat} setScoringFormat={setScoringFormat} />
-      </section>
+      <div className="flex gap-8">
+        <section className="border rounded-lg p-4">
+          <CreateRoundScoringFormatRadio scoringFormat={scoringFormat} setScoringFormat={setScoringFormat} />
+        </section>
+        <section className="border rounded-lg p-4 gap-2 flex flex-col">
+          <h2 className="text-md font-semibold">VELG SPILLERE FOR RUNDEN</h2>
+          <PlayersInRoundChooser selectedEvent={selectedEvent} activePlayers={activePlayers} setActivePlayers={setActivePlayers} />
+        </section>
+      </div>
       <section className="border rounded-lg p-4 gap-2 flex flex-col">
-        <h2 className="text-md font-semibold">VELG SPILLERE FOR RUNDEN</h2>
-        <PlayersInRoundChooser selectedEvent={selectedEvent} activePlayers={activePlayers} setActivePlayers={setActivePlayers} />
+        <h2 className="text-md font-semibold">VELG HULL FOR RUNDEN</h2>
+        <HoleSection selectedEvent={selectedEvent} holes={holes} setHoles={setHoles} activePlayers={activePlayers} />
       </section>
     </div>
   )
