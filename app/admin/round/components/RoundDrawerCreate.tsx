@@ -7,16 +7,18 @@ interface RoundDrawerCreateProps {
 }
 
 export default function RoundDrawerCreate({ selectedEvent }: RoundDrawerCreateProps) {
-
-
   return (
     <DrawerContent>
       <DrawerHeader>
         <DrawerTitle>Lag ny runde</DrawerTitle>
-        <DrawerDescription>Skriv inn detaljer for den nye runden</DrawerDescription>
+        <DrawerDescription>
+          Skriv inn detaljer for runden på:{" "}
+          <span className="font-semibold">
+            <u>{selectedEvent?.title}</u>
+          </span>
+        </DrawerDescription>
       </DrawerHeader>
       <CreateRound selectedEvent={selectedEvent} />
     </DrawerContent>
   );
-
 }
