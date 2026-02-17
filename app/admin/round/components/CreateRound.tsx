@@ -1,3 +1,5 @@
+"use client";
+
 import { Event } from "@/app/types/event.model";
 import { PlayerScore, Round, ScoringFormat, TeamScore } from "@/app/types/round.model";
 import { useState } from "react";
@@ -11,7 +13,7 @@ export type HoleInput = {
   holeNumber: number;
   par: number;
   playerScores?: PlayerScore[]; // for individual rounds
-  teamScores?: TeamScore[];     // for team rounds
+  teamScores?: TeamScore[]; // for team rounds
   scoringFormatOverride?: ScoringFormat;
 };
 
@@ -20,9 +22,7 @@ interface CreateRoundProps {
 }
 
 export default function CreateRound({ selectedEvent }: CreateRoundProps) {
-
   const isTeamEvent = selectedEvent?.teamEvent || false;
-
 
   const [scoringFormat, setScoringFormat] = useState<ScoringFormat>("stroke");
   const eventType = isTeamEvent ? "team" : "individual";
@@ -34,7 +34,7 @@ export default function CreateRound({ selectedEvent }: CreateRoundProps) {
     // Implementer logikk for å sende roundData til backend for å opprette en ny runde
     // roundData bør inneholde eventId, scoringFormat, og holes med playerScores
     console.log("Creating round with data:", roundData);
-  }
+  };
 
   /**
  * Example data for individual rounds:
@@ -71,7 +71,11 @@ export default function CreateRound({ selectedEvent }: CreateRoundProps) {
         </section>
         <section className="border rounded-lg p-4 gap-2 flex flex-col">
           <h2 className="text-md font-semibold">VELG SPILLERE FOR RUNDEN</h2>
-          <PlayersInRoundChooser selectedEvent={selectedEvent} activePlayers={activePlayers} setActivePlayers={setActivePlayers} />
+          <PlayersInRoundChooser
+            selectedEvent={selectedEvent}
+            activePlayers={activePlayers}
+            setActivePlayers={setActivePlayers}
+          />
         </section>
       </div>
       <section className="border rounded-lg p-4 gap-2 flex flex-col">
@@ -79,5 +83,5 @@ export default function CreateRound({ selectedEvent }: CreateRoundProps) {
         <HoleSection selectedEvent={selectedEvent} holes={holes} setHoles={setHoles} activePlayers={activePlayers} />
       </section>
     </div>
-  )
+  );
 }
