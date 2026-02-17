@@ -3,7 +3,6 @@ import { Event } from "@/app/types/event.model";
 import { HoleInput } from "./CreateRound";
 import HoleList from "./HoleList";
 import Button from "@/app/components/button/Button";
-import { useState } from "react";
 import { SimplePlayer } from "@/app/types/player.model";
 
 interface HoleSectionProps {
@@ -14,16 +13,14 @@ interface HoleSectionProps {
 }
 
 export default function HoleSection({ selectedEvent, holes, setHoles, activePlayers }: HoleSectionProps) {
-  const [newHole, setNewHole] = useState<HoleInput>({
-    holeNumber: holes.length + 1,
-    par: 3,
-    playerScores: [],
-    teamScores: [],
-  });
-
   const onAddNewHoleClick = () => {
+    const newHole = {
+      holeNumber: holes.length > 0 ? holes[holes.length - 1].holeNumber + 1 : 1,
+      par: 3,
+      playerScores: activePlayers.map((player) => ({ playerId: player.id, throws: 3 })),
+      teamScores: [],
+    };
     setHoles([...holes, newHole]);
-    setNewHole({ holeNumber: holes.length + 1, par: 3, playerScores: [], teamScores: [] });
   };
 
   const currentScoreStatus: string = activePlayers
