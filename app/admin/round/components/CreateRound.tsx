@@ -8,6 +8,7 @@ import PlayersInRoundChooser from "./PlayersInRoundChooser";
 import { SimplePlayer } from "@/app/types/player.model";
 import HoleSection from "./HoleSection";
 import { holeDefaultData } from "../data/holeDefaultData";
+import Button from "@/app/components/button/Button";
 
 export type HoleInput = {
   holeNumber: number;
@@ -34,6 +35,20 @@ export default function CreateRound({ selectedEvent }: CreateRoundProps) {
     // Implementer logikk for å sende roundData til backend for å opprette en ny runde
     // roundData bør inneholde eventId, scoringFormat, og holes med playerScores
     console.log("Creating round with data:", roundData);
+  };
+
+  // When updating activePlayers, set default playerScores for new players in holes
+  const updateActivePlayers = (players: SimplePlayer[]) => {
+    setActivePlayers(players);
+    setHoles((prevHoles) =>
+      prevHoles.map((hole) => {
+        const updatedPlayerScores = players.map((player) => {
+          const existingScore = hole.playerScores?.find((ps) => ps.playerId === player.id);
+          return existingScore || { playerId: player.id, throws: hole.par || 3 };
+        });
+        return { ...hole, playerScores: updatedPlayerScores };
+      }),
+    );
   };
 
   /**
@@ -63,8 +78,7 @@ export default function CreateRound({ selectedEvent }: CreateRoundProps) {
  */
 
   return (
-    <div className="flex flex-col gap-4 w-full max-w-4xl mx-auto p-4">
-      <h2 className="text-lg font-semibold self-center">Lag runde for {selectedEvent?.title}</h2>
+    <div className="flex flex-col gap-4 w-full mx-auto p-4">
       <div className="flex gap-8">
         <section className="border rounded-lg p-4">
           <CreateRoundScoringFormatRadio scoringFormat={scoringFormat} setScoringFormat={setScoringFormat} />
@@ -74,7 +88,7 @@ export default function CreateRound({ selectedEvent }: CreateRoundProps) {
           <PlayersInRoundChooser
             selectedEvent={selectedEvent}
             activePlayers={activePlayers}
-            setActivePlayers={setActivePlayers}
+            updateActivePlayers={updateActivePlayers}
           />
         </section>
       </div>
@@ -82,6 +96,9 @@ export default function CreateRound({ selectedEvent }: CreateRoundProps) {
         <h2 className="text-md font-semibold">VELG HULL FOR RUNDEN</h2>
         <HoleSection selectedEvent={selectedEvent} holes={holes} setHoles={setHoles} activePlayers={activePlayers} />
       </section>
+      <Button className="self-end" onClick={() => {}}>
+        OPPRETT RUNDE
+      </Button>
     </div>
   );
 }

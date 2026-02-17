@@ -4,7 +4,6 @@ import { SimplePlayer } from "@/app/types/player.model";
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import PlayerScorePerHole from "./PlayerScorePerHole";
 import { HoleInput } from "./CreateRound";
-import { useCallback } from "react";
 import { PlayerScore } from "@/app/types/round.model";
 
 interface HoleDrawerProps {
@@ -16,18 +15,6 @@ interface HoleDrawerProps {
 }
 
 export default function HoleDrawer({ isOpen, setIsOpen, activePlayers, hole, setPlayerScoreForHole }: HoleDrawerProps) {
-  //   const playerScores = useCallback(() => {
-  //     if (!hole) return [];
-  //     return activePlayers.map((player) => {
-  //       const playerScoreForHole = hole.playerScores?.find((ps) => ps.playerId === player.id);
-  //       return {
-  //         playerId: player.id,
-  //         playerName: player.name,
-  //         throws: playerScoreForHole ? playerScoreForHole.throws : 0,
-  //       };
-  //     });
-  //   }, [hole, activePlayers]);
-
   const playerScore = (playerId: string) => {
     let tempPlayerScore: PlayerScore = { playerId, throws: hole?.par || 3 };
 
@@ -42,17 +29,19 @@ export default function HoleDrawer({ isOpen, setIsOpen, activePlayers, hole, set
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Sett antall kast per spiller for hull {hole?.holeNumber ?? -1}</DrawerTitle>
-          <DrawerDescription>Sett inn antall kast</DrawerDescription>
+          <DrawerDescription>Par {hole?.par}</DrawerDescription>
         </DrawerHeader>
-        {activePlayers.map((player) => (
-          <PlayerScorePerHole
-            key={player.id}
-            playerName={player.name}
-            holeNumber={hole?.holeNumber ?? -1}
-            playerScore={playerScore(player.id)}
-            setPlayerScoreForHole={setPlayerScoreForHole}
-          />
-        ))}
+        <div className="flex flex-col gap-4 p-4">
+          {activePlayers.map((player) => (
+            <PlayerScorePerHole
+              key={player.id}
+              playerName={player.name}
+              hole={hole}
+              playerScore={playerScore(player.id)}
+              setPlayerScoreForHole={setPlayerScoreForHole}
+            />
+          ))}
+        </div>
       </DrawerContent>
     </Drawer>
   );
