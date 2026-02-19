@@ -31,10 +31,78 @@ export default function CreateRound({ selectedEvent }: CreateRoundProps) {
   const [activePlayers, setActivePlayers] = useState<SimplePlayer[]>([]); // For individual rounds
   const [activeTeamIds, setActiveTeamIds] = useState<string[]>([]); // For team rounds
 
-  const handleCreateRound = async (roundData: Partial<Round>) => {
-    // Implementer logikk for å sende roundData til backend for å opprette en ny runde
-    // roundData bør inneholde eventId, scoringFormat, og holes med playerScores
-    console.log("Creating round with data:", roundData);
+  // Frontend shape for creating an individual round (matches backend CreateIndividualRoundRequest)
+  type CreatePlayerScoreRequest = {
+    playerId: string;
+    throws: number;
+  };
+
+  type CreateIndividualHoleRequest = {
+    holeNumber: number;
+    par: number;
+    scoringFormatOverride?: ScoringFormat | null;
+    playerScores: CreatePlayerScoreRequest[];
+  };
+
+  type CreateIndividualRoundRequest = {
+    eventId: string;
+    scoringFormat: ScoringFormat;
+    holes: CreateIndividualHoleRequest[];
+  };
+
+  const handleCreateRound = async () => {
+    if (!selectedEvent) {
+      alert("Velg et arrangement først");
+      return;
+    }
+
+    if (isTeamEvent) {
+      alert("Team round creation not implemented in this UI");
+      return;
+    }
+
+    // basic validation
+    if (!activePlayers || activePlayers.length === 0) {
+      alert("Legg til minst én spiller i runden");
+      return;
+    }
+
+    const payload: CreateIndividualRoundRequest = {
+      eventId: selectedEvent.id,
+      scoringFormat,
+      holes: holes.map((h) => ({
+        holeNumber: h.holeNumber,
+        par: h.par,
+        scoringFormatOverride: h.scoringFormatOverride ?? null,
+        playerScores:
+          (h.playerScores || activePlayers.map((p) => ({ playerId: p.id, throws: h.par || 3 })))?.map((ps) => ({
+            playerId: ps.playerId,
+            throws: ps.throws,
+          })) || [],
+      })),
+    };
+
+    try {
+      const res = await fetch("/api/admin/round", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("Create round failed:", text);
+        alert("Kunne ikke opprette runden: " + res.statusText);
+        return;
+      }
+
+      const data = await res.json();
+      console.log("Round created:", data);
+      alert("Runde opprettet");
+    } catch (err) {
+      console.error(err);
+      alert("Feil ved oppretting av runde");
+    }
   };
 
   // When updating activePlayers, set default playerScores for new players in holes
@@ -96,7 +164,7 @@ export default function CreateRound({ selectedEvent }: CreateRoundProps) {
         <h2 className="text-md font-semibold">VELG HULL FOR RUNDEN</h2>
         <HoleSection selectedEvent={selectedEvent} holes={holes} setHoles={setHoles} activePlayers={activePlayers} />
       </section>
-      <Button className="self-end" onClick={() => {}}>
+      <Button className="self-end" onClick={handleCreateRound}>
         OPPRETT RUNDE
       </Button>
     </div>
