@@ -17,6 +17,18 @@ export async function proxyPublicGet(path: string) {
     return NextResponse.json({ error: "Backend URL not configured" }, { status: 500 });
   }
 
-  const res = await fetch(`${BACKEND}${path}`, { method: "GET" });
-  return forwardResponse(res);
+  try {
+    const res = await fetch(`${BACKEND}${path}`, { method: "GET" });
+    return forwardResponse(res);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown proxy error";
+    return NextResponse.json(
+      {
+        error: "Failed to reach backend service",
+        details: message,
+        backendPath: path,
+      },
+      { status: 500 }
+    );
+  }
 }
