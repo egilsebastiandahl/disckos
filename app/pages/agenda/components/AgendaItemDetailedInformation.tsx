@@ -8,14 +8,12 @@ interface AgendaItemDetailedInformationProps {
   event: Event;
 }
 
-export default function AgendaItemDetailedInformation({
-  event,
-}: AgendaItemDetailedInformationProps) {
+export default function AgendaItemDetailedInformation({ event }: AgendaItemDetailedInformationProps) {
   return (
     <div className="flex justify-around">
       <div className="flex flex-col items-center">
         <PlaceIcon />
-        <span>{event.location}</span>
+        <span>{event.location.name}</span>
       </div>
 
       <div className="flex flex-col items-center">

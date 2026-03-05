@@ -6,11 +6,6 @@ import NavigationHeaderMobile from "./NavigationHeaderMobile";
 import NewLogo from "../logo/NewLogo";
 
 export default function NavigationHeader() {
-  // Return Mobile header for mobile phone
-  // if (screenSize == ScreenSize.XS || screenSize == ScreenSize.SM) {
-  //   return <NavigationHeaderMobile />;
-  // }
-
   return (
     <>
       {/* Hide if screensize is over md */}

@@ -1,13 +1,22 @@
-const BASE_URL = process.env.BACKEND_API_URL;
+import { Player } from "@/app/types/player.model";
+import { httpGet } from "./apiPublicHelper";
 
-function getAllPlayers(){
-    const url = BASE_URL + "/player"
+
+async function getAllPlayers(): Promise<Player[]> {
+    const res = await fetch("/api/player");
+    if (!res.ok) throw new Error("Failed to fetch players");
+    return res.json();
 }
 
-
-export function playersApi() {
-    return {
-        getAllPlayers,
-
-    }
+async function getPlayerById(id: string) {
+    const res = await fetch(`/api/player/${id}`);
+    if (!res.ok) throw new Error("Failed to fetch player");
+    return res.json();
 }
+
+const playersApi = {
+    getAllPlayers,
+    getPlayerById
+}
+
+export default playersApi

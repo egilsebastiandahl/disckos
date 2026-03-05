@@ -1,18 +1,18 @@
-export interface Placement {
-    position: number;
-    players: string[];
-    score: string;
-    quote?: string;
-}
+import { Location } from "./location.model";
+import { Placement } from "./placement.model";
+
+export type { Placement } from "./placement.model";
+
 export interface Event {
-    id: number;
-    date: string; // ISO 8601 format
-    title: string;
-    description: string;
-    location: string;
-    teamEvent: boolean;
-    rounds: number;
-    placements?: Placement[];
+  id: string;
+  date: string; // ISO 8601 format
+  title: string;
+  description: string;
+  location: Location;
+  teamEvent: boolean;
+  rounds: number;
+  placements?: Placement[];
+  published?: boolean
 }
 
 /**
