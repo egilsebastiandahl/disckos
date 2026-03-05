@@ -1,18 +1,18 @@
 "use client";
 
 import AgendaItem from "@/app/pages/agenda/components/AgendaItem";
-import eventsData from "@/app/data/events.json";
 import { Event } from "@/app/types/event.model";
 import TextImage from "./TextImage";
 import Link from "next/link";
+import useFetch from "@/app/hooks/useFetch";
 
 export default function UpcomingEvent() {
-  const events: Event[] = eventsData ?? [];
+  const { data } = useFetch<Event[]>("/api/event");
+  // Force events to be an empty array if undefined
+  const events = data ?? [];
 
   const currentTime = new Date();
-  const nextEventIndex = events.findIndex(
-    (e) => new Date(e.date) > currentTime,
-  );
+  const nextEventIndex = events.findIndex((e) => new Date(e.date) > currentTime);
   const nextEvent = events[nextEventIndex];
   const nextEventLink = `pages/agenda#agenda-item-${nextEventIndex}`;
 
