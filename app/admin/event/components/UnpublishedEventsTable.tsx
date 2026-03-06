@@ -1,17 +1,18 @@
 "use client";
 
 import TableComponent from "@/app/components/table/TableComponent";
+import useFetch from "@/app/hooks/useFetch";
 import { Event } from "@/app/types/event.model";
 import { Column } from "@/app/types/table/column.data";
 import { Row } from "@/app/types/table/row.data";
 import EventTableActions from "./EventTableActions";
 import { dateStringToDateTimeFormatter } from "@/app/utils/dateFormatters";
 
-interface EventsTableProps {
+interface UnpublishedEventsTableProps {
   events: Event[] | undefined;
 }
 
-export default function EventsTable({ events }: EventsTableProps) {
+export default function UnpublishedEventsTable({ events }: UnpublishedEventsTableProps) {
   const handleCopy = async (event: Event) => {
     const idStr = String(event.id);
     try {
@@ -68,5 +69,10 @@ export default function EventsTable({ events }: EventsTableProps) {
       })
     : [];
 
-  return <TableComponent columnData={columns} rowData={rowData} />;
+  return (
+    <div className="flex flex-col gap-2">
+      <h2 className="font-bold">UPUBLISERTE EVENTER:</h2>
+      <TableComponent columnData={columns} rowData={rowData} />
+    </div>
+  );
 }
