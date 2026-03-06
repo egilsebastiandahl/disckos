@@ -1,8 +1,8 @@
 export const navigationData: {url: string, name: string}[] = [
-    // {
-    //     url: "/pages/results",
-    //     name: "Resultater"
-    // },
+    {
+        url: "/pages/results",
+        name: "Resultater"
+    },
     {
         url: "/pages/agenda",
         name: "Agenda"

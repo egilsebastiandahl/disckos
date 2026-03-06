@@ -5,9 +5,10 @@ import { Event } from "@/app/types/event.model";
 import TextImage from "./TextImage";
 import Link from "next/link";
 import useFetch from "@/app/hooks/useFetch";
+import FrisbeeLoader from "../loader/FrisbeeLoader";
 
 export default function UpcomingEvent() {
-  const { data } = useFetch<Event[]>("/api/event");
+  const { data, isLoading } = useFetch<Event[]>("/api/event");
   // Force events to be an empty array if undefined
   const events = data ?? [];
 
@@ -15,6 +16,10 @@ export default function UpcomingEvent() {
   const nextEventIndex = events.findIndex((e) => new Date(e.date) > currentTime);
   const nextEvent = events[nextEventIndex];
   const nextEventLink = `pages/agenda#agenda-item-${nextEventIndex}`;
+
+  if (isLoading) {
+    return <FrisbeeLoader size="lg" text="Henter neste event..."></FrisbeeLoader>;
+  }
 
   if (!nextEvent) {
     return (

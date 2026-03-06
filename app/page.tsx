@@ -6,10 +6,7 @@ export default function Home() {
     <div className="flex justify-center font-sans">
       <main className="flex w-full flex-col items-center justify-between pt-32 sm:items-start gap-4 md:gap-8">
         <div className="flex w-full justify-center items-center px-4 md:px-0">
-          <HeaderSection
-            title="Velkommen til Disckos"
-            text="Her kan du følge med på hva som skjer i Disckos."
-          />
+          <HeaderSection title="Velkommen til Disckos" text="Her kan du følge med på hva som skjer i Disckos." />
         </div>
         <section className="flex justify-center items-center w-full p-4 md:p-16">
           <UpcomingEvent />
