@@ -18,7 +18,7 @@ export default function UpcomingEvent() {
   const nextEventLink = `pages/agenda#agenda-item-${nextEventIndex}`;
 
   if (isLoading) {
-    return <FrisbeeLoader size="lg" text="Henter neste event..."></FrisbeeLoader>;
+    return <FrisbeeLoader size="lg" text="Henter neste event..." />;
   }
 
   if (!nextEvent) {
