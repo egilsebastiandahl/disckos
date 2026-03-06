@@ -74,16 +74,12 @@ export default function CreateRound({ selectedEvent }: CreateRoundProps) {
         holeNumber: h.holeNumber,
         par: h.par,
         scoringFormatOverride: h.scoringFormatOverride ?? null,
-        playerScores:
-          (h.playerScores || activePlayers.map((p) => ({ playerId: p.id, throws: h.par || 3 })))?.map((ps) => ({
-            playerId: ps.playerId,
-            throws: ps.throws,
-          })) || [],
+        playerScores: (h.playerScores ?? activePlayers.map((p) => ({ playerId: p.id, throws: h.par || 3 }))) || [],
       })),
     };
 
     try {
-      const res = await fetch("/api/admin/round", {
+      const res = await fetch("/api/admin/round/individual", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
