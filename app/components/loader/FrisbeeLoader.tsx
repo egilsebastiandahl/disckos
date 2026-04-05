@@ -16,14 +16,14 @@ export default function FrisbeeLoader({
   };
 
   const windPositions = [
-    { left: '10%', top: '20%', duration: 2, delay: 0 },
-    { left: '80%', top: '15%', duration: 1.8, delay: 0.2 },
-    { left: '40%', top: '70%', duration: 2.2, delay: 0.4 },
-    { left: '90%', top: '45%', duration: 1.9, delay: 0.6 },
-    { left: '25%', top: '60%', duration: 2.1, delay: 0.8 },
-    { left: '65%', top: '80%', duration: 2, delay: 1 },
-    { left: '50%', top: '30%', duration: 1.7, delay: 1.2 },
-    { left: '15%', top: '85%', duration: 2.3, delay: 1.4 },
+    { left: "10%", top: "20%", duration: 2, delay: 0 },
+    { left: "80%", top: "15%", duration: 1.8, delay: 0.2 },
+    { left: "40%", top: "70%", duration: 2.2, delay: 0.4 },
+    { left: "90%", top: "45%", duration: 1.9, delay: 0.6 },
+    { left: "25%", top: "60%", duration: 2.1, delay: 0.8 },
+    { left: "65%", top: "80%", duration: 2, delay: 1 },
+    { left: "50%", top: "30%", duration: 1.7, delay: 1.2 },
+    { left: "15%", top: "85%", duration: 2.3, delay: 1.4 },
   ];
 
   return (
@@ -55,16 +55,16 @@ export default function FrisbeeLoader({
           {[0, 60, 120, 180, 240, 300].map((rotation) => (
             <div
               key={rotation}
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[2px]"
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full"
               style={{
                 transform: `rotate(${rotation}deg)`,
               }}
             >
               <div
-                className="absolute right-0 w-1/3 h-full rounded-full bg-gradient-to-r from-transparent via-blue-400/40 to-transparent dark:via-blue-500/40"
+                className="absolute left-[65%] top-0 w-16 h-[2px] rounded-full bg-gradient-to-r from-transparent via-blue-400/40 to-transparent dark:via-blue-500/40 animate-woosh"
                 style={{
-                  animation: `woosh 1s ease-in-out infinite`,
                   animationDelay: `${rotation * 0.001}s`,
+                  transformOrigin: "left center",
                 }}
               />
             </div>
@@ -73,10 +73,9 @@ export default function FrisbeeLoader({
 
         {/* Main disc */}
         <div
-          className="absolute inset-[20%] rounded-full bg-gradient-to-br from-blue-400 to-blue-600 dark:from-blue-500 dark:to-blue-700"
+          className="absolute inset-[20%] rounded-full bg-gradient-to-br from-green-400 to-green-600 dark:from-green-500 dark:to-green-700"
           style={{
-            boxShadow:
-              "0 0 20px rgba(59, 130, 246, 0.5), inset 0 1px 3px rgba(255, 255, 255, 0.3)",
+            boxShadow: "0 0 20px rgba(59, 130, 246, 0.5), inset 0 1px 3px rgba(255, 255, 255, 0.3)",
             animation: "spin 1s linear infinite",
           }}
         >
@@ -85,9 +84,7 @@ export default function FrisbeeLoader({
         </div>
       </div>
 
-      {text && (
-        <p className="text-sm text-muted-foreground animate-pulse">{text}</p>
-      )}
+      {text && <p className="text-sm text-muted-foreground animate-pulse">{text}</p>}
 
       <style jsx>{`
         @keyframes spin {
@@ -112,6 +109,10 @@ export default function FrisbeeLoader({
             opacity: 0;
             transform: scaleX(0.5);
           }
+        }
+
+        .animate-woosh {
+          animation: woosh 1s ease-in-out infinite;
         }
 
         @keyframes wind-flow {
