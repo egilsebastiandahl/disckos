@@ -43,7 +43,7 @@ export const shotData: ShotData[] = [
     ],
   },
   {
-    category: "Vinkel",
+    category: "Type",
     items: [
       {
         title: "Hyzer",
@@ -57,20 +57,7 @@ export const shotData: ShotData[] = [
         title: "Anhyzer",
         isActive: true,
       },
-    ],
-  },
-  {
-    category: "Kastemåte",
-    items: [
-      {
-        title: "Backhand",
-        isActive: true,
-      },
-      {
-        title: "Forehand",
-        isActive: true,
-      },
-      {
+       {
         title: "Tomahawk",
         isActive: true,
       },
@@ -86,14 +73,21 @@ export const shotData: ShotData[] = [
         title: "Opp-ned",
         isActive: true,
       },
+    ],
+  },
+  {
+    category: "Kastemåte",
+    items: [
       {
-        title: "Kamerat velger",
+        title: "Backhand",
         isActive: true,
       },
       {
-        title: "Konkurrent velger",
+        title: "Forehand",
         isActive: true,
       },
+     
+      
     ],
   },
   {
@@ -117,6 +111,14 @@ export const shotData: ShotData[] = [
       },
       {
         title: "Gå for kurv, ikke legg opp",
+        isActive: true,
+      },
+      {
+        title: "Kamerat velger",
+        isActive: true,
+      },
+      {
+        title: "Konkurrent velger",
         isActive: true,
       },
     ],

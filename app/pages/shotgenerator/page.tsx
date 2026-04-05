@@ -22,7 +22,7 @@ const ShotgeneratorPage = () => {
           shotTextArray = shotTextArray.concat(getRandomShotText(type.items, 1));
 
           break;
-        case "Vinkel":
+        case "Type":
           // allowed 1 selection
           shotTextArray = shotTextArray.concat(getRandomShotText(type.items, 1));
 
@@ -35,6 +35,10 @@ const ShotgeneratorPage = () => {
         case "Ekstra":
           // allowed 2 selections
           shotTextArray = shotTextArray.concat(getRandomShotText(type.items, 2));
+          // if certain extra elements are contained, remove all other elements.
+          if (shotTextArray.includes("Kamerat velger") || shotTextArray.includes("Konkurrent velger")) {
+            shotTextArray = shotTextArray.filter((e) => e == "Kamerat velger" || e == "Konkurrent velger");
+          }
 
           break;
         default:
@@ -45,7 +49,16 @@ const ShotgeneratorPage = () => {
   };
 
   const getRandomShotText = (items: { title: string; isActive: boolean }[], allowedAmount: number = 1): string[] => {
-    return [];
+    let tempItems = items.filter((e) => e.isActive);
+    const randomShotText: string[] = [];
+
+    for (let i = 0; i < allowedAmount; i++) {
+      const randomIndex = Math.floor(Math.random() * tempItems.length);
+      randomShotText.push(tempItems[randomIndex].title);
+      tempItems = tempItems.filter((e, i) => i !== randomIndex);
+    }
+
+    return randomShotText;
   };
 
   return (
