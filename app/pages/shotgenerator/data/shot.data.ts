@@ -23,6 +23,10 @@ export const shotData: ShotData[] = [
         title: "Driver",
         isActive: true,
       },
+      {
+        title: "Fritt valg",
+        isActive: true,
+      },
     ],
   },
   {
@@ -38,6 +42,10 @@ export const shotData: ShotData[] = [
       },
       {
         title: "Understabil",
+        isActive: true,
+      },
+      {
+        title: "Fritt valg",
         isActive: true,
       },
     ],
@@ -73,6 +81,10 @@ export const shotData: ShotData[] = [
         title: "Opp-ned",
         isActive: true,
       },
+      {
+        title: "Fritt valg",
+        isActive: true,
+      },
     ],
   },
   {
@@ -86,7 +98,10 @@ export const shotData: ShotData[] = [
         title: "Forehand",
         isActive: true,
       },
-     
+     {
+        title: "Fritt valg",
+        isActive: true,
+      },
       
     ],
   },
@@ -94,11 +109,7 @@ export const shotData: ShotData[] = [
     category: "Ekstra",
     items: [
       {
-        title: "Venstre hånd",
-        isActive: true,
-      },
-      {
-        title: "Høyre hånd",
+        title: "Skeivhendt",
         isActive: true,
       },
       {
@@ -119,6 +130,31 @@ export const shotData: ShotData[] = [
       },
       {
         title: "Konkurrent velger",
+        isActive: true,
+      },
+      {
+        title: "MAX POWER",
+        isActive: true,
+      },
+      {
+        title: "Fritt valg",
+        isActive: true,
+      },
+    ],
+  },
+  {
+    category: "Lag",
+    items: [
+      {
+        title: "Kamerat velger",
+        isActive: true,
+      },
+      {
+        title: "Konkurrent velger",
+        isActive: true,
+      },
+      {
+        title: "Fritt valg",
         isActive: true,
       },
     ],
