@@ -121,11 +121,19 @@ export const shotData: ShotData[] = [
         isActive: true,
       },
       {
+        title: "Roller",
+        isActive: true,
+      },
+      {
         title: "Gå for kurv, ikke legg opp",
         isActive: true,
       },
       {
-        title: "Kamerat velger",
+        title: "Hyzer spike",
+        isActive: true,
+      },
+      {
+        title: "Flex shot",
         isActive: true,
       },
       {

@@ -104,7 +104,7 @@ export default function RouletteWheel({ category, options, selected, isSpinning,
 
       <div
         ref={wheelRef}
-        className="relative w-full h-32 overflow-hidden border-4 border-foreground rounded-lg bg-background shadow-lg"
+        className="relative w-full h-16 md:h-32 overflow-hidden border-4 border-foreground rounded-lg bg-background shadow-lg"
       >
         {/* Pointer at center */}
         <div
