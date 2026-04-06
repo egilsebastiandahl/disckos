@@ -6,6 +6,7 @@ import ShotCategory from "./components/ShotCategory";
 import RouletteWheel from "./components/RouletteWheel";
 import { useState } from "react";
 import ShotButtons from "./components/ShotButtons";
+import { ShotType } from "./types/shot-type.enum";
 
 interface ShotResult {
   [category: string]: {
@@ -17,11 +18,43 @@ interface ShotResult {
 const ShotgeneratorPage = () => {
   const [currentShot, setCurrentShot] = useState<ShotResult | null>(null);
   const [spinningCategories, setSpinningCategories] = useState<Set<string>>(new Set());
+  const [selectedMode, setSelectedMode] = useState<ShotType | null>(null);
 
-  const generateShot = () => {
+  const getVisibleCategories = () => {
+    return shotData.filter((category) => {
+      if (category.category === "Ekstra") {
+        // Ekstra only shows for Wildcard mode
+        return selectedMode === ShotType.WILDCARD;
+      }
+      if (category.category === "Lag") {
+        // Lag only shows for Team mode
+        return selectedMode === ShotType.TEAM;
+      }
+      // All other categories show for Single and Team, but not for Wildcard
+      if (selectedMode === ShotType.WILDCARD) {
+        return false;
+      }
+      return true;
+    });
+  };
+
+  const generateShot = (mode: ShotType) => {
+    setSelectedMode(mode);
     const result: ShotResult = {};
+    const visibleCategories = shotData.filter((category) => {
+      if (category.category === "Ekstra") {
+        return mode === ShotType.WILDCARD;
+      }
+      if (category.category === "Lag") {
+        return mode === ShotType.TEAM;
+      }
+      if (mode === ShotType.WILDCARD) {
+        return false;
+      }
+      return true;
+    });
 
-    shotData.forEach((type) => {
+    visibleCategories.forEach((type) => {
       const activeItems = type.items.filter((e) => e.isActive);
       let selectedNames: string[] = [];
 
@@ -30,6 +63,7 @@ const ShotgeneratorPage = () => {
         case "Stabilitet":
         case "Type":
         case "Kastemåte":
+        case "Lag":
           // allowed 1 selection
           selectedNames = getRandomShotText(type.items, 1);
           break;
@@ -53,7 +87,7 @@ const ShotgeneratorPage = () => {
 
     setCurrentShot(result);
     // Start spinning all wheels
-    setSpinningCategories(new Set(shotData.map((d) => d.category)));
+    setSpinningCategories(new Set(visibleCategories.map((d) => d.category)));
   };
 
   const handleSpinComplete = (category: string) => {
@@ -80,18 +114,13 @@ const ShotgeneratorPage = () => {
 
   return (
     <>
-      <HeaderSection
-        title="Shot-generator"
-        text="Her kan du rulle om hvilket kast du skal bruke!"
-        buttonClick={generateShot}
-        buttonText="Generer skudd"
-      />
+      <HeaderSection title="Shot-generator" text="Her kan du rulle om hvilket kast du skal bruke!" />
       <main className="flex flex-col max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 items-center w-full">
-        <ShotButtons style={{ marginBottom: 36 }} onPress={() => {}} />
+        <ShotButtons style={{ marginBottom: 36 }} onPress={generateShot} />
         {currentShot && (
           <section className="w-full mb-12">
             <div className="flex flex-col gap-8 w-full">
-              {shotData.map((shotType) => (
+              {getVisibleCategories().map((shotType) => (
                 <RouletteWheel
                   key={shotType.category}
                   category={shotType.category}
