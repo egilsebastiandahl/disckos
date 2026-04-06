@@ -3,49 +3,65 @@
 import HeaderSection from "@/app/components/sections/HeaderSection";
 import { shotData } from "./data/shot.data";
 import ShotCategory from "./components/ShotCategory";
-import Button from "@/app/components/button/Button";
+import RouletteWheel from "./components/RouletteWheel";
 import { useState } from "react";
 
+interface ShotResult {
+  [category: string]: {
+    options: string[];
+    selected: string;
+  };
+}
+
 const ShotgeneratorPage = () => {
-  const [currentShot, setCurrentShot] = useState<string>("Trykk knappen");
+  const [currentShot, setCurrentShot] = useState<ShotResult | null>(null);
+  const [spinningCategories, setSpinningCategories] = useState<Set<string>>(new Set());
 
   const generateShot = () => {
-    let shotTextArray: string[] = [];
+    const result: ShotResult = {};
+
     shotData.forEach((type) => {
+      const activeItems = type.items.filter((e) => e.isActive);
+      let selectedNames: string[] = [];
+
       switch (type.category) {
         case "Disctype":
-          // allowed 1 selection
-          shotTextArray = shotTextArray.concat(getRandomShotText(type.items, 1));
-          break;
         case "Stabilitet":
-          // allowed 1 selection
-          shotTextArray = shotTextArray.concat(getRandomShotText(type.items, 1));
-
-          break;
         case "Type":
-          // allowed 1 selection
-          shotTextArray = shotTextArray.concat(getRandomShotText(type.items, 1));
-
-          break;
         case "Kastemåte":
           // allowed 1 selection
-          shotTextArray = shotTextArray.concat(getRandomShotText(type.items, 1));
-
+          selectedNames = getRandomShotText(type.items, 1);
           break;
         case "Ekstra":
           // allowed 2 selections
-          shotTextArray = shotTextArray.concat(getRandomShotText(type.items, 2));
+          selectedNames = getRandomShotText(type.items, 2);
           // if certain extra elements are contained, remove all other elements.
-          if (shotTextArray.includes("Kamerat velger") || shotTextArray.includes("Konkurrent velger")) {
-            shotTextArray = shotTextArray.filter((e) => e == "Kamerat velger" || e == "Konkurrent velger");
+          if (selectedNames.includes("Kamerat velger") || selectedNames.includes("Konkurrent velger")) {
+            selectedNames = selectedNames.filter((e) => e == "Kamerat velger" || e == "Konkurrent velger");
           }
-
           break;
         default:
-          shotTextArray = ["Ugyldig konfigurasjon"];
+          selectedNames = ["Ugyldig konfigurasjon"];
       }
+
+      result[type.category] = {
+        options: activeItems.map((item) => item.title),
+        selected: selectedNames.join(", "),
+      };
     });
-    setCurrentShot(shotTextArray.join(", "));
+
+    setCurrentShot(result);
+    // Start spinning all wheels
+    setSpinningCategories(new Set(shotData.map((d) => d.category)));
+  };
+
+  const handleSpinComplete = (category: string) => {
+    // Remove from spinning categories after animation completes
+    setSpinningCategories((prev) => {
+      const updated = new Set(prev);
+      updated.delete(category);
+      return updated;
+    });
   };
 
   const getRandomShotText = (items: { title: string; isActive: boolean }[], allowedAmount: number = 1): string[] => {
@@ -69,10 +85,23 @@ const ShotgeneratorPage = () => {
         buttonClick={generateShot}
         buttonText="Generer skudd"
       />
-      <main className="flex flex-col max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 items-center">
-        <section>
-          <p className="font-bold text-foreground">{currentShot}</p>
-        </section>
+      <main className="flex flex-col max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 items-center w-full">
+        {currentShot && (
+          <section className="w-full mb-12">
+            <div className="flex flex-col gap-8 w-full">
+              {shotData.map((shotType) => (
+                <RouletteWheel
+                  key={shotType.category}
+                  category={shotType.category}
+                  options={currentShot[shotType.category]?.options || []}
+                  selected={currentShot[shotType.category]?.selected || ""}
+                  isSpinning={spinningCategories.has(shotType.category)}
+                  onSpinComplete={() => handleSpinComplete(shotType.category)}
+                />
+              ))}
+            </div>
+          </section>
+        )}
         <section className="flex gap-8 flex-wrap">
           {/* <h2 className="font-bold text-xl">Innstillinger</h2> */}
           {shotData.map((shot) => {
