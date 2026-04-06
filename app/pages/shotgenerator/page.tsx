@@ -5,6 +5,7 @@ import { shotData } from "./data/shot.data";
 import ShotCategory from "./components/ShotCategory";
 import RouletteWheel from "./components/RouletteWheel";
 import { useState } from "react";
+import ShotButtons from "./components/ShotButtons";
 
 interface ShotResult {
   [category: string]: {
@@ -86,6 +87,7 @@ const ShotgeneratorPage = () => {
         buttonText="Generer skudd"
       />
       <main className="flex flex-col max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 items-center w-full">
+        <ShotButtons style={{ marginBottom: 36 }} onPress={() => {}} />
         {currentShot && (
           <section className="w-full mb-12">
             <div className="flex flex-col gap-8 w-full">
@@ -102,12 +104,11 @@ const ShotgeneratorPage = () => {
             </div>
           </section>
         )}
-        <section className="flex gap-8 flex-wrap">
-          {/* <h2 className="font-bold text-xl">Innstillinger</h2> */}
+        {/* <section className="flex gap-8 flex-wrap">
           {shotData.map((shot) => {
             return <ShotCategory key={shot.category} shotData={shot} />;
           })}
-        </section>
+        </section> */}
       </main>
     </>
   );

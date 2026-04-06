@@ -100,7 +100,7 @@ export default function RouletteWheel({ category, options, selected, isSpinning,
 
   return (
     <div className="flex flex-col items-center gap-6 w-full">
-      <h3 className="font-semibold text-lg">{category}</h3>
+      {/* <h3 className="font-semibold text-lg">{category}</h3> */}
 
       <div
         ref={wheelRef}
@@ -150,9 +150,9 @@ export default function RouletteWheel({ category, options, selected, isSpinning,
       </div>
 
       {/* Display selected value below */}
-      <div className="text-center">
+      {/* <div className="text-center">
         <p className="font-bold text-primary text-lg">{selected}</p>
-      </div>
+      </div> */}
     </div>
   );
 }
