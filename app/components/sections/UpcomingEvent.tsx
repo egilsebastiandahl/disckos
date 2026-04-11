@@ -32,7 +32,7 @@ export default function UpcomingEvent() {
   }
 
   return (
-    <Link href={`${nextEventLink}`} className="w-full cursor-pointer">
+    <Link href={`${nextEventLink}`} className="cursor-pointer">
       <AgendaItem event={nextEvent} isNextEvent={true} />
     </Link>
   );
