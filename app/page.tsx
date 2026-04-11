@@ -8,7 +8,7 @@ export default function Home() {
         <div className="flex w-full justify-center items-center px-4 md:px-0">
           <HeaderSection title="Velkommen til Disckos" text="Her kan du følge med på hva som skjer i Disckos." />
         </div>
-        <section className="flex justify-center items-center w-full p-4">
+        <section className="flex justify-center items-center w-full">
           <UpcomingEvent />
         </section>
 
