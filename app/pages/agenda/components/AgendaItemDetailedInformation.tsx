@@ -9,12 +9,20 @@ interface AgendaItemDetailedInformationProps {
 }
 
 export default function AgendaItemDetailedInformation({ event }: AgendaItemDetailedInformationProps) {
+  const handleLocationClick = () => {
+    const mapsUrl = `https://maps.google.com/?q=${event.location.lat},${event.location.lon}`;
+    window.open(mapsUrl, "_blank");
+  };
+
   return (
     <div className="flex justify-around">
-      <div className="flex flex-col items-center">
+      <button
+        onClick={handleLocationClick}
+        className="flex flex-col items-center bg-none border-none cursor-pointer text-inherit font-inherit hover:underline"
+      >
         <PlaceIcon />
         <span>{event.location.name}</span>
-      </div>
+      </button>
 
       <div className="flex flex-col items-center">
         {event.teamEvent ? <PeopleIcon /> : <PersonIcon />}
