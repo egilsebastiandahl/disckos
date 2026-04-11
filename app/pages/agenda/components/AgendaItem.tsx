@@ -18,17 +18,13 @@ export default function AgendaItem({ event, isNextEvent }: AgendaItemProps) {
   return (
     <div
       className={`border border-foreground shadow p-4 mb-4 rounded-lg w-full md:min-w-sm md:max-w-xl ${isPastEvent ? "opacity-50" : ""} ${isNextEvent ? "bg-foreground text-background" : ""}`}
-    // className={`border border-foreground p-4 mb-4 rounded-lg max-w-sm ${orientation === "left" ? "ml-auto" : "mr-auto"} ${isPastEvent ? "opacity-50" : ""} ${isNextEvent ? "bg-foreground text-background" : ""}`}
+      // className={`border border-foreground p-4 mb-4 rounded-lg max-w-sm ${orientation === "left" ? "ml-auto" : "mr-auto"} ${isPastEvent ? "opacity-50" : ""} ${isNextEvent ? "bg-foreground text-background" : ""}`}
     >
       <h2 className="text-xl font-bold">{event.title}</h2>
-      <p
-        className={`text-lg  ${isNextEvent ? "text-background" : "text-foreground"}`}
-      >
+      <p className={`text-lg  ${isNextEvent ? "text-background" : "text-foreground"}`}>
         {dateStringToDateTimeFormatter(event.date)}
       </p>
-      <Separator
-        className={`mb-4 mt-2  ${isNextEvent ? "bg-background" : "bg-foreground"}`}
-      />
+      <Separator className={`mb-4 mt-2  ${isNextEvent ? "bg-background" : "bg-foreground"}`} />
       <p className="mb-4">{event.description}</p>
       <AgendaItemDetailedInformation event={event} />
       {event?.placements && (
