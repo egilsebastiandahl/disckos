@@ -12,7 +12,8 @@ export interface Event {
   teamEvent: boolean;
   rounds: number;
   placements?: Placement[];
-  published?: boolean
+  published?: boolean;
+  major: boolean;
 }
 
 /**
