@@ -5,9 +5,9 @@ import HeaderSection from "@/app/components/sections/HeaderSection";
 import { Player } from "@/app/types/player.model";
 import { Gender } from "@/app/types/gender.enum";
 import useFetch from "@/app/hooks/useFetch";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import styles from "./teamgenerator.module.css";
+import Button from "@/app/components/button/Button";
 
 export default function TeamGeneratorPage() {
   const { data: players = [] } = useFetch<Player[]>("/api/player");
@@ -58,7 +58,10 @@ export default function TeamGeneratorPage() {
 
   return (
     <>
-      <HeaderSection title="Lagbygger" text="Her er lagbyggeren for å velge lag!" />
+      <HeaderSection
+        title="Lagbygger"
+        text="Her er lagbyggeren for å velge lag! Denne er vibe-codet, så kan være noen problemer 😅"
+      />
       <main className={styles.container}>
         {/* Player Selection */}
         <section className={styles.modeContent}>
@@ -91,9 +94,7 @@ export default function TeamGeneratorPage() {
                 onChange={(e) => setCustomPlayerInput(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && addCustomPlayer()}
               />
-              <Button onClick={addCustomPlayer} className={styles.actionButton}>
-                Legg til spiller
-              </Button>
+              {customPlayerInput.trim() !== "" && <Button onClick={addCustomPlayer}>Legg til spiller</Button>}
             </div>
 
             {/* Display Custom Players */}
@@ -129,21 +130,22 @@ export default function TeamGeneratorPage() {
         {/* Randomizer - appears directly when 2+ players selected */}
         {participatingPlayers.length >= 2 && teams.length === 0 && (
           <section className={styles.modeContent}>
-            <label>
-              Antall lag: &nbsp;
-              <input
-                type="number"
-                min="2"
-                max="10"
-                value={numberOfTeams}
-                onChange={(e) => setNumberOfTeams(parseInt(e.target.value))}
-                disabled={teams.length > 0}
-              />
-            </label>
-
-            <Button onClick={generateTeamsRandomly} className={styles.actionButton}>
-              Generer tilfeldige lag
-            </Button>
+            <div className="w-40 flex items-center justify-between">
+              Antall lag: {numberOfTeams} &nbsp;
+              <div className="flex gap-2">
+                <button className="border px-2 border-foreground" onClick={() => setNumberOfTeams((prev) => prev + 1)}>
+                  +
+                </button>
+                <button
+                  className="border px-2 border-foreground"
+                  disabled={numberOfTeams == 1}
+                  onClick={() => setNumberOfTeams((prev) => (prev > 2 ? prev - 1 : 1))}
+                >
+                  -
+                </button>
+              </div>
+            </div>
+            <Button onClick={generateTeamsRandomly}>Generer tilfeldige lag</Button>
           </section>
         )}
 
@@ -165,10 +167,8 @@ export default function TeamGeneratorPage() {
             </div>
 
             <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-              <Button onClick={generateTeamsRandomly} className={styles.actionButton}>
-                Scramble lag
-              </Button>
-              <Button onClick={resetAll} variant="outline">
+              <Button onClick={generateTeamsRandomly}>Scramble lag</Button>
+              <Button variant="outline" onClick={resetAll}>
                 Start på nytt
               </Button>
             </div>

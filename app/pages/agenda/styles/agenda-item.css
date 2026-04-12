@@ -1,7 +1,27 @@
+/* `agenda-item border border-foreground shadow p-4 mb-4 rounded-lg w-full min-w-xs sm:min-w-md md:max-w-xl ${isPastEvent ? "opacity-50" : ""} ${isNextEvent ? "bg-foreground text-background" : ""} ${majorEventClass}` */
 .agenda-item{
-    border: 1px solid #ccc;
-    padding: 16px;
-    margin-bottom: 12px;
-    border-radius: 8px;
-    background-color: #f9f9f9;
+    border: 1px solid var(--foreground);
+    box-shadow: var(--shadow);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+}
+
+.agenda-item.past {
+    opacity: 0.5;
+}
+.agenda-item.next {
+    background-color: var(--foreground);
+    color: var(--background);
+}
+
+.agenda-item.major {
+    border-color: gold;
+    box-shadow: 0 0 10px gold;
+}
+
+.agenda-item.major > h2 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: gold;
 }
