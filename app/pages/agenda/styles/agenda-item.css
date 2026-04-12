@@ -16,12 +16,24 @@
 }
 
 .agenda-item.major {
-    border-color: gold;
-    box-shadow: 0 0 10px gold;
+    background-color: var(--color-amber-300);
+    color: var(--background);
+    border: none;
 }
 
 .agenda-item.major > h2 {
     font-size: 1.25rem;
     font-weight: bold;
-    color: gold;
+}
+
+.dark .agenda-item.major > p {
+    color: var(--background);
+}
+
+.light .agenda-item.major {
+    background-color: var(--color-amber-300);
+    color: var(--foreground);
+}
+.light .agenda-item.major > p {
+    color: var(--foreground);
 }
