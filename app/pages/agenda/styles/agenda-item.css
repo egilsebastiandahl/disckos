@@ -8,9 +8,14 @@
 }
 
 .agenda-item.past {
-    opacity: 0.5;
+    opacity: 0.4;
+}
+
+.agenda-item{
+    opacity: 0.6;
 }
 .agenda-item.next {
+    opacity: 1;
     background-color: var(--foreground);
     color: var(--background);
 }
@@ -28,6 +33,11 @@
 
 .dark .agenda-item.major > p {
     color: var(--background);
+}
+
+.dark .major-separator {
+    background-color: var(--background);
+
 }
 
 .light .agenda-item.major {

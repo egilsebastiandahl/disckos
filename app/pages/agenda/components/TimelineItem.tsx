@@ -4,6 +4,7 @@ import CircleIcon from "@mui/icons-material/Circle";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { useMemo } from "react";
+import "../styles/timeline-item.css";
 
 interface TimelineItemProps {
   event: Event;
@@ -21,7 +22,11 @@ export default function TimelineItem({ event, isNextEvent }: TimelineItemProps) 
   // If major, show crown icon instead.
   const icon = useMemo(() => {
     if (event.major) {
-      return <EmojiEventsIcon className="text-amber-300" />;
+      return (
+        <EmojiEventsIcon
+          className={`${isPastEvent ? "opacity-40" : ""} ${isNextEvent ? "text-amber-300" : "opacity-60"} text-amber-300 major-icon`}
+        />
+      );
     }
     if (isPastEvent) {
       return <CheckCircleOutlineIcon className="text-foreground" />;
@@ -33,7 +38,7 @@ export default function TimelineItem({ event, isNextEvent }: TimelineItemProps) 
 
   return (
     <div
-      className={`hidden md:flex border-r-4 border-foreground mr-4 ml-4 w-24 items-center flex-col ${isPastEvent ? "opacity-50" : ""}`}
+      className={`hidden md:flex border-r-4 border-foreground mr-4 ml-4 w-24 items-center flex-col ${isPastEvent ? "opacity-40" : ""}`}
     >
       <div className="text-xs md:text-xl">{eventDateFormatted}</div>
       {icon}
