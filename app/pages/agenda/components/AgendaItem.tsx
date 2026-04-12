@@ -25,7 +25,9 @@ export default function AgendaItem({ event, isNextEvent }: AgendaItemProps) {
       <p className={`text-lg  ${isNextEvent ? "text-background" : "text-foreground"}`}>
         {dateStringToDateTimeFormatter(event.date)}
       </p>
-      <Separator className={`mb-4 mt-2  ${isNextEvent ? "bg-background" : "bg-foreground"}`} />
+      <Separator
+        className={`mb-4 mt-2 bg-background  ${isNextEvent ? "bg-background" : "bg-foreground"} ${event.major ? "major-separator" : ""} `}
+      />
       <p className="mb-4">{event.description}</p>
       <AgendaItemDetailedInformation event={event} />
       {event?.placements && (
