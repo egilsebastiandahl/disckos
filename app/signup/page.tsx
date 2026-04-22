@@ -1,41 +1,61 @@
-"use client"
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { supabase } from '../../lib/supabaseClient'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "../../lib/supabaseClient";
 
 export default function SignupPage() {
-  const router = useRouter()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirm, setConfirm] = useState('')
-  const [message, setMessage] = useState('')
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleSignup(e: any) {
-    e.preventDefault()
-    setMessage('')
+    e.preventDefault();
+    setMessage("");
     if (password !== confirm) {
-      setMessage('Passwords do not match')
-      return
+      setMessage("Passwords do not match");
+      return;
     }
-    setLoading(true)
+    setLoading(true);
     try {
-      const res = await supabase.auth.signUp({ email, password })
-      setLoading(false)
+      const res = await supabase.auth.signUp({ email, password });
+      setLoading(false);
       if (res.error) {
-        setMessage(res.error.message)
-        return
+        setMessage(res.error.message);
+        return;
       }
       // If session present, user is signed in immediately
       if (res.data?.session) {
-        router.push('/')
-        return
+        // ensure backend profile exists and redirect to /profile if incomplete
+        try {
+          const session = res.data.session;
+          const token = session?.access_token;
+          const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8080";
+          if (token) {
+            const profileRes = await fetch(`${backendUrl}/api/profile`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            if (profileRes.ok) {
+              const profile = await profileRes.json();
+              if (!profile.username || !profile.displayName) {
+                router.push("/profile");
+                return;
+              }
+            }
+          }
+        } catch (e) {
+          // ignore
+        }
+        router.push("/");
+        return;
       }
-      setMessage('Signup successful — check your email for confirmation (if enabled)')
+      setMessage("Signup successful — check your email for confirmation (if enabled)");
     } catch (err: any) {
-      setLoading(false)
-      setMessage(err?.message ?? 'Signup failed')
+      setLoading(false);
+      setMessage(err?.message ?? "Signup failed");
     }
   }
 
@@ -89,18 +109,19 @@ export default function SignupPage() {
             className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-60"
             disabled={loading}
           >
-            {loading ? 'Creating account...' : 'Create account'}
+            {loading ? "Creating account..." : "Create account"}
           </button>
         </form>
 
-        {message && (
-          <div className="mt-4 text-center text-sm text-gray-700">{message}</div>
-        )}
+        {message && <div className="mt-4 text-center text-sm text-gray-700">{message}</div>}
 
         <div className="mt-6 text-center text-sm text-gray-600">
-          Already have an account? <a href="/login" className="text-indigo-600 hover:underline">Sign in</a>
+          Already have an account?{" "}
+          <a href="/login" className="text-indigo-600 hover:underline">
+            Sign in
+          </a>
         </div>
       </div>
     </div>
-  )
+  );
 }

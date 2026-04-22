@@ -4,6 +4,7 @@ import NavigationBar from "./NavigationBar";
 import ThemeSwitch from "@/app/features/theme_switch/ThemeSwitch";
 import NavigationHeaderMobile from "./NavigationHeaderMobile";
 import NewLogo from "../logo/NewLogo";
+import ProfileMenu from "./ProfileMenu";
 
 export default function NavigationHeader() {
   return (
