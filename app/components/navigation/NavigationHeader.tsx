@@ -19,7 +19,10 @@ export default function NavigationHeader() {
           <NewLogo />
         </Link>
         <NavigationBar />
-        <ThemeSwitch />
+        <div className="flex items-center gap-2">
+          <ThemeSwitch />
+          <ProfileMenu />
+        </div>
       </div>
     </>
   );
