@@ -12,26 +12,38 @@ export default function ProfileMenu() {
   const router = useRouter();
   const ref = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    const s = async () => {
-      const { data } = await supabase.auth.getSession();
-      const sess = data?.session;
-      setSession(sess);
-      if (sess) {
-        const token = sess.access_token;
-        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8080";
-        try {
-          const res = await fetch(`${backendUrl}/api/profile`, { headers: { Authorization: `Bearer ${token}` } });
-          if (res.ok) {
-            const json = await res.json();
-            setProfile(json);
-          }
-        } catch (e) {
-          console.warn("Failed fetching profile", e);
+  const fetchProfile = async () => {
+    const { data } = await supabase.auth.getSession();
+    const sess = data?.session;
+    setSession(sess);
+    if (sess) {
+      const token = sess.access_token;
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8080";
+      try {
+        const res = await fetch(`${backendUrl}/api/profile`, { headers: { Authorization: `Bearer ${token}` } });
+        if (res.ok) {
+          const json = await res.json();
+          setProfile(json);
         }
+      } catch (e) {
+        console.warn("Failed fetching profile", e);
       }
-    };
-    s();
+    }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession);
+      if (newSession) {
+        fetchProfile();
+      } else {
+        setProfile(null);
+      }
+    });
+    return () => subscription.unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -56,10 +68,27 @@ export default function ProfileMenu() {
         .toUpperCase()
     : (session?.user?.email?.[0] ?? "U").toUpperCase();
 
+  if (!session) {
+    return (
+      <div className="ml-4">
+        <Link
+          href="/login"
+          className="px-4 py-2 rounded-md border border-foreground bg-transparent text-foreground hover:bg-foreground hover:text-background transition text-sm font-medium"
+        >
+          Sign in
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div className="relative ml-4" ref={ref}>
       <button
-        onClick={() => setOpen(!open)}
+        onClick={() => {
+          const willOpen = !open;
+          setOpen(willOpen);
+          if (willOpen) fetchProfile();
+        }}
         className="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-semibold"
       >
         {profile?.avatarUrl ? (

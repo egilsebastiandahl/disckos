@@ -64,6 +64,11 @@ export default function ProfilePage() {
       setMessage(text || "Failed to save");
       return;
     }
+    const saved = await res.json();
+    setProfile(saved);
+    setUsername(saved.username ?? "");
+    setDisplayName(saved.displayName ?? "");
+    setBio(saved.bio ?? "");
     setMessage("Profile saved");
   }
 
