@@ -51,16 +51,16 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-8 px-4">
-      <div className="w-full max-w-md bg-white border border-gray-200 rounded-lg shadow-md p-6">
-        <h2 className="text-center text-2xl font-semibold text-gray-800 mb-4">Sign in to Disckos</h2>
-        <p className="text-center text-sm text-gray-500 mb-6">Enter your email and password to continue.</p>
+    <div className="min-h-screen flex items-center justify-center py-8 px-4">
+      <div className="w-full max-w-md bg-foreground border rounded-lg shadow-md p-6">
+        <h2 className="text-center text-2xl font-semibold text-background mb-4">Logg inn til Disckos</h2>
+        <p className="text-center text-sm text-background mb-6">Skriv inn e-post og passord for å fortsette.</p>
 
         <form className="space-y-4" onSubmit={handleLogin}>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-background mb-1">E-post</label>
             <input
-              className="block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="block w-full px-3 py-2 border border-background rounded-md placeholder-background focus:outline-none focus:ring-2"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -70,9 +70,9 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label className="block text-sm font-medium text-background mb-1">Passord</label>
             <input
-              className="block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="block w-full px-3 py-2 border border-background rounded-md placeholder-background focus:outline-none focus:ring-2"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -83,19 +83,19 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-60"
+            className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-background text-foreground border rounded-md hover:bg-foreground hover:border-background hover:text-background disabled:opacity-60"
             disabled={loading}
           >
-            {loading ? "Signing in..." : "Sign in"}
+            {loading ? "Logger inn…" : "Logg inn"}
           </button>
         </form>
 
         {message && <div className="mt-4 text-center text-sm text-red-600">{message}</div>}
 
-        <div className="mt-6 text-center text-sm text-gray-600">
-          Don't have an account?{" "}
-          <a href="/signup" className="text-indigo-600 hover:underline">
-            Sign up
+        <div className="mt-6 text-center text-sm text-background">
+          Har du ikke en konto?{" "}
+          <a href="/signup" className="text-blue-500 underline">
+            Registrer deg
           </a>
         </div>
       </div>
