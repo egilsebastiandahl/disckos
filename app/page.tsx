@@ -20,7 +20,7 @@ export default function Home() {
           <p className="max-w-xs text-center">
             Alle dere som leser dette kan{" "}
             <Link href="/login" className="text-foreground underline">
-              logge inn
+              logge inn/signe up
             </Link>{" "}
             for å få tilgang til flere funksjoner som kommer etterhvert. Vi kommer til å legge ut mer nøyaktig
             informasjon om eventene underveis.
