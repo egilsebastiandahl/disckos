@@ -23,7 +23,7 @@ export default function AgendaPage() {
         buttonText="Neste event"
         buttonClick={onGoToNextEventClick}
       />
-      <main className="flex max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 justify-center">
+      <main className="flex max-w-7xl mx-auto sm:px-6 lg:px-8 justify-center">
         {isLoading && <FrisbeeLoader text="Henter eventer..." size="lg"></FrisbeeLoader>}
         <AgendaList events={events ?? []} />
       </main>

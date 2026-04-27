@@ -73,9 +73,9 @@ export default function ProfileMenu() {
       <div className="ml-4">
         <Link
           href="/login"
-          className="px-4 py-2 rounded-md border border-foreground bg-transparent text-foreground hover:bg-foreground hover:text-background transition text-sm font-medium"
+          className="px-4 py-2 rounded-md border hover:border-foreground bg-foreground text-background hover:bg-background hover:text-foreground transition text-sm font-medium"
         >
-          Sign in
+          Logg inn
         </Link>
       </div>
     );
@@ -105,7 +105,7 @@ export default function ProfileMenu() {
           </div>
           <div className="border-t" />
           <Link href="/pages/profile" className="block px-3 py-2 text-sm hover:bg-gray-100">
-            Your profile
+            Din profil
           </Link>
           {profile?.isAdmin && (
             <Link href="/admin" className="block px-3 py-2 text-sm hover:bg-gray-100">
@@ -114,11 +114,11 @@ export default function ProfileMenu() {
           )}
           {(!profile?.username || !profile?.displayName) && (
             <Link href="/pages/profile" className="block px-3 py-2 text-sm text-indigo-600 hover:bg-gray-100">
-              Complete profile
+              Fullfør profil
             </Link>
           )}
           <button onClick={handleSignOut} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100">
-            Sign out
+            Logg ut
           </button>
         </div>
       )}

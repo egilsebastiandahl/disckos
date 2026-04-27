@@ -16,7 +16,7 @@ export default function SignupPage() {
     e.preventDefault();
     setMessage("");
     if (password !== confirm) {
-      setMessage("Passwords do not match");
+      setMessage("Passordene stemmer ikke overens");
       return;
     }
     setLoading(true);
@@ -52,24 +52,24 @@ export default function SignupPage() {
         router.push("/");
         return;
       }
-      setMessage("Signup successful — check your email for confirmation (if enabled)");
+      setMessage("Registrering vellykket — sjekk e-posten din for bekreftelse (hvis aktivert)");
     } catch (err: any) {
       setLoading(false);
-      setMessage(err?.message ?? "Signup failed");
+      setMessage(err?.message ?? "Registrering mislyktes");
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-8 px-4">
-      <div className="w-full max-w-md bg-white border border-gray-200 rounded-lg shadow-md p-6">
-        <h2 className="text-center text-2xl font-semibold text-gray-800 mb-2">Create an account</h2>
-        <p className="text-center text-sm text-gray-500 mb-6">Sign up with your email address.</p>
+    <div className="min-h-screen flex items-center justify-center py-8 px-4">
+      <div className="w-full max-w-md bg-foreground border text-background rounded-lg shadow-md p-6">
+        <h2 className="text-center text-2xl font-semibold mb-2">Lag en konto</h2>
+        <p className="text-center text-sm mb-6">Registrer deg med din e-postadresse.</p>
 
         <form className="space-y-4" onSubmit={handleSignup}>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium mb-1">E-post</label>
             <input
-              className="block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="block w-full px-3 py-2 border rounded-md border-background placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -79,9 +79,9 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label className="block text-sm font-medium mb-1">Passord</label>
             <input
-              className="block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="block w-full px-3 py-2 border rounded-md border-background placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -92,9 +92,9 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Confirm password</label>
+            <label className="block text-sm font-medium mb-1">Bekreft passord</label>
             <input
-              className="block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="block w-full px-3 py-2 border rounded-md border-background placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               type="password"
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
@@ -109,16 +109,16 @@ export default function SignupPage() {
             className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-60"
             disabled={loading}
           >
-            {loading ? "Creating account..." : "Create account"}
+            {loading ? "Oppretter konto..." : "Opprett konto"}
           </button>
         </form>
 
-        {message && <div className="mt-4 text-center text-sm text-gray-700">{message}</div>}
+        {message && <div className="mt-4 text-center text-sm">{message}</div>}
 
-        <div className="mt-6 text-center text-sm text-gray-600">
-          Already have an account?{" "}
+        <div className="mt-6 text-center text-sm">
+          Har du allerede en konto?{" "}
           <a href="/login" className="text-indigo-600 hover:underline">
-            Sign in
+            Logg inn
           </a>
         </div>
       </div>

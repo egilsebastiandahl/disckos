@@ -18,7 +18,7 @@ export default function AgendaItem({ event, isNextEvent }: AgendaItemProps) {
 
   return (
     <div
-      className={`agenda-item min-w-xs sm:min-w-md md:max-w-xl ${isPastEvent ? "past" : ""} ${isNextEvent ? "next" : ""} ${majorEventClass}`}
+      className={`agenda-item min-w-[300px] sm:min-w-md md:max-w-xl ${isPastEvent ? "past" : ""} ${isNextEvent ? "next" : ""} ${majorEventClass}`}
       // className={`border border-foreground shadow p-4 mb-4 rounded-lg w-full min-w-xs sm:min-w-md md:max-w-xl ${isPastEvent ? "opacity-50" : ""} ${isNextEvent ? "bg-foreground text-background" : ""} ${majorEventClass}`}
     >
       <h2 className="text-xl font-bold">{event.title}</h2>
