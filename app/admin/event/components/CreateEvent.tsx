@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
-import { clientPost } from "@/lib/clientApi";
+import { adminPost } from "@/lib/adminClient";
 import { locationApi } from "@/app/api/admin/location/locationApi";
 import { Location } from "@/app/types/location.model";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 
-export default function CreateEvent() {
+interface CreateEventProps {
+  onSuccess?: () => void;
+}
+
+export default function CreateEvent({ onSuccess }: CreateEventProps) {
   const [eTitle, setETitle] = useState("");
   const [eDate, setEDate] = useState("");
   const [selectedLocationId, setSelectedLocationId] = useState("");
@@ -30,7 +33,7 @@ export default function CreateEvent() {
     setLoadingEvent(true);
     setEventMsg(null);
     try {
-      const res = await clientPost(`/api/admin/event`, {
+      const res = await adminPost(`/api/admin/event`, {
         title: eTitle,
         date: new Date(eDate).toISOString(),
         locationId: selectedLocationId,
@@ -49,6 +52,7 @@ export default function CreateEvent() {
       setETeamEvent(false);
       setEPublished(false);
       setEMajor(false);
+      onSuccess?.();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setEventMsg(`Error: ${err.message || String(err)}`);
@@ -82,21 +86,21 @@ export default function CreateEvent() {
             />
           </div>
           <div>
-            <label className="block text-sm">Location</label>
-            <Select value={selectedLocationId} onValueChange={(value) => setSelectedLocationId(value)}>
-              <SelectTrigger className="w-full border px-2 py-1">
-                {selectedLocationId
-                  ? locations.find((loc) => loc.id === selectedLocationId)?.name || "Velg lokasjon"
-                  : "Velg lokasjon"}
-              </SelectTrigger>
-              <SelectContent>
-                {locations.map((loc) => (
-                  <SelectItem key={loc.id} value={loc.id}>
-                    {loc.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <label className="block text-sm">Lokasjon</label>
+            <select
+              className="w-full border px-2 py-1 rounded bg-transparent"
+              value={selectedLocationId}
+              onChange={(e) => setSelectedLocationId(e.target.value)}
+            >
+              <option value="" disabled>
+                Velg lokasjon
+              </option>
+              {locations.map((loc) => (
+                <option key={loc.id} value={loc.id}>
+                  {loc.name}
+                </option>
+              ))}
+            </select>
           </div>
           <div>
             <label className="block text-sm">Description</label>

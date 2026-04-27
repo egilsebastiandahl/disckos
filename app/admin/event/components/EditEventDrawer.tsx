@@ -1,24 +1,24 @@
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
-import CreateEvent from "./CreateEvent";
+import { Event } from "@/app/types/event.model";
+import UpdateEvent from "./UpdateEvent";
 
-interface EventDrawerProps {
+interface EditEventDrawerProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
+  event: Event;
   onRefresh?: () => void;
 }
 
-export default function EventDrawer({ isOpen, setIsOpen, onRefresh }: EventDrawerProps) {
+export default function EditEventDrawer({ isOpen, setIsOpen, event, onRefresh }: EditEventDrawerProps) {
   return (
     <Drawer direction="bottom" onOpenChange={setIsOpen} open={isOpen} modal={false}>
-      {/* <DrawerTrigger>
-                <PlusIcon />
-            </DrawerTrigger> */}
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Lag nytt event</DrawerTitle>
-          <DrawerDescription>Skriv inn detaljer for det nye eventet</DrawerDescription>
+          <DrawerTitle>Rediger event</DrawerTitle>
+          <DrawerDescription>Endre detaljer for &quot;{event.title}&quot;</DrawerDescription>
         </DrawerHeader>
-        <CreateEvent
+        <UpdateEvent
+          event={event}
           onSuccess={() => {
             setIsOpen(false);
             onRefresh?.();

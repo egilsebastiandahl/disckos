@@ -10,9 +10,10 @@ import { dateStringToDateTimeFormatter } from "@/app/utils/dateFormatters";
 
 interface UnpublishedEventsTableProps {
   events: Event[] | undefined;
+  onRefresh?: () => void;
 }
 
-export default function UnpublishedEventsTable({ events }: UnpublishedEventsTableProps) {
+export default function UnpublishedEventsTable({ events, onRefresh }: UnpublishedEventsTableProps) {
   const handleCopy = async (event: Event) => {
     const idStr = String(event.id);
     try {
@@ -62,7 +63,7 @@ export default function UnpublishedEventsTable({ events }: UnpublishedEventsTabl
             <p key={event.title + "- title"}>{event.title}</p>,
             <p key={event.location + "- location"}>{event.location.name}</p>,
             <p key={event.date + "- date"}>{dateStringToDateTimeFormatter(event.date)}</p>,
-            <EventTableActions key={idStr + "- actions"} event={event} />,
+            <EventTableActions key={idStr + "- actions"} event={event} onRefresh={onRefresh} />,
           ],
         };
         return row;

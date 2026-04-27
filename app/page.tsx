@@ -1,15 +1,29 @@
+import Link from "next/link";
 import HeaderSection from "./components/sections/HeaderSection";
 import UpcomingEvent from "./components/sections/UpcomingEvent";
+import TextImage from "./components/sections/TextImage";
 
 export default function Home() {
   return (
-    <div className="flex justify-center font-sans">
-      <main className="flex w-full flex-col items-center justify-between pt-32 sm:items-start gap-4 md:gap-8">
+    <div className="flex justify-center font-sans p-8 md:p-20">
+      <main className="flex w-full flex-col items-center justify-between pt-32 sm:items-start gap-8 md:gap-24 ">
         <div className="flex w-full justify-center items-center px-4 md:px-0">
-          <HeaderSection title="Velkommen til Disckos" text="Her kan du følge med på hva som skjer i Disckos." />
+          <HeaderSection
+            title="Velkommen til Disckos"
+            text="Her kan du følge med på hva som skjer i Disckos. Eventene og agendaen kommer til å oppdateres jevnlig."
+          />
         </div>
-        <section className="flex justify-center items-center w-full">
+        <section className="flex justify-center items-center w-full mx-4">
           <UpcomingEvent />
+        </section>
+        <section className="flex flex-col justify-center items-center max-w-sm m-auto dark:text-gray-300 text-center gap-4">
+          <TextImage
+            orientation="text-left"
+            heading="Oppdateringer kommer"
+            paragraph="Holder på å jobbe med litt småting på nettsiden, det kommer bl.a en måte dere kan se tidligere runder og resultater på, og det kommer til å være mulig å legge til bilder og videoer underveis i runden. For at dere skal kunne gjøre dette så må dere opprette en profil ved å trykke på knappen øverst til høyre, så legger jeg dere til!"
+            imageUrl="/enlightened.png"
+            textCenter
+          />
         </section>
 
         {/* <section className="flex justify-center items-center w-full text-background bg-foreground p-4 md:p-16">
