@@ -1,6 +1,6 @@
 "use client";
 
-import useFetch from "@/app/hooks/useFetch";
+import useAdminFetch from "@/app/hooks/useAdminFetch";
 import HeaderSection from "@/app/components/sections/HeaderSection";
 import EventsTable from "./components/EventsTable";
 import { useState } from "react";
@@ -12,7 +12,7 @@ export default function AdminEventPage() {
   // const [players, setPlayers] = useState<Player[]>([])
   // Drawer for å lage nytt event
   const [isOpen, setIsOpen] = useState(false);
-  const { data: events } = useFetch<Event[]>("/api/admin/event");
+  const { data: events } = useAdminFetch<Event[]>("/api/admin/event");
 
   // useEffect(() => {
   //   playersApi.getAllPlayers().then((res) => {

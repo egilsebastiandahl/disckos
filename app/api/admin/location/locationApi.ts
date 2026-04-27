@@ -1,5 +1,5 @@
+import { adminGet, adminPost } from "@/lib/adminClient";
 import { Location } from "@/app/types/location.model";
-import { clientGet, clientPost } from "@/lib/clientApi";
 
 const createLocation = async (location: {
     name: string;
@@ -7,11 +7,11 @@ const createLocation = async (location: {
     lat: number;
     lon: number;
 }) => {
-    return clientPost("/api/admin/location", location);
+    return adminPost("/api/admin/location", location);
 }
 
 const getLocations = async (): Promise<Location[]> => {
-    return (await clientGet("/api/admin/location")).json();
+    return (await adminGet("/api/admin/location")).json();
 }
 
 export const locationApi = {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { clientPost } from "@/lib/clientApi";
+import { adminPost } from "@/lib/adminClient";
 import { locationApi } from "@/app/api/admin/location/locationApi";
 import { Location } from "@/app/types/location.model";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
@@ -30,7 +30,7 @@ export default function CreateEvent() {
     setLoadingEvent(true);
     setEventMsg(null);
     try {
-      const res = await clientPost(`/api/admin/event`, {
+      const res = await adminPost(`/api/admin/event`, {
         title: eTitle,
         date: new Date(eDate).toISOString(),
         locationId: selectedLocationId,

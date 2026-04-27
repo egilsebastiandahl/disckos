@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
-import authOptions from "@/lib/auth";
 
 const BACKEND = process.env.BACKEND_API_URL;
 
@@ -44,10 +42,11 @@ export async function handler(req: Request, context: any) {
     const publicAuthPaths = new Set(["login", "refresh", "logout"]);
     const isAuthEndpoint = pathParts.length > 0 && publicAuthPaths.has(pathParts[0]);
 
-    const session = await getServerSession(authOptions);
-    if (!session && !isAuthEndpoint) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // Read the Supabase access token from the incoming request's Authorization header
+    const authHeader = req.headers.get("Authorization");
+    const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : undefined;
 
-    const token = (session as any)?.accessToken as string | undefined;
+    if (!token && !isAuthEndpoint) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const url = new URL(req.url);
     const search = url.search ? `?${url.searchParams.toString()}` : "";

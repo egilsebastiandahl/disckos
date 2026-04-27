@@ -1,14 +1,14 @@
-import { clientDelete, clientPost, clientPut } from "@/lib/clientApi"
+import { adminDelete, adminPost, adminPut } from "@/lib/adminClient"
 
 const deleteEvent = async(eventId: string) => {
-    return (await clientDelete("/api/admin/event/" + eventId))
+    return (await adminDelete("/api/admin/event/" + eventId))
 }
 
 const publishEvent = async(eventId: string) => {
-    return (await clientPost("/api/admin/event/" + eventId + "/publish"))
+    return (await adminPost("/api/admin/event/" + eventId + "/publish"))
 }
 const unpublishEvent = async(eventId: string) => {
-    return (await clientPost("/api/admin/event/" + eventId + "/unpublish"))
+    return (await adminPost("/api/admin/event/" + eventId + "/unpublish"))
 }
 
 const updateEvent = async(eventId: string, body: {
@@ -20,7 +20,7 @@ const updateEvent = async(eventId: string, body: {
     published: boolean;
     major: boolean;
 }) => {
-    return clientPut("/api/admin/event/" + eventId, body)
+    return adminPut("/api/admin/event/" + eventId, body)
 }
 
 export const eventApi = {

@@ -107,6 +107,11 @@ export default function ProfileMenu() {
           <Link href="/pages/profile" className="block px-3 py-2 text-sm hover:bg-gray-100">
             Your profile
           </Link>
+          {profile?.isAdmin && (
+            <Link href="/admin" className="block px-3 py-2 text-sm hover:bg-gray-100">
+              Admin
+            </Link>
+          )}
           {(!profile?.username || !profile?.displayName) && (
             <Link href="/pages/profile" className="block px-3 py-2 text-sm text-indigo-600 hover:bg-gray-100">
               Complete profile
