@@ -1,16 +1,15 @@
-import Link from "next/link";
 import HeaderSection from "./components/sections/HeaderSection";
 import UpcomingEvent from "./components/sections/UpcomingEvent";
 import TextImage from "./components/sections/TextImage";
 
 export default function Home() {
   return (
-    <div className="flex justify-center font-sans p-8 md:p-20">
-      <main className="flex w-full flex-col items-center justify-between pt-32 sm:items-start gap-8 md:gap-24 ">
+    <div className="flex justify-center font-sans p-4">
+      <main className="flex w-full flex-col items-center justify-between pt-16 md:pt-32 sm:items-start gap-8 md:gap-16">
         <div className="flex w-full justify-center items-center px-4 md:px-0">
           <HeaderSection
             title="Velkommen til Disckos"
-            text="Her kan dere følge med på kommende runder, se resultater og mer! Vi skal også legge til støtte for å kunne legge til bilder og videoer underveis i runden!"
+            text="Her kan dere følge med på når vi skal spille! Vi skal også legge til støtte for å kunne legge til bilder og videoer underveis i runden!"
           />
         </div>
         <section className="flex justify-center items-center w-full mx-4">
@@ -52,6 +51,9 @@ export default function Home() {
             paragraph="Livet er et lære, man må alltid lære."
           />
         </section> */}
+        <section className="flex justify-center items-center w-full text-sm text-gray-500">
+          &copy; 2026 Disckos. Laget med ❤️ av Disckos-teamet.
+        </section>
       </main>
     </div>
   );
