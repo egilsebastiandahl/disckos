@@ -3,7 +3,6 @@ import { eventApi } from "@/app/api/admin/event/adminEventApi";
 import { locationApi } from "@/app/api/admin/location/locationApi";
 import { Event } from "@/app/types/event.model";
 import { Location } from "@/app/types/location.model";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 
 interface UpdateEventProps {
   event: Event;
@@ -86,20 +85,20 @@ export default function UpdateEvent({ event, onSuccess }: UpdateEventProps) {
         </div>
         <div>
           <label className="block text-sm">Lokasjon</label>
-          <Select value={selectedLocationId} onValueChange={(value) => setSelectedLocationId(value)}>
-            <SelectTrigger className="w-full border px-2 py-1">
-              {selectedLocationId
-                ? locations.find((loc) => loc.id === selectedLocationId)?.name || event.location.name
-                : "Velg lokasjon"}
-            </SelectTrigger>
-            <SelectContent>
-              {locations.map((loc) => (
-                <SelectItem key={loc.id} value={loc.id}>
-                  {loc.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <select
+            className="w-full border px-2 py-1 rounded bg-transparent"
+            value={selectedLocationId}
+            onChange={(e) => setSelectedLocationId(e.target.value)}
+          >
+            <option value="" disabled>
+              Velg lokasjon
+            </option>
+            {locations.map((loc) => (
+              <option key={loc.id} value={loc.id}>
+                {loc.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div>
           <label className="block text-sm">Beskrivelse</label>

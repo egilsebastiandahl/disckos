@@ -10,7 +10,7 @@ interface EditEventDrawerProps {
 
 export default function EditEventDrawer({ isOpen, setIsOpen, event }: EditEventDrawerProps) {
   return (
-    <Drawer direction="bottom" onOpenChange={setIsOpen} open={isOpen}>
+    <Drawer direction="bottom" onOpenChange={setIsOpen} open={isOpen} modal={false}>
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Rediger event</DrawerTitle>
