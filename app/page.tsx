@@ -10,13 +10,13 @@ export default function Home() {
         <div className="flex w-full justify-center items-center px-4 md:px-0">
           <HeaderSection
             title="Velkommen til Disckos"
-            text="Her kan du følge med på hva som skjer i Disckos. Eventene og agendaen kommer til å oppdateres jevnlig."
+            text="Her kan dere følge med på kommende runder, se resultater og mer! Vi skal også legge til støtte for å kunne legge til bilder og videoer underveis i runden!"
           />
         </div>
         <section className="flex justify-center items-center w-full mx-4">
           <UpcomingEvent />
         </section>
-        <section className="flex flex-col justify-center items-center max-w-sm m-auto dark:text-gray-300 text-center gap-4">
+        <section className="flex flex-col justify-center items-center m-auto dark:text-gray-300 text-center gap-4">
           <TextImage
             orientation="text-left"
             heading="Oppdateringer kommer"
