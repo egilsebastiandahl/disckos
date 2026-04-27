@@ -24,6 +24,7 @@ export default function UpdateEvent({ event, onSuccess }: UpdateEventProps) {
   const [eTeamEvent, setETeamEvent] = useState(event.teamEvent);
   const [ePublished, setEPublished] = useState(event.published ?? false);
   const [eMajor, setEMajor] = useState(event.major);
+  const [eRounds, setERounds] = useState(event.rounds);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [locations, setLocations] = useState<Location[]>([]);
@@ -49,6 +50,7 @@ export default function UpdateEvent({ event, onSuccess }: UpdateEventProps) {
         teamEvent: eTeamEvent,
         published: ePublished,
         major: eMajor,
+        rounds: eRounds,
       });
       if (!res.ok) throw new Error(await res.text());
       setMessage("Event oppdatert!");
@@ -106,6 +108,17 @@ export default function UpdateEvent({ event, onSuccess }: UpdateEventProps) {
             className="w-full border px-2 py-1 rounded"
             value={eDescription}
             onChange={(e) => setEDescription(e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-sm">Antall runder</label>
+          <input
+            type="number"
+            min={1}
+            className="w-full border px-2 py-1 rounded"
+            value={eRounds}
+            onChange={(e) => setERounds(Number(e.target.value))}
+            required
           />
         </div>
         <div className="flex items-center gap-4">

@@ -19,6 +19,7 @@ const updateEvent = async(eventId: string, body: {
     teamEvent: boolean;
     published: boolean;
     major: boolean;
+    rounds: number;
 }) => {
     return adminPut("/api/admin/event/" + eventId, body)
 }
