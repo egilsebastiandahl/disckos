@@ -4,9 +4,10 @@ import CreateEvent from "./CreateEvent";
 interface EventDrawerProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
+  onRefresh?: () => void;
 }
 
-export default function EventDrawer({ isOpen, setIsOpen }: EventDrawerProps) {
+export default function EventDrawer({ isOpen, setIsOpen, onRefresh }: EventDrawerProps) {
   return (
     <Drawer direction="bottom" onOpenChange={setIsOpen} open={isOpen} modal={false}>
       {/* <DrawerTrigger>
@@ -17,7 +18,12 @@ export default function EventDrawer({ isOpen, setIsOpen }: EventDrawerProps) {
           <DrawerTitle>Lag nytt event</DrawerTitle>
           <DrawerDescription>Skriv inn detaljer for det nye eventet</DrawerDescription>
         </DrawerHeader>
-        <CreateEvent />
+        <CreateEvent
+          onSuccess={() => {
+            setIsOpen(false);
+            onRefresh?.();
+          }}
+        />
       </DrawerContent>
     </Drawer>
   );

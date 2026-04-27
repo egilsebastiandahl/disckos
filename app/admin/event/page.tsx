@@ -12,14 +12,7 @@ export default function AdminEventPage() {
   // const [players, setPlayers] = useState<Player[]>([])
   // Drawer for å lage nytt event
   const [isOpen, setIsOpen] = useState(false);
-  const { data: events } = useAdminFetch<Event[]>("/api/admin/event");
-
-  // useEffect(() => {
-  //   playersApi.getAllPlayers().then((res) => {
-  //     setPlayers(res ?? [])
-  //   })
-
-  // }, []);
+  const { data: events, refetch } = useAdminFetch<Event[]>("/api/admin/event");
 
   return (
     <>
@@ -29,9 +22,15 @@ export default function AdminEventPage() {
         buttonText="Lag nytt event"
         buttonClick={() => setIsOpen(true)}
       />
-      <EventsTable events={events?.filter((e) => e.published == true)} />
-      <UnpublishedEventsTable events={events?.filter((e) => e.published == false)} />
-      <EventDrawer isOpen={isOpen} setIsOpen={setIsOpen} />
+      <EventsTable
+        events={events?.filter((e) => e.published == true).sort((a, b) => a.date.localeCompare(b.date))}
+        onRefresh={refetch}
+      />
+      <UnpublishedEventsTable
+        events={events?.filter((e) => e.published == false).sort((a, b) => a.date.localeCompare(b.date))}
+        onRefresh={refetch}
+      />
+      <EventDrawer isOpen={isOpen} setIsOpen={setIsOpen} onRefresh={refetch} />
     </>
   );
 }

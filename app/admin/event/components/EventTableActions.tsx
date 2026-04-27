@@ -14,9 +14,10 @@ import EditEventDrawer from "./EditEventDrawer";
 
 interface EventTableActionsProps {
   event: Event;
+  onRefresh?: () => void;
 }
 
-export default function EventTableActions({ event }: EventTableActionsProps) {
+export default function EventTableActions({ event, onRefresh }: EventTableActionsProps) {
   const [editOpen, setEditOpen] = useState(false);
 
   const onDeleteClick = () => {
@@ -24,7 +25,7 @@ export default function EventTableActions({ event }: EventTableActionsProps) {
       eventApi
         .deleteEvent(event.id)
         .then(() => {
-          alert("Event slettet, refresh for å oppdatere");
+          onRefresh?.();
         })
         .catch(() => {
           alert("Noe gikk feil når eventet skulle slettes, sjekk konsoll.");
@@ -35,11 +36,11 @@ export default function EventTableActions({ event }: EventTableActionsProps) {
   const onPublishOrUnpublishClick = () => {
     if (event.published) {
       eventApi.unpublishEvent(event.id).then(() => {
-        console.log("Event har blitt upublisert.");
+        onRefresh?.();
       });
     } else {
       eventApi.publishEvent(event.id).then(() => {
-        console.log("Event har blitt publisert.");
+        onRefresh?.();
       });
     }
   };
@@ -64,7 +65,7 @@ export default function EventTableActions({ event }: EventTableActionsProps) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <EditEventDrawer isOpen={editOpen} setIsOpen={setEditOpen} event={event} />
+      <EditEventDrawer isOpen={editOpen} setIsOpen={setEditOpen} event={event} onRefresh={onRefresh} />
     </>
   );
 }

@@ -3,7 +3,11 @@ import { adminPost } from "@/lib/adminClient";
 import { locationApi } from "@/app/api/admin/location/locationApi";
 import { Location } from "@/app/types/location.model";
 
-export default function CreateEvent() {
+interface CreateEventProps {
+  onSuccess?: () => void;
+}
+
+export default function CreateEvent({ onSuccess }: CreateEventProps) {
   const [eTitle, setETitle] = useState("");
   const [eDate, setEDate] = useState("");
   const [selectedLocationId, setSelectedLocationId] = useState("");
@@ -48,6 +52,7 @@ export default function CreateEvent() {
       setETeamEvent(false);
       setEPublished(false);
       setEMajor(false);
+      onSuccess?.();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setEventMsg(`Error: ${err.message || String(err)}`);

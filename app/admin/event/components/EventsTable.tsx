@@ -9,9 +9,10 @@ import { dateStringToDateTimeFormatter } from "@/app/utils/dateFormatters";
 
 interface EventsTableProps {
   events: Event[] | undefined;
+  onRefresh?: () => void;
 }
 
-export default function EventsTable({ events }: EventsTableProps) {
+export default function EventsTable({ events, onRefresh }: EventsTableProps) {
   const handleCopy = async (event: Event) => {
     const idStr = String(event.id);
     try {
@@ -61,7 +62,7 @@ export default function EventsTable({ events }: EventsTableProps) {
             <p key={event.title + "- title"}>{event.title}</p>,
             <p key={event.location + "- location"}>{event.location.name}</p>,
             <p key={event.date + "- date"}>{dateStringToDateTimeFormatter(event.date)}</p>,
-            <EventTableActions key={idStr + "- actions"} event={event} />,
+            <EventTableActions key={idStr + "- actions"} event={event} onRefresh={onRefresh} />,
           ],
         };
         return row;

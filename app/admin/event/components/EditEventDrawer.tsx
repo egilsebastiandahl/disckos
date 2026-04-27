@@ -6,9 +6,10 @@ interface EditEventDrawerProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   event: Event;
+  onRefresh?: () => void;
 }
 
-export default function EditEventDrawer({ isOpen, setIsOpen, event }: EditEventDrawerProps) {
+export default function EditEventDrawer({ isOpen, setIsOpen, event, onRefresh }: EditEventDrawerProps) {
   return (
     <Drawer direction="bottom" onOpenChange={setIsOpen} open={isOpen} modal={false}>
       <DrawerContent>
@@ -16,7 +17,13 @@ export default function EditEventDrawer({ isOpen, setIsOpen, event }: EditEventD
           <DrawerTitle>Rediger event</DrawerTitle>
           <DrawerDescription>Endre detaljer for &quot;{event.title}&quot;</DrawerDescription>
         </DrawerHeader>
-        <UpdateEvent event={event} onSuccess={() => setIsOpen(false)} />
+        <UpdateEvent
+          event={event}
+          onSuccess={() => {
+            setIsOpen(false);
+            onRefresh?.();
+          }}
+        />
       </DrawerContent>
     </Drawer>
   );
