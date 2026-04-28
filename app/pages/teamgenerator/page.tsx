@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useRef } from "react";
 import HeaderSection from "@/app/components/sections/HeaderSection";
 import { Player } from "@/app/types/player.model";
 import { Gender } from "@/app/types/gender.enum";
@@ -9,6 +9,24 @@ import { Card } from "@/components/ui/card";
 import styles from "./teamgenerator.module.css";
 import Button from "@/app/components/button/Button";
 
+const TEAM_COLORS = [
+  "var(--primary)",
+  "var(--warm)",
+  "var(--chart-5)",
+  "var(--chart-4)",
+  "var(--destructive)",
+  "var(--chart-3)",
+];
+
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+}
+
 export default function TeamGeneratorPage() {
   const { data: players = [] } = useFetch<Player[]>("/api/player");
   const [participatingPlayers, setParticipatingPlayers] = useState<Player[]>([]);
@@ -16,6 +34,14 @@ export default function TeamGeneratorPage() {
   const [customPlayerInput, setCustomPlayerInput] = useState("");
   const [teams, setTeams] = useState<Player[][]>([]);
   const [numberOfTeams, setNumberOfTeams] = useState(2);
+  const [isShuffling, setIsShuffling] = useState(false);
+  const [revealKey, setRevealKey] = useState(0);
+  const teamsRef = useRef<HTMLDivElement>(null);
+
+  const isSelected = useCallback(
+    (player: Player) => participatingPlayers.some((p) => p.id === player.id),
+    [participatingPlayers],
+  );
 
   const handleParticipantSelect = (player: Player) => {
     setParticipatingPlayers((prev) =>
@@ -23,11 +49,20 @@ export default function TeamGeneratorPage() {
     );
   };
 
+  const selectAll = () => {
+    const allPlayers = [...players, ...customPlayers];
+    setParticipatingPlayers(allPlayers);
+  };
+
+  const deselectAll = () => {
+    setParticipatingPlayers([]);
+  };
+
   const addCustomPlayer = () => {
     if (customPlayerInput.trim() === "") return;
     const newPlayer: Player = {
       id: `custom-${Date.now()}`,
-      name: customPlayerInput,
+      name: customPlayerInput.trim(),
       gender: Gender.OTHER,
     };
     setCustomPlayers((prev) => [...prev, newPlayer]);
@@ -41,12 +76,22 @@ export default function TeamGeneratorPage() {
   };
 
   const generateTeamsRandomly = () => {
-    const shuffled = [...participatingPlayers].sort(() => Math.random() - 0.5);
-    const newTeams: Player[][] = Array.from({ length: numberOfTeams }, () => []);
-    shuffled.forEach((player, index) => {
-      newTeams[index % numberOfTeams].push(player);
-    });
-    setTeams(newTeams);
+    setIsShuffling(true);
+    // Brief delay for the animation feel
+    setTimeout(() => {
+      const shuffled = [...participatingPlayers].sort(() => Math.random() - 0.5);
+      const newTeams: Player[][] = Array.from({ length: numberOfTeams }, () => []);
+      shuffled.forEach((player, index) => {
+        newTeams[index % numberOfTeams].push(player);
+      });
+      setTeams(newTeams);
+      setRevealKey((k) => k + 1);
+      setIsShuffling(false);
+      // Scroll to teams after a tiny delay
+      setTimeout(() => {
+        teamsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }, 400);
   };
 
   const resetAll = () => {
@@ -56,118 +101,192 @@ export default function TeamGeneratorPage() {
     setNumberOfTeams(2);
   };
 
+  const totalSelected = participatingPlayers.length;
+  const canGenerate = totalSelected >= 2;
+
   return (
     <>
-      <HeaderSection
-        title="Lagbygger"
-        text="Her er lagbyggeren for å velge lag! Denne er vibe-codet, så kan være noen problemer 😅"
-      />
-      <main className={styles.container}>
-        {/* Player Selection */}
-        <section className={styles.modeContent}>
-          <h2>Velg spillere som skal spille</h2>
+      <HeaderSection title="Lagbygger" text="Velg spillere og generer tilfeldige lag på et blunk!" />
 
-          {/* Database Players */}
-          <div className={styles.playerList}>
-            <div className={styles.playerGrid}>
-              {players.map((player) => (
-                <button
-                  key={player.id}
-                  className={`${styles.playerButton} ${
-                    participatingPlayers.some((p) => p.id === player.id) ? styles.selected : ""
-                  }`}
-                  onClick={() => handleParticipantSelect(player)}
-                >
-                  {player.name}
-                </button>
-              ))}
+      <main className={styles.container}>
+        {/* ── Step 1: Player Selection ── */}
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <div className={styles.stepBadge}>1</div>
+            <div>
+              <h2 className={styles.sectionTitle}>Velg spillere</h2>
+              <p className={styles.sectionSubtitle}>
+                {totalSelected === 0
+                  ? "Trykk på spillere for å legge dem til"
+                  : `${totalSelected} spiller${totalSelected !== 1 ? "e" : ""} valgt`}
+              </p>
             </div>
           </div>
 
-          {/* Custom Player Input */}
-          <div className={styles.customPlayerSection}>
-            <div className={styles.customPlayerInput}>
-              <input
-                type="text"
-                placeholder="Skriv inn navn på ny spiller"
-                value={customPlayerInput}
-                onChange={(e) => setCustomPlayerInput(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && addCustomPlayer()}
-              />
-              {customPlayerInput.trim() !== "" && <Button onClick={addCustomPlayer}>Legg til spiller</Button>}
+          {/* Quick actions */}
+          {players.length > 0 && (
+            <div className={styles.quickActions}>
+              <button className={styles.quickActionBtn} onClick={selectAll}>
+                Velg alle
+              </button>
+              {totalSelected > 0 && (
+                <button className={styles.quickActionBtn} onClick={deselectAll}>
+                  Fjern alle
+                </button>
+              )}
             </div>
+          )}
 
-            {/* Display Custom Players */}
-            {customPlayers.length > 0 && (
-              <div className={styles.customPlayersList}>
-                <p className={styles.customPlayersLabel}>Egendefinerte spillere:</p>
-                <div className={styles.playerGrid}>
-                  {customPlayers.map((player) => (
-                    <div key={player.id} className={styles.customPlayerItem}>
-                      <button
-                        className={`${styles.playerButton} ${
-                          participatingPlayers.some((p) => p.id === player.id) ? styles.selected : ""
-                        }`}
-                        onClick={() => handleParticipantSelect(player)}
-                      >
-                        {player.name}
-                      </button>
-                      <button
-                        className={styles.removeButton}
-                        onClick={() => removeCustomPlayer(player.id)}
-                        title="Fjern spiller"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
-                </div>
+          {/* Player chips grid */}
+          <div className={styles.playerGrid}>
+            {players.map((player) => (
+              <button
+                key={player.id}
+                className={`${styles.playerChip} ${isSelected(player) ? styles.chipSelected : ""}`}
+                onClick={() => handleParticipantSelect(player)}
+              >
+                <span className={styles.chipAvatar}>{getInitials(player.name)}</span>
+                <span className={styles.chipName}>{player.name}</span>
+                {isSelected(player) && <span className={styles.chipCheck}>✓</span>}
+              </button>
+            ))}
+          </div>
+
+          {/* Custom players */}
+          {customPlayers.length > 0 && (
+            <>
+              <p className={styles.customLabel}>Gjestespillere</p>
+              <div className={styles.playerGrid}>
+                {customPlayers.map((player) => (
+                  <div key={player.id} className={styles.customChipWrap}>
+                    <button
+                      className={`${styles.playerChip} ${isSelected(player) ? styles.chipSelected : ""}`}
+                      onClick={() => handleParticipantSelect(player)}
+                    >
+                      <span className={styles.chipAvatar}>{getInitials(player.name)}</span>
+                      <span className={styles.chipName}>{player.name}</span>
+                      {isSelected(player) && <span className={styles.chipCheck}>✓</span>}
+                    </button>
+                    <button
+                      className={styles.removeBtn}
+                      onClick={() => removeCustomPlayer(player.id)}
+                      aria-label={`Fjern ${player.name}`}
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
               </div>
-            )}
+            </>
+          )}
+
+          {/* Add custom player */}
+          <div className={styles.addPlayerRow}>
+            <input
+              className={styles.addPlayerInput}
+              type="text"
+              placeholder="Legg til gjestespiller..."
+              value={customPlayerInput}
+              onChange={(e) => setCustomPlayerInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && addCustomPlayer()}
+            />
+            <Button onClick={addCustomPlayer} disabled={customPlayerInput.trim() === ""}>
+              + Legg til
+            </Button>
           </div>
         </section>
 
-        {/* Randomizer - appears directly when 2+ players selected */}
-        {participatingPlayers.length >= 2 && teams.length === 0 && (
-          <section className={styles.modeContent}>
-            <div className="w-40 flex items-center justify-between">
-              Antall lag: {numberOfTeams} &nbsp;
-              <div className="flex gap-2">
-                <button className="border px-2 border-foreground" onClick={() => setNumberOfTeams((prev) => prev + 1)}>
-                  +
-                </button>
-                <button
-                  className="border px-2 border-foreground"
-                  disabled={numberOfTeams == 1}
-                  onClick={() => setNumberOfTeams((prev) => (prev > 2 ? prev - 1 : 1))}
-                >
-                  -
-                </button>
+        {/* ── Step 2: Configure ── */}
+        <section className={`${styles.section} ${!canGenerate ? styles.sectionDisabled : ""}`}>
+          <div className={styles.sectionHeader}>
+            <div className={styles.stepBadge}>2</div>
+            <div>
+              <h2 className={styles.sectionTitle}>Antall lag</h2>
+              <p className={styles.sectionSubtitle}>
+                {canGenerate
+                  ? `${totalSelected} spillere fordeles på ${numberOfTeams} lag`
+                  : "Velg minst 2 spillere for å fortsette"}
+              </p>
+            </div>
+          </div>
+
+          <div className={styles.teamStepper}>
+            <button
+              className={styles.stepperBtn}
+              disabled={!canGenerate || numberOfTeams <= 1}
+              onClick={() => setNumberOfTeams((prev) => Math.max(1, prev - 1))}
+            >
+              −
+            </button>
+            <span className={styles.stepperValue}>{numberOfTeams}</span>
+            <button
+              className={styles.stepperBtn}
+              disabled={!canGenerate || numberOfTeams >= totalSelected}
+              onClick={() => setNumberOfTeams((prev) => Math.min(totalSelected, prev + 1))}
+            >
+              +
+            </button>
+          </div>
+
+          <Button
+            className={`${styles.generateBtn} ${isShuffling ? styles.shuffling : ""}`}
+            onClick={generateTeamsRandomly}
+            disabled={!canGenerate || isShuffling}
+          >
+            {teams.length > 0 ? "🔀 Bland på nytt!" : "🎲 Generer lag!"}
+          </Button>
+        </section>
+
+        {/* ── Step 3: Teams Display ── */}
+        {teams.length > 0 && (
+          <section className={styles.section} ref={teamsRef} key={revealKey}>
+            <div className={styles.sectionHeader}>
+              <div className={`${styles.stepBadge} ${styles.stepBadgeDone}`}>✓</div>
+              <div>
+                <h2 className={styles.sectionTitle}>Lagene er klare!</h2>
+                <p className={styles.sectionSubtitle}>
+                  {teams.length} lag med {totalSelected} spillere
+                </p>
               </div>
             </div>
-            <Button onClick={generateTeamsRandomly}>Generer tilfeldige lag</Button>
-          </section>
-        )}
 
-        {/* Teams Display */}
-        {teams.length > 0 && (
-          <section className={styles.teamsDisplay}>
-            <div className={styles.teamsList}>
+            <div className={styles.teamsGrid}>
               {teams.map((team, index) => (
-                <Card key={index} className={styles.teamCard}>
-                  <h3>Lag {index + 1}</h3>
-                  <ul>
+                <Card
+                  key={index}
+                  className={styles.teamCard}
+                  style={
+                    {
+                      "--team-color": TEAM_COLORS[index % TEAM_COLORS.length],
+                      animationDelay: `${index * 100}ms`,
+                    } as React.CSSProperties
+                  }
+                >
+                  <div className={styles.teamHeader}>
+                    <span className={styles.teamNumber}>{index + 1}</span>
+                    <div>
+                      <h3 className={styles.teamName}>Lag {index + 1}</h3>
+                      <span className={styles.teamCount}>
+                        {team.length} spiller{team.length !== 1 ? "e" : ""}
+                      </span>
+                    </div>
+                  </div>
+                  <ul className={styles.teamMembers}>
                     {team.map((player) => (
-                      <li key={player.id}>{player.name}</li>
+                      <li key={player.id} className={styles.memberTag}>
+                        <span className={styles.memberAvatar}>{getInitials(player.name)}</span>
+                        {player.name}
+                      </li>
                     ))}
                   </ul>
-                  <p className={styles.teamSize}>({team.length} spillere)</p>
                 </Card>
               ))}
             </div>
 
-            <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-              <Button onClick={generateTeamsRandomly}>Scramble lag</Button>
+            <div className={styles.actionRow}>
+              <Button onClick={generateTeamsRandomly} disabled={isShuffling}>
+                🔀 Bland på nytt
+              </Button>
               <Button variant="outline" onClick={resetAll}>
                 Start på nytt
               </Button>
