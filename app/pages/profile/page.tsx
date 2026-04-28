@@ -1,21 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { supabase } from "../../../lib/supabaseClient";
 import { useRouter } from "next/navigation";
+import { Player } from "../../types/player.model";
+import { Profile } from "../../types/profile.model";
+import { NativeSelect } from "@/components/ui/native-select";
 
 export default function ProfilePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [linkingPlayer, setLinkingPlayer] = useState(false);
   const [message, setMessage] = useState("");
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [selectedPlayerId, setSelectedPlayerId] = useState<string>("");
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchData = async () => {
       setLoading(true);
       const { data: sessionData } = await supabase.auth.getSession();
       const session = sessionData?.session;
@@ -25,23 +31,36 @@ export default function ProfilePage() {
       }
       const token = session.access_token;
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8080";
-      const res = await fetch(`${backendUrl}/api/profile`, { headers: { Authorization: `Bearer ${token}` } });
-      if (!res.ok) {
+
+      const [profileRes, playersRes] = await Promise.all([
+        fetch(`${backendUrl}/api/profile`, { headers: { Authorization: `Bearer ${token}` } }),
+        fetch("/api/player"),
+      ]);
+
+      if (!profileRes.ok) {
         setMessage("Failed to load profile");
         setLoading(false);
         return;
       }
-      const data = await res.json();
-      setProfile(data);
-      setUsername(data.username ?? "");
-      setDisplayName(data.displayName ?? "");
-      setBio(data.bio ?? "");
+
+      const profileData = await profileRes.json();
+      setProfile(profileData);
+      setUsername(profileData.username ?? "");
+      setDisplayName(profileData.displayName ?? "");
+      setBio(profileData.bio ?? "");
+      setSelectedPlayerId(profileData.playerId ?? "");
+
+      if (playersRes.ok) {
+        const playersData = await playersRes.json();
+        setPlayers(playersData);
+      }
+
       setLoading(false);
     };
-    fetchProfile();
+    fetchData();
   }, [router]);
 
-  async function handleSave(e: any) {
+  async function handleSave(e: FormEvent) {
     e.preventDefault();
     setSaving(true);
     setMessage("");
@@ -70,6 +89,34 @@ export default function ProfilePage() {
     setDisplayName(saved.displayName ?? "");
     setBio(saved.bio ?? "");
     setMessage("Profile saved");
+  }
+
+  async function handleLinkPlayer() {
+    setLinkingPlayer(true);
+    setMessage("");
+    const { data: sessionData } = await supabase.auth.getSession();
+    const session = sessionData?.session;
+    if (!session) {
+      router.push("/login");
+      return;
+    }
+    const token = session.access_token;
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8080";
+    const res = await fetch(`${backendUrl}/api/profile/player`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ playerId: selectedPlayerId || null }),
+    });
+    setLinkingPlayer(false);
+    if (!res.ok) {
+      const text = await res.text();
+      setMessage(text || "Failed to link player");
+      return;
+    }
+    const saved = await res.json();
+    setProfile(saved);
+    setSelectedPlayerId(saved.playerId ?? "");
+    setMessage(saved.playerId ? "Player linked" : "Player unlinked");
   }
 
   if (loading) return <div className="p-6">Loading...</div>;
@@ -114,6 +161,38 @@ export default function ProfilePage() {
           {message && <span className="text-sm text-muted-foreground">{message}</span>}
         </div>
       </form>
+
+      <hr className="my-6 border-border" />
+
+      <div>
+        <h2 className="text-lg font-semibold mb-2">Link player profile</h2>
+        <p className="text-sm text-muted-foreground mb-3">
+          If you are a player, link your account to your player profile to connect your stats.
+        </p>
+        <div className="flex items-center gap-2">
+          <NativeSelect value={selectedPlayerId} onChange={(e) => setSelectedPlayerId(e.target.value)}>
+            <option value="">No player linked</option>
+            {players.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name}
+              </option>
+            ))}
+          </NativeSelect>
+          <button
+            type="button"
+            onClick={handleLinkPlayer}
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-xl shadow-sm hover:bg-primary/85 transition"
+            disabled={linkingPlayer}
+          >
+            {linkingPlayer ? "Saving..." : selectedPlayerId ? "Link" : "Unlink"}
+          </button>
+        </div>
+        {profile?.playerName && (
+          <p className="text-sm text-muted-foreground mt-2">
+            Currently linked to: <span className="font-medium text-foreground">{profile.playerName}</span>
+          </p>
+        )}
+      </div>
     </div>
   );
 }
