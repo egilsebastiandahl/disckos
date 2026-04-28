@@ -106,18 +106,18 @@ export default function SignupPage() {
 
           <button
             type="submit"
-            className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-60"
+            className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-background text-foreground border rounded-md hover:bg-foreground hover:cursor-pointer hover:border-background hover:text-background disabled:opacity-60"
             disabled={loading}
           >
             {loading ? "Oppretter konto..." : "Opprett konto"}
           </button>
         </form>
 
-        {message && <div className="mt-4 text-center text-sm">{message}</div>}
+        {message && <div className="mt-4 text-center text-sm text-background">{message}</div>}
 
-        <div className="mt-6 text-center text-sm">
+        <div className="mt-6 text-center text-sm text-background">
           Har du allerede en konto?{" "}
-          <a href="/login" className="text-indigo-600 hover:underline">
+          <a href="/login" className="text-gray-200 underline">
             Logg inn
           </a>
         </div>
