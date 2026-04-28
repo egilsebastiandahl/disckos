@@ -15,7 +15,7 @@ export default function Home() {
         <section className="flex justify-center items-center w-full mx-4">
           <UpcomingEvent />
         </section>
-        <section className="flex flex-col justify-center items-center m-auto dark:text-gray-300 text-center gap-4">
+        <section className="flex flex-col justify-center items-center m-auto text-center gap-4">
           <TextImage
             orientation="text-left"
             heading="Oppdateringer kommer"
@@ -51,7 +51,7 @@ export default function Home() {
             paragraph="Livet er et lære, man må alltid lære."
           />
         </section> */}
-        <section className="flex justify-center items-center w-full text-sm text-gray-500">
+        <section className="flex justify-center items-center w-full text-sm text-muted-foreground">
           &copy; 2026 Disckos. Laget med ❤️ av Disckos-teamet.
         </section>
       </main>

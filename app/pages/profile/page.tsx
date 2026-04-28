@@ -79,31 +79,39 @@ export default function ProfilePage() {
       <h1 className="text-2xl font-semibold mb-4">Your profile</h1>
       <form onSubmit={handleSave} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
-          <input value={username} onChange={(e) => setUsername(e.target.value)} className="w-full border rounded p-2" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Display name</label>
+          <label className="block text-sm font-medium text-muted-foreground mb-1">Username</label>
           <input
-            value={displayName}
-            onChange={(e) => setDisplayName(e.target.value)}
-            className="w-full border rounded p-2"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="w-full border border-border bg-background rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-ring"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+          <label className="block text-sm font-medium text-muted-foreground mb-1">Display name</label>
+          <input
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+            className="w-full border border-border bg-background rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-ring"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-muted-foreground mb-1">Bio</label>
           <textarea
             value={bio}
             onChange={(e) => setBio(e.target.value)}
-            className="w-full border rounded p-2"
+            className="w-full border border-border bg-background rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-ring"
             rows={4}
           />
         </div>
         <div className="flex items-center gap-2">
-          <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded" disabled={saving}>
+          <button
+            type="submit"
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-xl shadow-sm hover:bg-primary/85 transition"
+            disabled={saving}
+          >
             {saving ? "Saving..." : "Save"}
           </button>
-          {message && <span className="text-sm text-gray-700">{message}</span>}
+          {message && <span className="text-sm text-muted-foreground">{message}</span>}
         </div>
       </form>
     </div>

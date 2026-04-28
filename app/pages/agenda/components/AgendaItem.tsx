@@ -22,11 +22,11 @@ export default function AgendaItem({ event, isNextEvent }: AgendaItemProps) {
       // className={`border border-foreground shadow p-4 mb-4 rounded-lg w-full min-w-xs sm:min-w-md md:max-w-xl ${isPastEvent ? "opacity-50" : ""} ${isNextEvent ? "bg-foreground text-background" : ""} ${majorEventClass}`}
     >
       <h2 className="text-xl font-bold">{event.title}</h2>
-      <p className={`text-lg  ${isNextEvent ? "text-background" : "text-foreground"}`}>
+      <p className={`text-lg  ${isNextEvent ? "text-primary-foreground" : "text-foreground"}`}>
         {dateStringToDateTimeFormatter(event.date)}
       </p>
       <Separator
-        className={`mb-4 mt-2 bg-background  ${isNextEvent ? "bg-background" : "bg-foreground"} ${event.major ? "major-separator" : ""} `}
+        className={`mb-4 mt-2 ${isNextEvent ? "bg-primary-foreground/50" : "bg-border"} ${event.major ? "major-separator" : ""} `}
       />
       <p className="mb-4">{event.description}</p>
       <AgendaItemDetailedInformation event={event} />

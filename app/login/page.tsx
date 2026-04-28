@@ -52,15 +52,15 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center py-8 px-4">
-      <div className="w-full max-w-md bg-foreground border rounded-lg shadow-md p-6 text-background">
-        <h2 className="text-center text-2xl font-semibold text-background mb-4">Logg inn til Disckos</h2>
-        <p className="text-center text-sm text-background mb-6">Skriv inn e-post og passord for å fortsette.</p>
+      <div className="w-full max-w-md bg-card border border-border rounded-xl shadow-sm p-6 text-card-foreground">
+        <h2 className="text-center text-2xl font-semibold mb-4">Logg inn til Disckos</h2>
+        <p className="text-center text-sm text-muted-foreground mb-6">Skriv inn e-post og passord for å fortsette.</p>
 
         <form className="space-y-4" onSubmit={handleLogin}>
           <div>
-            <label className="block text-sm font-medium text-background mb-1">E-post</label>
+            <label className="block text-sm font-medium mb-1">E-post</label>
             <input
-              className="block w-full px-3 py-2 border border-background rounded-md placeholder-background focus:outline-none focus:ring-2"
+              className="block w-full px-3 py-2 border border-border rounded-xl bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -70,9 +70,9 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-background mb-1">Passord</label>
+            <label className="block text-sm font-medium mb-1">Passord</label>
             <input
-              className="block w-full px-3 py-2 border border-background rounded-md placeholder-background focus:outline-none focus:ring-2"
+              className="block w-full px-3 py-2 border border-border rounded-xl bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -83,18 +83,18 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-background text-foreground border rounded-md hover:bg-foreground hover:cursor-pointer hover:border-background hover:text-background disabled:opacity-60"
+            className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-primary text-primary-foreground border border-transparent rounded-xl hover:bg-primary/85 hover:cursor-pointer disabled:opacity-60 transition shadow-sm"
             disabled={loading}
           >
             {loading ? "Logger inn…" : "Logg inn"}
           </button>
         </form>
 
-        {message && <div className="mt-4 text-center text-sm text-red-600">{message}</div>}
+        {message && <div className="mt-4 text-center text-sm text-destructive">{message}</div>}
 
-        <div className="mt-6 text-center text-sm text-background">
+        <div className="mt-6 text-center text-sm text-muted-foreground">
           Har du ikke en konto?{" "}
-          <a href="/signup" className="text-gray-200 underline">
+          <a href="/signup" className="text-warm underline">
             Registrer deg
           </a>
         </div>

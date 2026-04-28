@@ -61,15 +61,15 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center py-8 px-4">
-      <div className="w-full max-w-md bg-foreground border text-background rounded-lg shadow-md p-6">
+      <div className="w-full max-w-md bg-card border border-border text-card-foreground rounded-xl shadow-sm p-6">
         <h2 className="text-center text-2xl font-semibold mb-2">Lag en konto</h2>
-        <p className="text-center text-sm mb-6">Registrer deg med din e-postadresse.</p>
+        <p className="text-center text-sm text-muted-foreground mb-6">Registrer deg med din e-postadresse.</p>
 
         <form className="space-y-4" onSubmit={handleSignup}>
           <div>
             <label className="block text-sm font-medium mb-1">E-post</label>
             <input
-              className="block w-full px-3 py-2 border rounded-md border-background placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="block w-full px-3 py-2 border rounded-xl border-border bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -81,7 +81,7 @@ export default function SignupPage() {
           <div>
             <label className="block text-sm font-medium mb-1">Passord</label>
             <input
-              className="block w-full px-3 py-2 border rounded-md border-background placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="block w-full px-3 py-2 border rounded-xl border-border bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -94,7 +94,7 @@ export default function SignupPage() {
           <div>
             <label className="block text-sm font-medium mb-1">Bekreft passord</label>
             <input
-              className="block w-full px-3 py-2 border rounded-md border-background placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="block w-full px-3 py-2 border rounded-xl border-border bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               type="password"
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
@@ -106,18 +106,18 @@ export default function SignupPage() {
 
           <button
             type="submit"
-            className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-background text-foreground border rounded-md hover:bg-foreground hover:cursor-pointer hover:border-background hover:text-background disabled:opacity-60"
+            className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-primary text-primary-foreground border border-transparent rounded-xl hover:bg-primary/85 hover:cursor-pointer disabled:opacity-60 transition shadow-sm"
             disabled={loading}
           >
             {loading ? "Oppretter konto..." : "Opprett konto"}
           </button>
         </form>
 
-        {message && <div className="mt-4 text-center text-sm text-background">{message}</div>}
+        {message && <div className="mt-4 text-center text-sm text-card-foreground">{message}</div>}
 
-        <div className="mt-6 text-center text-sm text-background">
+        <div className="mt-6 text-center text-sm text-muted-foreground">
           Har du allerede en konto?{" "}
-          <a href="/login" className="text-gray-200 underline">
+          <a href="/login" className="text-warm underline">
             Logg inn
           </a>
         </div>

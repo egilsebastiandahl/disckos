@@ -15,14 +15,14 @@ export default function TextImage({ orientation, imageUrl, heading, paragraph, t
     >
       <div className="w-full ">
         {imageUrl ? (
-          <Image src={imageUrl} alt="Image" width={400} height={300} className="w-full h-auto rounded-lg shadow-md" />
+          <Image src={imageUrl} alt="Image" width={400} height={300} className="w-full h-auto rounded-xl shadow-sm" />
         ) : (
           <Image
             src="/Disckos-bilde-chat.png"
             alt="Placeholder"
             width={400}
             height={300}
-            className="w-full h-auto rounded-lg shadow-md"
+            className="w-full h-auto rounded-xl shadow-sm"
           />
         )}
       </div>

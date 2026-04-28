@@ -1,10 +1,12 @@
-/* `agenda-item border border-foreground shadow p-4 mb-4 rounded-lg w-full min-w-xs sm:min-w-md md:max-w-xl ${isPastEvent ? "opacity-50" : ""} ${isNextEvent ? "bg-foreground text-background" : ""} ${majorEventClass}` */
+/* agenda item – nature-inspired card styling */
 .agenda-item{
-    border: 1px solid var(--foreground);
-    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     padding: 1rem;
     margin-bottom: 1rem;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
+    background-color: var(--card);
+    color: var(--card-foreground);
 }
 
 .agenda-item.past {
@@ -16,13 +18,14 @@
 }
 .agenda-item.next {
     opacity: 1;
-    background-color: var(--foreground);
-    color: var(--background);
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    border-color: transparent;
 }
 
 .agenda-item.major {
-    background-color: var(--color-amber-300);
-    color: var(--background);
+    background-color: var(--warm);
+    color: var(--warm-foreground);
     border: none;
 }
 
@@ -32,18 +35,17 @@
 }
 
 .dark .agenda-item.major > p {
-    color: var(--background);
+    color: var(--warm-foreground);
 }
 
 .dark .major-separator {
-    background-color: var(--background);
-
+    background-color: var(--warm-foreground);
 }
 
 .light .agenda-item.major {
-    background-color: var(--color-amber-300);
-    color: var(--foreground);
+    background-color: var(--warm);
+    color: var(--warm-foreground);
 }
 .light .agenda-item.major > p {
-    color: var(--foreground);
+    color: var(--warm-foreground);
 }
