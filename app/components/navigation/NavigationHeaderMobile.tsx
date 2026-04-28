@@ -2,6 +2,7 @@ import Link from "next/link";
 import NavigationHeaderMobileDrawer from "./NavigationHeaderMobileDrawer";
 import NewLogo from "../logo/NewLogo";
 import ThemeSwitch from "@/app/features/theme_switch/ThemeSwitch";
+import ProfileMenu from "./ProfileMenu";
 
 export default function NavigationHeaderMobile() {
   return (
@@ -11,6 +12,7 @@ export default function NavigationHeaderMobile() {
       </Link>
       <div className="flex gap-4 items-center">
         <ThemeSwitch />
+        <ProfileMenu />
         <NavigationHeaderMobileDrawer />
       </div>
     </div>

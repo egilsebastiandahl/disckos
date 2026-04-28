@@ -52,7 +52,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center py-8 px-4">
-      <div className="w-full max-w-md bg-foreground border rounded-lg shadow-md p-6">
+      <div className="w-full max-w-md bg-foreground border rounded-lg shadow-md p-6 text-background">
         <h2 className="text-center text-2xl font-semibold text-background mb-4">Logg inn til Disckos</h2>
         <p className="text-center text-sm text-background mb-6">Skriv inn e-post og passord for å fortsette.</p>
 
@@ -83,7 +83,7 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-background text-foreground border rounded-md hover:bg-foreground hover:border-background hover:text-background disabled:opacity-60"
+            className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-background text-foreground border rounded-md hover:bg-foreground hover:cursor-pointer hover:border-background hover:text-background disabled:opacity-60"
             disabled={loading}
           >
             {loading ? "Logger inn…" : "Logg inn"}
@@ -94,7 +94,7 @@ export default function LoginPage() {
 
         <div className="mt-6 text-center text-sm text-background">
           Har du ikke en konto?{" "}
-          <a href="/signup" className="text-blue-500 underline">
+          <a href="/signup" className="text-gray-200 underline">
             Registrer deg
           </a>
         </div>
