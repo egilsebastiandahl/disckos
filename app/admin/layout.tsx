@@ -59,9 +59,9 @@ export default function AdminLayout({ children }: AdminLayout) {
   if (!authorized) return null;
 
   return (
-    <div className="flex gap-4 p-24">
+    <div className="flex gap-8 px-6 py-8 md:px-12 md:py-12 lg:px-24 lg:py-16">
       <AdminSideBar />
-      <div className="max-w-3xl mx-auto space-y-8">{children}</div>
+      <main className="flex-1 max-w-3xl space-y-8">{children}</main>
     </div>
   );
 }

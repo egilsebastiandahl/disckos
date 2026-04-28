@@ -1,27 +1,41 @@
-export const sideBarNavigationData = [
+import { Users, MapPin, UsersRound, CalendarDays, IterationCcw, Trophy } from "lucide-react";
+import { LucideIcon } from "lucide-react";
+
+export interface SideBarNavItem {
+    url: string;
+    name: string;
+    icon: LucideIcon;
+}
+
+export const sideBarNavigationData: SideBarNavItem[] = [
     {
         url: "/admin/player",
-        name: "Spiller"
+        name: "Spiller",
+        icon: Users,
     },
     {
         url: "/admin/location",
-        name: "Lokasjon"
+        name: "Lokasjon",
+        icon: MapPin,
     },
     {
         url: "/admin/team",
-        name: "Lag"
+        name: "Lag",
+        icon: UsersRound,
     },
     {
         url: "/admin/event",
-        name: "Event"
+        name: "Event",
+        icon: CalendarDays,
     },
     {
         url: "/admin/round",
-        name: "Runde"
+        name: "Runde",
+        icon: IterationCcw,
     },
     {
         url: "/admin/result",
-        name: "Resultat"
+        name: "Resultat",
+        icon: Trophy,
     },
-
 ]
