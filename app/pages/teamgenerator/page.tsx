@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useMemo } from "react";
 import HeaderSection from "@/app/components/sections/HeaderSection";
 import { Player } from "@/app/types/player.model";
 import { Gender } from "@/app/types/gender.enum";
@@ -29,6 +29,8 @@ function getInitials(name: string) {
 
 export default function TeamGeneratorPage() {
   const { data: players = [] } = useFetch<Player[]>("/api/player");
+  const { data: linkedIds = [] } = useFetch<string[]>("/api/player/linked-ids");
+  const linkedSet = useMemo(() => new Set(linkedIds), [linkedIds]);
   const [participatingPlayers, setParticipatingPlayers] = useState<Player[]>([]);
   const [customPlayers, setCustomPlayers] = useState<Player[]>([]);
   const [customPlayerInput, setCustomPlayerInput] = useState("");
@@ -145,7 +147,10 @@ export default function TeamGeneratorPage() {
                 className={`${styles.playerChip} ${isSelected(player) ? styles.chipSelected : ""}`}
                 onClick={() => handleParticipantSelect(player)}
               >
-                <span className={styles.chipAvatar}>{getInitials(player.name)}</span>
+                <span className={styles.chipAvatar}>
+                  {getInitials(player.name)}
+                  {linkedSet.has(player.id) && <span className={styles.linkedDot} title="Har profil" />}
+                </span>
                 <span className={styles.chipName}>{player.name}</span>
                 {isSelected(player) && <span className={styles.chipCheck}>✓</span>}
               </button>

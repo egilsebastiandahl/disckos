@@ -149,6 +149,7 @@
 }
 
 .chipAvatar {
+  position: relative;
   flex-shrink: 0;
   width: 1.6rem;
   height: 1.6rem;
@@ -167,6 +168,22 @@
 .chipSelected .chipAvatar {
   background: var(--primary-foreground);
   color: var(--primary);
+}
+
+.linkedDot {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 1.5px solid var(--background);
+}
+
+.chipSelected .linkedDot {
+  background: var(--warm);
+  border-color: var(--primary);
 }
 
 .chipName {
