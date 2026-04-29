@@ -18,9 +18,8 @@ export default function ProfileMenu() {
     setSession(sess);
     if (sess) {
       const token = sess.access_token;
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8080";
       try {
-        const res = await fetch(`${backendUrl}/api/profile`, { headers: { Authorization: `Bearer ${token}` } });
+        const res = await fetch(`/api/profile`, { headers: { Authorization: `Bearer ${token}` } });
         if (res.ok) {
           const json = await res.json();
           setProfile(json);

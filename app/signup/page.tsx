@@ -33,9 +33,8 @@ export default function SignupPage() {
         try {
           const session = res.data.session;
           const token = session?.access_token;
-          const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8080";
           if (token) {
-            const profileRes = await fetch(`${backendUrl}/api/profile`, {
+            const profileRes = await fetch(`/api/profile`, {
               headers: { Authorization: `Bearer ${token}` },
             });
             if (profileRes.ok) {

@@ -24,8 +24,7 @@ export default function AdminLayout({ children }: AdminLayout) {
       }
 
       try {
-        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8080";
-        const res = await fetch(`${backendUrl}/api/profile`, {
+        const res = await fetch(`/api/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.ok) {
