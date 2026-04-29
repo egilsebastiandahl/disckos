@@ -188,7 +188,7 @@ export default function EventSignupSection({
                     : "bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30"
               }`}
             >
-              Registrer deg for å melde på
+              Meld deg på
             </button>
           )}
         </div>
