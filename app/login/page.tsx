@@ -87,6 +87,12 @@ export default function LoginPage() {
           >
             {loading ? "Logger inn…" : "Logg inn"}
           </button>
+
+          <div className="text-right">
+            <a href="/glemt-passord" className="text-sm text-warm underline">
+              Glemt passord?
+            </a>
+          </div>
         </form>
 
         {message && <div className="mt-4 text-center text-sm text-destructive">{message}</div>}
