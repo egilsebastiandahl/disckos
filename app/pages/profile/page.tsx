@@ -30,11 +30,11 @@ export default function ProfilePage() {
         return;
       }
       const token = session.access_token;
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8080";
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL ?? "http://localhost:8080";
 
       const [profileRes, playersRes] = await Promise.all([
         fetch(`${backendUrl}/api/profile`, { headers: { Authorization: `Bearer ${token}` } }),
-        fetch("/api/player"),
+        fetch(`${backendUrl}/api/player`, { headers: { Authorization: `Bearer ${token}` } }),
       ]);
 
       if (!profileRes.ok) {
@@ -71,7 +71,7 @@ export default function ProfilePage() {
       return;
     }
     const token = session.access_token;
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8080";
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL ?? "http://localhost:8080";
     const res = await fetch(`${backendUrl}/api/profile`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
@@ -101,7 +101,7 @@ export default function ProfilePage() {
       return;
     }
     const token = session.access_token;
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8080";
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL ?? "http://localhost:8080";
     const res = await fetch(`${backendUrl}/api/profile/player`, {
       method: "PUT",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
