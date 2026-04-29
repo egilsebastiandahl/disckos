@@ -2,6 +2,7 @@ import { Event } from "@/app/types/event.model";
 import "../styles/agenda-item.css";
 import { Separator } from "@/components/ui/separator";
 import AgendaItemDetailedInformation from "./AgendaItemDetailedInformation";
+import EventSignupSection from "./EventSignupSection";
 import Podium from "@/app/components/podium/Podium";
 import { dateStringToDateTimeFormatter } from "@/app/utils/dateFormatters";
 
@@ -19,12 +20,24 @@ export default function AgendaItem({ event, isNextEvent }: AgendaItemProps) {
   return (
     <div
       className={`agenda-item min-w-[300px] sm:min-w-md md:max-w-xl ${isPastEvent ? "past" : ""} ${isNextEvent ? "next" : ""} ${majorEventClass}`}
-      // className={`border border-foreground shadow p-4 mb-4 rounded-lg w-full min-w-xs sm:min-w-md md:max-w-xl ${isPastEvent ? "opacity-50" : ""} ${isNextEvent ? "bg-foreground text-background" : ""} ${majorEventClass}`}
     >
-      <h2 className="text-xl font-bold">{event.title}</h2>
-      <p className={`text-lg  ${isNextEvent ? "text-primary-foreground" : "text-foreground"}`}>
-        {dateStringToDateTimeFormatter(event.date)}
-      </p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-xl font-bold">{event.title}</h2>
+
+          <p className={`text-lg  ${isNextEvent ? "text-primary-foreground" : "text-foreground"}`}>
+            {dateStringToDateTimeFormatter(event.date)}
+          </p>
+        </div>
+
+        <EventSignupSection
+          eventId={event.id}
+          signups={event.signups ?? []}
+          isNextEvent={isNextEvent}
+          isPastEvent={isPastEvent}
+        />
+      </div>
+
       <Separator
         className={`mb-4 mt-2 ${isNextEvent ? "bg-primary-foreground/50" : "bg-border"} ${event.major ? "major-separator" : ""} `}
       />

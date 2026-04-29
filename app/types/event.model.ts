@@ -3,6 +3,12 @@ import { Placement } from "./placement.model";
 
 export type { Placement } from "./placement.model";
 
+export interface EventSignup {
+  profileId: string;
+  displayName: string | null;
+  avatarUrl: string | null;
+}
+
 export interface Event {
   id: string;
   date: string; // ISO 8601 format
@@ -14,6 +20,7 @@ export interface Event {
   placements?: Placement[];
   published?: boolean;
   major: boolean;
+  signups?: EventSignup[];
 }
 
 /**
