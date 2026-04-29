@@ -35,6 +35,7 @@ export default function AgendaItem({ event, isNextEvent }: AgendaItemProps) {
           signups={event.signups ?? []}
           isNextEvent={isNextEvent}
           isPastEvent={isPastEvent}
+          isMajor={event.major}
         />
       </div>
 

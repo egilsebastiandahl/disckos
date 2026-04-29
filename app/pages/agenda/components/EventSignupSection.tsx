@@ -10,6 +10,7 @@ interface EventSignupSectionProps {
   signups: EventSignup[];
   isNextEvent: boolean;
   isPastEvent: boolean;
+  isMajor?: boolean;
 }
 
 export default function EventSignupSection({
@@ -17,6 +18,7 @@ export default function EventSignupSection({
   signups: initialSignups,
   isNextEvent,
   isPastEvent,
+  isMajor = false,
 }: EventSignupSectionProps) {
   const router = useRouter();
   const [signups, setSignups] = useState<EventSignup[]>(initialSignups);
@@ -111,20 +113,24 @@ export default function EventSignupSection({
       {signups.length > 0 && (
         <div className="flex items-center gap-2 flex-wrap mb-3">
           <span
-            className={`text-sm font-medium ${isNextEvent ? "text-primary-foreground/80" : "text-muted-foreground"}`}
+            className={`text-sm font-medium ${
+              isMajor ? "text-warm-foreground/80" : isNextEvent ? "text-primary-foreground/80" : "text-muted-foreground"
+            }`}
           >
             Påmeldte ({signups.length}):
           </span>
           <div className="flex -space-x-2">
             {signups.slice(0, 8).map((signup) => (
-              <SignupAvatar key={signup.profileId} signup={signup} isNextEvent={isNextEvent} />
+              <SignupAvatar key={signup.profileId} signup={signup} isNextEvent={isNextEvent} isMajor={isMajor} />
             ))}
             {signups.length > 8 && (
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 ${
-                  isNextEvent
-                    ? "bg-primary-foreground/20 border-primary-foreground/40 text-primary-foreground"
-                    : "bg-muted border-border text-muted-foreground"
+                  isMajor
+                    ? "bg-warm-foreground/20 border-warm-foreground/40 text-warm-foreground"
+                    : isNextEvent
+                      ? "bg-primary-foreground/20 border-primary-foreground/40 text-primary-foreground"
+                      : "bg-muted border-border text-muted-foreground"
                 }`}
               >
                 +{signups.length - 8}
@@ -143,9 +149,11 @@ export default function EventSignupSection({
                 onClick={handleUnsignup}
                 disabled={loading}
                 className={`text-sm px-4 py-1.5 rounded-lg border transition cursor-pointer disabled:opacity-50 ${
-                  isNextEvent
-                    ? "border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10"
-                    : "border-border text-muted-foreground hover:bg-muted"
+                  isMajor
+                    ? "border-warm-foreground/40 text-warm-foreground hover:bg-warm-foreground/10"
+                    : isNextEvent
+                      ? "border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10"
+                      : "border-border text-muted-foreground hover:bg-muted"
                 }`}
               >
                 {loading ? "..." : "Meld av"}
@@ -155,9 +163,11 @@ export default function EventSignupSection({
                 onClick={handleSignup}
                 disabled={loading}
                 className={`text-sm px-4 py-1.5 rounded-lg font-medium transition cursor-pointer disabled:opacity-50 ${
-                  isNextEvent
-                    ? "bg-primary-foreground text-primary hover:bg-primary-foreground/90"
-                    : "bg-primary text-primary-foreground hover:bg-primary/90"
+                  isMajor
+                    ? "bg-warm-foreground text-warm hover:bg-warm-foreground/90"
+                    : isNextEvent
+                      ? "bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+                      : "bg-primary text-primary-foreground hover:bg-primary/90"
                 }`}
               >
                 {loading ? "..." : "Meld på"}
@@ -171,9 +181,11 @@ export default function EventSignupSection({
                 router.push("/signup");
               }}
               className={`text-sm px-4 py-1.5 rounded-lg font-medium transition cursor-pointer ${
-                isNextEvent
-                  ? "bg-primary-foreground/15 text-primary-foreground hover:bg-primary-foreground/25 border border-primary-foreground/30"
-                  : "bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30"
+                isMajor
+                  ? "bg-warm-foreground/15 text-warm-foreground hover:bg-warm-foreground/25 border border-warm-foreground/30"
+                  : isNextEvent
+                    ? "bg-primary-foreground/15 text-primary-foreground hover:bg-primary-foreground/25 border border-primary-foreground/30"
+                    : "bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30"
               }`}
             >
               Registrer deg for å melde på
@@ -185,7 +197,15 @@ export default function EventSignupSection({
   );
 }
 
-function SignupAvatar({ signup, isNextEvent }: { signup: EventSignup; isNextEvent: boolean }) {
+function SignupAvatar({
+  signup,
+  isNextEvent,
+  isMajor,
+}: {
+  signup: EventSignup;
+  isNextEvent: boolean;
+  isMajor: boolean;
+}) {
   const initials = getInitials(signup.displayName);
 
   if (signup.avatarUrl) {
@@ -194,7 +214,9 @@ function SignupAvatar({ signup, isNextEvent }: { signup: EventSignup; isNextEven
         src={signup.avatarUrl}
         alt={signup.displayName || "Bruker"}
         title={signup.displayName || "Bruker"}
-        className={`w-8 h-8 rounded-full border-2 object-cover ${isNextEvent ? "border-primary" : "border-card"}`}
+        className={`w-8 h-8 rounded-full border-2 object-cover ${
+          isMajor ? "border-warm-foreground/40" : isNextEvent ? "border-primary" : "border-card"
+        }`}
       />
     );
   }
@@ -203,9 +225,11 @@ function SignupAvatar({ signup, isNextEvent }: { signup: EventSignup; isNextEven
     <div
       title={signup.displayName || "Bruker"}
       className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 ${
-        isNextEvent
-          ? "bg-primary-foreground/30 border-primary text-primary-foreground"
-          : "bg-primary/15 border-card text-primary"
+        isMajor
+          ? "bg-warm-foreground/30 border-warm-foreground/40 text-warm-foreground"
+          : isNextEvent
+            ? "bg-primary-foreground/30 border-primary text-primary-foreground"
+            : "bg-primary/15 border-card text-primary"
       }`}
     >
       {initials}
