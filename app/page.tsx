@@ -1,6 +1,7 @@
 import HeaderSection from "./components/sections/HeaderSection";
 import UpcomingEvent from "./components/sections/UpcomingEvent";
 import TextImage from "./components/sections/TextImage";
+import HallOfFame from "./components/sections/HallOfFame";
 
 export default function Home() {
   return (
@@ -9,7 +10,7 @@ export default function Home() {
         <div className="flex w-full justify-center items-center px-4 md:px-0">
           <HeaderSection
             title="Velkommen til Disckos"
-            text="Her kan dere følge med på når vi skal spille! Vi skal også legge til støtte for å kunne legge til bilder og videoer underveis i runden!"
+            text="Her kan du følge med på når vi skal spille! Lag deg en profil!"
           />
         </div>
         <section className="flex justify-center items-center w-full mx-4">
@@ -23,6 +24,10 @@ export default function Home() {
             imageUrl="/enlightened.png"
             textCenter
           />
+        </section>
+
+        <section className="flex justify-center items-center w-full">
+          <HallOfFame />
         </section>
 
         {/* <section className="flex justify-center items-center w-full text-background bg-foreground p-4 md:p-16">
