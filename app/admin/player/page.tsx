@@ -58,7 +58,12 @@ export default function AdminPlayerPage() {
       {/* Profiles table */}
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">Profiler</h2>
-        <ProfilesTable profiles={profiles ?? []} isLoading={profilesLoading} />
+        <ProfilesTable
+          profiles={profiles ?? []}
+          players={players ?? []}
+          isLoading={profilesLoading}
+          onUpdate={refetchProfiles}
+        />
       </section>
 
       {/* Create player */}
