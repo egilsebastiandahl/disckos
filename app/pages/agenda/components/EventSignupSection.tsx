@@ -33,6 +33,7 @@ export default function EventSignupSection({
 }: EventSignupSectionProps) {
   const router = useRouter();
   const [signups, setSignups] = useState<EventSignup[]>(initialSignups);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [isSignedUp, setIsSignedUp] = useState(false);
