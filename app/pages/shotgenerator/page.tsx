@@ -17,7 +17,9 @@ interface ShotResult {
 
 const ShotgeneratorPage = () => {
   const [currentShot, setCurrentShot] = useState<ShotResult | null>(null);
-  const [spinningCategories, setSpinningCategories] = useState<Set<string>>(new Set());
+  const [spinningCategories, setSpinningCategories] = useState<Set<string>>(
+    new Set()
+  );
   const [selectedMode, setSelectedMode] = useState<ShotType | null>(null);
 
   const getVisibleCategories = () => {
@@ -60,7 +62,6 @@ const ShotgeneratorPage = () => {
 
       switch (type.category) {
         case "Disctype":
-        case "Stabilitet":
         case "Type":
         case "Kastemåte":
         case "Lag":
@@ -71,8 +72,13 @@ const ShotgeneratorPage = () => {
           // allowed 2 selections
           selectedNames = getRandomShotText(type.items, 2);
           // if certain extra elements are contained, remove all other elements.
-          if (selectedNames.includes("Kamerat velger") || selectedNames.includes("Konkurrent velger")) {
-            selectedNames = selectedNames.filter((e) => e == "Kamerat velger" || e == "Konkurrent velger");
+          if (
+            selectedNames.includes("Kamerat velger") ||
+            selectedNames.includes("Konkurrent velger")
+          ) {
+            selectedNames = selectedNames.filter(
+              (e) => e == "Kamerat velger" || e == "Konkurrent velger"
+            );
           }
           break;
         default:
@@ -99,7 +105,10 @@ const ShotgeneratorPage = () => {
     });
   };
 
-  const getRandomShotText = (items: { title: string; isActive: boolean }[], allowedAmount: number = 1): string[] => {
+  const getRandomShotText = (
+    items: { title: string; isActive: boolean }[],
+    allowedAmount: number = 1
+  ): string[] => {
     let tempItems = items.filter((e) => e.isActive);
     const randomShotText: string[] = [];
 
@@ -114,7 +123,10 @@ const ShotgeneratorPage = () => {
 
   return (
     <>
-      <HeaderSection title="Shot-generator" text="Her kan du rulle om hvilket kast du skal bruke!" />
+      <HeaderSection
+        title="Shot-generator"
+        text="Her kan du rulle om hvilket kast du skal bruke!"
+      />
       <main className="flex flex-col max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 items-center w-full">
         <ShotButtons style={{ marginBottom: 36 }} onPress={generateShot} />
         {currentShot && (

@@ -30,27 +30,6 @@ export const shotData: ShotData[] = [
     ],
   },
   {
-    category: "Stabilitet",
-    items: [
-      {
-        title: "Overstabil",
-        isActive: true,
-      },
-      {
-        title: "Stabil",
-        isActive: true,
-      },
-      {
-        title: "Understabil",
-        isActive: true,
-      },
-      {
-        title: "Fritt valg",
-        isActive: true,
-      },
-    ],
-  },
-  {
     category: "Type",
     items: [
       {
@@ -65,7 +44,7 @@ export const shotData: ShotData[] = [
         title: "Anhyzer",
         isActive: true,
       },
-       {
+      {
         title: "Tomahawk",
         isActive: true,
       },
@@ -98,11 +77,10 @@ export const shotData: ShotData[] = [
         title: "Forehand",
         isActive: true,
       },
-     {
+      {
         title: "Fritt valg",
         isActive: true,
       },
-      
     ],
   },
   {
