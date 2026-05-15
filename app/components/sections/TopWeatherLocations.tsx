@@ -33,11 +33,7 @@ export default function TopWeatherLocations() {
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[0, 1, 2].map((i) => (
-            <LocationWeatherCardSkeleton
-              key={i}
-              compact
-              showHourly={false}
-            />
+            <LocationWeatherCardSkeleton key={i} compact showHourly={false} />
           ))}
         </div>
       ) : (
@@ -49,7 +45,6 @@ export default function TopWeatherLocations() {
               badge={BADGES[index]}
               compact
               showHourly={false}
-              showScore
             />
           ))}
         </div>

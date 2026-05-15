@@ -4,7 +4,6 @@ import AgendaList from "./components/AgendaList";
 import { AgendaListSkeleton } from "./components/AgendaItemSkeleton";
 import { type Event } from "@/app/types/event.model";
 import useFetch from "@/app/hooks/useFetch";
-import { flyDisc } from "@/app/components/animations/flyDisc";
 
 const NESTE_EVENT_BUTTON_ID = "neste-event-btn";
 
@@ -14,13 +13,14 @@ export default function AgendaPage() {
   const onGoToNextEventClick = () => {
     const now = new Date();
     const nextIndex = events?.findIndex((e) => new Date(e.date) > now);
-    const targetIndex = nextIndex !== -1 ? nextIndex : 0; /* If no upcoming event, go to first event */
+    const targetIndex =
+      nextIndex !== -1
+        ? nextIndex
+        : 0; /* If no upcoming event, go to first event */
     const target = document.getElementById(`agenda-item-${targetIndex}`);
     if (!target) return;
 
     target.scrollIntoView({ behavior: "smooth", block: "center" });
-    const button = document.getElementById(NESTE_EVENT_BUTTON_ID);
-    if (button) flyDisc({ from: button, to: target, durationMs: 1000 });
   };
   return (
     <>
@@ -32,7 +32,11 @@ export default function AgendaPage() {
         buttonId={NESTE_EVENT_BUTTON_ID}
       />
       <main className="flex max-w-7xl mx-auto sm:px-6 lg:px-8 justify-center">
-        {isLoading ? <AgendaListSkeleton /> : <AgendaList events={events ?? []} />}
+        {isLoading ? (
+          <AgendaListSkeleton />
+        ) : (
+          <AgendaList events={events ?? []} />
+        )}
       </main>
     </>
   );

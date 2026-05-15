@@ -22,6 +22,8 @@ export default function UpcomingEvent() {
     return <AgendaItemSkeleton />;
   }
 
+  if (!nextEvent) return null;
+
   return (
     <Link href={`${nextEventLink}`} className="cursor-pointer">
       <AgendaItem event={nextEvent} isNextEvent={true} />
