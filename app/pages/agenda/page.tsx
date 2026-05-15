@@ -2,8 +2,11 @@
 import HeaderSection from "@/app/components/sections/HeaderSection";
 import AgendaList from "./components/AgendaList";
 import { AgendaListSkeleton } from "./components/AgendaItemSkeleton";
-import { Event } from "@/app/types/event.model";
+import { type Event } from "@/app/types/event.model";
 import useFetch from "@/app/hooks/useFetch";
+import { flyDisc } from "@/app/components/animations/flyDisc";
+
+const NESTE_EVENT_BUTTON_ID = "neste-event-btn";
 
 export default function AgendaPage() {
   const { data: events, isLoading } = useFetch<Event[]>("/api/event");
@@ -12,8 +15,12 @@ export default function AgendaPage() {
     const now = new Date();
     const nextIndex = events?.findIndex((e) => new Date(e.date) > now);
     const targetIndex = nextIndex !== -1 ? nextIndex : 0; /* If no upcoming event, go to first event */
-    const el = document.getElementById(`agenda-item-${targetIndex}`);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    const target = document.getElementById(`agenda-item-${targetIndex}`);
+    if (!target) return;
+
+    target.scrollIntoView({ behavior: "smooth", block: "center" });
+    const button = document.getElementById(NESTE_EVENT_BUTTON_ID);
+    if (button) flyDisc({ from: button, to: target, durationMs: 1000 });
   };
   return (
     <>
@@ -22,6 +29,7 @@ export default function AgendaPage() {
         text="Her kan man se alle eventene våres. Flere blir lagt til fortløpende."
         buttonText="Neste event"
         buttonClick={onGoToNextEventClick}
+        buttonId={NESTE_EVENT_BUTTON_ID}
       />
       <main className="flex max-w-7xl mx-auto sm:px-6 lg:px-8 justify-center">
         {isLoading ? <AgendaListSkeleton /> : <AgendaList events={events ?? []} />}

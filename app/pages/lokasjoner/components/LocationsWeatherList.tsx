@@ -5,6 +5,7 @@ import { useLocationsForecasts } from "@/app/hooks/useLocationsForecasts";
 import LocationWeatherCard from "@/app/components/weather/LocationWeatherCard";
 import LocationWeatherCardSkeleton from "@/app/components/weather/LocationWeatherCardSkeleton";
 import WeatherAttribution from "@/app/components/weather/WeatherAttribution";
+import DiscInBasket from "@/app/components/animations/DiscInBasket";
 
 const DEFAULT_SKELETON_COUNT = 3;
 
@@ -30,7 +31,12 @@ export default function LocationsWeatherList() {
   }
 
   if (locations.length === 0) {
-    return <p className="text-muted-foreground">Ingen lokasjoner enda.</p>;
+    return (
+      <div className="flex flex-col items-center gap-3 py-8 text-center">
+        <DiscInBasket size={140} />
+        <p className="text-muted-foreground">Ingen lokasjoner enda.</p>
+      </div>
+    );
   }
 
   return (

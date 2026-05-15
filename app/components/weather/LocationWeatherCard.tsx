@@ -14,6 +14,9 @@ import PlaceIcon from "@mui/icons-material/Place";
 import AirIcon from "@mui/icons-material/Air";
 import OpacityIcon from "@mui/icons-material/Opacity";
 import { cn } from "@/lib/utils";
+import "../animations/animations.css";
+
+const ACE_SCORE_THRESHOLD = 10;
 
 interface LocationWeatherCardProps {
   data: LocationForecast;
@@ -64,11 +67,20 @@ export default function LocationWeatherCard({
               <span
                 title="Lavere er bedre — kombinerer regn, vind og temperatur."
                 className={cn(
-                  "inline-flex items-center gap-1 text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full",
-                  scoreBadgeClass(score)
+                  "relative inline-flex items-center gap-1 text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full",
+                  scoreBadgeClass(score),
+                  score < ACE_SCORE_THRESHOLD && "ace-pulse"
                 )}
               >
                 Score {Math.round(score)}
+                {score < ACE_SCORE_THRESHOLD && (
+                  <span
+                    aria-hidden="true"
+                    className="ace-sparkle absolute -top-1 -right-1 text-[10px] leading-none"
+                  >
+                    ✨
+                  </span>
+                )}
               </span>
             )}
             {badge && (

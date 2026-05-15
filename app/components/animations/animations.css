@@ -1,0 +1,117 @@
+/* ──────────────────────────────────────────────────────────────────
+   Disc-golf animations — shared keyframes.
+   All animations should respect prefers-reduced-motion.
+   ────────────────────────────────────────────────────────────────── */
+
+@keyframes disc-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Hero arc: disc flies across the top of the viewport once, then exits. */
+@keyframes disc-hero-arc {
+  0% {
+    transform: translate(-15vw, 30vh) rotate(0deg) scale(0.6);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(50vw, -8vh) rotate(540deg) scale(1);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(115vw, 25vh) rotate(1080deg) scale(0.7);
+    opacity: 0;
+  }
+}
+
+/* Trail that fades behind a flying disc. */
+@keyframes disc-trail {
+  0%, 100% { opacity: 0; }
+  20%, 80% { opacity: 0.5; }
+}
+
+/* In-basket loop: disc enters from left, arcs into the basket, fades. */
+@keyframes disc-into-basket {
+  0% {
+    transform: translate(-90px, 10px) rotate(0deg) scale(0.7);
+    opacity: 0;
+  }
+  10% { opacity: 1; }
+  60% {
+    transform: translate(0, -32px) rotate(540deg) scale(0.9);
+    opacity: 1;
+  }
+  80% {
+    transform: translate(0, 8px) rotate(720deg) scale(0.55);
+    opacity: 1;
+  }
+  90% {
+    transform: translate(0, 8px) rotate(720deg) scale(0.45);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-90px, 10px) rotate(0deg) scale(0.7);
+    opacity: 0;
+  }
+}
+
+/* Chains rattle when the disc lands. */
+@keyframes chains-rattle {
+  0%, 70%, 100% { transform: translateX(0); }
+  75% { transform: translateX(-1px); }
+  80% { transform: translateX(1.5px); }
+  85% { transform: translateX(-1px); }
+  90% { transform: translateX(0.5px); }
+}
+
+/* One-shot pulse for ace-tier scores. */
+@keyframes ace-pulse {
+  0%, 100% { transform: scale(1); }
+  30% { transform: scale(1.15); }
+  60% { transform: scale(0.97); }
+}
+
+@keyframes ace-sparkle {
+  0% { opacity: 0; transform: scale(0.4) rotate(0deg); }
+  40% { opacity: 1; transform: scale(1.1) rotate(120deg); }
+  100% { opacity: 0; transform: scale(1.4) rotate(240deg); }
+}
+
+.disc-spin { animation: disc-spin 1.2s linear infinite; }
+
+.disc-hero-arc {
+  animation: disc-hero-arc 2.6s cubic-bezier(0.33, 0.05, 0.5, 1) forwards;
+}
+
+.disc-into-basket {
+  animation: disc-into-basket 3.6s cubic-bezier(0.33, 0.05, 0.5, 1) infinite;
+}
+
+.chains-rattle {
+  animation: chains-rattle 3.6s ease-in-out infinite;
+  transform-origin: center top;
+}
+
+.ace-pulse {
+  animation: ace-pulse 700ms cubic-bezier(0.34, 1.56, 0.64, 1) 1;
+}
+
+.ace-sparkle {
+  animation: ace-sparkle 900ms ease-out 1 forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .disc-spin,
+  .disc-hero-arc,
+  .disc-into-basket,
+  .chains-rattle,
+  .ace-pulse,
+  .ace-sparkle {
+    animation: none !important;
+  }
+}

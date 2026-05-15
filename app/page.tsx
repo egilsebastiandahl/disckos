@@ -2,10 +2,12 @@ import HeaderSection from "./components/sections/HeaderSection";
 import UpcomingEvent from "./components/sections/UpcomingEvent";
 import HallOfFame from "./components/sections/HallOfFame";
 import TopWeatherLocations from "./components/sections/TopWeatherLocations";
+import HeroDiscArc from "./components/animations/HeroDiscArc";
 
 export default function Home() {
   return (
     <div className="flex justify-center font-sans p-4">
+      <HeroDiscArc />
       <main className="flex w-full flex-col items-center justify-between pt-16 md:pt-32 sm:items-start gap-8 md:gap-16">
         <section className="flex w-full justify-center items-center px-4 md:px-0">
           <HeaderSection

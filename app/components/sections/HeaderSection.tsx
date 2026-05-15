@@ -5,15 +5,16 @@ interface HeaderSectionProps {
   text?: string;
   buttonText?: string;
   buttonClick?: () => void;
+  buttonId?: string;
 }
 
-export default function HeaderSection({ title, text, buttonText, buttonClick }: HeaderSectionProps) {
+export default function HeaderSection({ title, text, buttonText, buttonClick, buttonId }: HeaderSectionProps) {
   return (
     <header className="flex flex-col mb-12 text-center w-full mx-auto items-center">
       <h1 className="text-4xl font-bold mb-4">{title}</h1>
       {text && <p className="max-w-lg text-lg text-muted-foreground">{text}</p>}
       {buttonText && (
-        <Button className="mt-4 max-w-sm" onClick={buttonClick}>
+        <Button id={buttonId} className="mt-4 max-w-sm" onClick={buttonClick}>
           {buttonText}
         </Button>
       )}

@@ -6,6 +6,7 @@ import { type Event } from "@/app/types/event.model";
 import CloseIcon from "@mui/icons-material/Close";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import DiscInBasket from "@/app/components/animations/DiscInBasket";
 
 interface PhotoGalleryProps {
   photos: EventPhoto[];
@@ -48,9 +49,10 @@ export default function PhotoGallery({ photos, events }: PhotoGalleryProps) {
 
   if (photos.length === 0) {
     return (
-      <div className="text-center py-16">
+      <div className="flex flex-col items-center text-center py-16 gap-3">
+        <DiscInBasket size={140} />
         <p className="text-muted-foreground text-lg">Ingen bilder ennå.</p>
-        <p className="text-muted-foreground text-sm mt-1">
+        <p className="text-muted-foreground text-sm -mt-2">
           Bilder lastet opp fra eventer vil dukke opp her.
         </p>
       </div>
