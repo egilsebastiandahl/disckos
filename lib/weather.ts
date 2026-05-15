@@ -141,14 +141,26 @@ export function summarizeToday(forecast: MetForecast, referenceDate = new Date()
 }
 
 /**
- * Playability for disc golf: lower is better.
- * Wind is the dominant factor; rain adds penalty; cold weighs in lightly.
+ * Playability for disc golf: lower is better. Rain dominates — any forecast
+ * rain incurs a fixed penalty so a dry location with some wind always beats
+ * a wet one. Wind and cold break ties between dry locations.
  */
+const RAIN_THRESHOLD_MM = 0.1;
+const RAIN_FIXED_PENALTY = 10;
+const RAIN_PER_MM = 15;
+const WIND_PER_MS = 2;
+
+function rainPenalty(mm: number): number {
+  if (mm <= RAIN_THRESHOLD_MM) return 0;
+  return RAIN_FIXED_PENALTY + mm * RAIN_PER_MM;
+}
+
+function coldPenalty(temp: number): number {
+  return Math.max(0, 5 - temp);
+}
+
 export function scorePlayability(summary: WeatherSummary): number {
-  const windPenalty = summary.windMax * 2;
-  const rainPenalty = summary.precipTotal * 4;
-  const coldPenalty = Math.max(0, 5 - summary.now.temperature);
-  return windPenalty + rainPenalty + coldPenalty;
+  return rainPenalty(summary.precipTotal) + summary.windMax * WIND_PER_MS + coldPenalty(summary.now.temperature);
 }
 
 export function isWithinForecastHorizon(isoDate: string, now = new Date()): boolean {
@@ -182,10 +194,7 @@ export function dayRange(referenceDate: Date, startHour = 8, endHour = 21): { fr
  * Lower is better, same axes as scorePlayability but applied to a single hour.
  */
 export function scoreSlice(slice: WeatherSlice): number {
-  const windPenalty = slice.windSpeed * 2;
-  const rainPenalty = slice.precipitation * 4;
-  const coldPenalty = Math.max(0, 5 - slice.temperature);
-  return windPenalty + rainPenalty + coldPenalty;
+  return rainPenalty(slice.precipitation) + slice.windSpeed * WIND_PER_MS + coldPenalty(slice.temperature);
 }
 
 export function findBestSlice(slices: WeatherSlice[]): WeatherSlice | null {
