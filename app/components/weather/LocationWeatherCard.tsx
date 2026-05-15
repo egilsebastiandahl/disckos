@@ -18,6 +18,12 @@ interface LocationWeatherCardProps {
   className?: string;
 }
 
+function scoreBadgeClass(score: number): string {
+  if (score < 15) return "bg-primary/15 text-primary";
+  if (score < 30) return "bg-warm/15 text-warm";
+  return "bg-destructive/15 text-destructive";
+}
+
 export default function LocationWeatherCard({
   data,
   badge,
@@ -25,24 +31,44 @@ export default function LocationWeatherCard({
   showHourly = true,
   className,
 }: LocationWeatherCardProps) {
-  const { location, forecast, summary, error } = data;
+  const { location, forecast, summary, score, error } = data;
 
   const today = dayRange(new Date());
   const hourly = forecast ? sliceRange(forecast, today.from, today.to) : [];
   const best = findBestSlice(hourly);
+  const mapsUrl = `https://maps.google.com/?q=${location.lat},${location.lon}`;
+  const hasScore = Number.isFinite(score);
 
   return (
     <Card className={cn("gap-3 py-4", className)}>
       <CardHeader className="px-4">
         <CardTitle className="flex items-center justify-between gap-2 text-base">
-          <span className="flex items-center gap-1.5">
+          <a
+            href={mapsUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-1.5 hover:underline focus-visible:underline outline-none"
+          >
             <PlaceIcon fontSize="small" /> {location.name}
+          </a>
+          <span className="flex items-center gap-2">
+            {hasScore && (
+              <span
+                title="Lavere er bedre — kombinerer regn, vind og temperatur."
+                className={cn(
+                  "hidden lg:inline-flex items-center gap-1 text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full",
+                  scoreBadgeClass(score),
+                )}
+              >
+                Score {Math.round(score)}
+              </span>
+            )}
+            {badge && (
+              <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary text-primary-foreground">
+                {badge}
+              </span>
+            )}
           </span>
-          {badge && (
-            <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary text-primary-foreground">
-              {badge}
-            </span>
-          )}
         </CardTitle>
       </CardHeader>
       <CardContent className="px-4">
