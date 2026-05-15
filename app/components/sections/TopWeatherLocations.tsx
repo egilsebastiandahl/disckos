@@ -10,8 +10,10 @@ import Link from "next/link";
 const BADGES = ["Best i dag", "2. plass", "3. plass"];
 
 export default function TopWeatherLocations() {
-  const { data: events, isLoading: eventsLoading } = useFetch<Event[]>("/api/event");
-  const { forecasts, isLoading: forecastsLoading } = useLocationsForecasts(events);
+  const { data: events, isLoading: eventsLoading } =
+    useFetch<Event[]>("/api/event");
+  const { forecasts, isLoading: forecastsLoading } =
+    useLocationsForecasts(events);
 
   if (eventsLoading) {
     return <FrisbeeLoader size="md" text="Sjekker været..." />;
@@ -23,7 +25,9 @@ export default function TopWeatherLocations() {
   return (
     <div className="w-full max-w-5xl mx-auto px-4">
       <div className="text-center mb-6 md:mb-8">
-        <h2 className="text-3xl md:text-4xl font-bold font-serif text-foreground">Hvor er det best vær?</h2>
+        <h2 className="text-3xl md:text-4xl font-bold font-serif text-foreground">
+          Hvor er det best vær?
+        </h2>
         <p className="mt-2 text-muted-foreground max-w-md mx-auto">
           Topp 3 lokasjoner med best forhold for discgolf i dag.
         </p>
@@ -32,7 +36,10 @@ export default function TopWeatherLocations() {
       {forecastsLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[0, 1, 2].map((i) => (
-            <div key={i} className="h-44 rounded-xl bg-muted/40 animate-pulse" />
+            <div
+              key={i}
+              className="h-44 rounded-xl bg-muted/40 animate-pulse"
+            />
           ))}
         </div>
       ) : (
@@ -44,6 +51,7 @@ export default function TopWeatherLocations() {
               badge={BADGES[index]}
               compact
               showHourly={false}
+              showScore
             />
           ))}
         </div>
