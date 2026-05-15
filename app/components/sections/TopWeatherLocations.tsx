@@ -2,8 +2,8 @@
 import type { Event } from "@/app/types/event.model";
 import useFetch from "@/app/hooks/useFetch";
 import { useLocationsForecasts } from "@/app/hooks/useLocationsForecasts";
-import FrisbeeLoader from "../loader/FrisbeeLoader";
 import LocationWeatherCard from "../weather/LocationWeatherCard";
+import LocationWeatherCardSkeleton from "../weather/LocationWeatherCardSkeleton";
 import WeatherAttribution from "../weather/WeatherAttribution";
 import Link from "next/link";
 
@@ -15,12 +15,9 @@ export default function TopWeatherLocations() {
   const { forecasts, isLoading: forecastsLoading } =
     useLocationsForecasts(events);
 
-  if (eventsLoading) {
-    return <FrisbeeLoader size="md" text="Sjekker været..." />;
-  }
-
+  const isLoading = eventsLoading || forecastsLoading;
   const playable = forecasts.filter((f) => !f.error && f.summary).slice(0, 3);
-  if (playable.length === 0 && !forecastsLoading) return null;
+  if (!isLoading && playable.length === 0) return null;
 
   return (
     <div className="w-full max-w-5xl mx-auto px-4">
@@ -33,12 +30,13 @@ export default function TopWeatherLocations() {
         </p>
       </div>
 
-      {forecastsLoading ? (
+      {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[0, 1, 2].map((i) => (
-            <div
+            <LocationWeatherCardSkeleton
               key={i}
-              className="h-44 rounded-xl bg-muted/40 animate-pulse"
+              compact
+              showHourly={false}
             />
           ))}
         </div>

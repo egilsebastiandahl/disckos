@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { Event } from "@/app/types/event.model";
-import { EventPhoto } from "@/app/types/event-photo.model";
+import { type Event } from "@/app/types/event.model";
+import { type EventPhoto } from "@/app/types/event-photo.model";
 import useFetch from "@/app/hooks/useFetch";
 import HeaderSection from "@/app/components/sections/HeaderSection";
-import FrisbeeLoader from "@/app/components/loader/FrisbeeLoader";
 import PhotoUpload from "./components/PhotoUpload";
 import PhotoGallery from "./components/PhotoGallery";
+import PhotoGallerySkeleton from "./components/PhotoGallerySkeleton";
 
 function getActiveEvent(events: Event[]): Event | null {
   const now = new Date();
@@ -23,7 +23,8 @@ function getActiveEvent(events: Event[]): Event | null {
 }
 
 export default function BilderPage() {
-  const { data: events, isLoading: eventsLoading } = useFetch<Event[]>("/api/event");
+  const { data: events, isLoading: eventsLoading } =
+    useFetch<Event[]>("/api/event");
   const [photos, setPhotos] = useState<EventPhoto[]>([]);
   const [photosLoading, setPhotosLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
@@ -63,13 +64,19 @@ export default function BilderPage() {
 
   return (
     <>
-      <HeaderSection title="Bilder" text="Minner fra eventene våre. Del dine egne bilder når et event pågår!" />
+      <HeaderSection
+        title="Bilder"
+        text="Minner fra eventene våre. Del dine egne bilder når et event pågår!"
+      />
 
       <main className="max-w-6xl mx-auto">
         {/* Upload section — only visible to authenticated users during active event */}
         {session && activeEvent && (
           <div className="mb-10 max-w-md mx-auto">
-            <PhotoUpload activeEvent={activeEvent} onUploadComplete={fetchPhotos} />
+            <PhotoUpload
+              activeEvent={activeEvent}
+              onUploadComplete={fetchPhotos}
+            />
           </div>
         )}
 
@@ -78,7 +85,10 @@ export default function BilderPage() {
           <div className="mb-10 max-w-md mx-auto text-center">
             <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
               <p className="text-sm text-muted-foreground">
-                Logg inn for å dele bilder fra <span className="font-medium text-foreground">{activeEvent.title}</span>
+                Logg inn for å dele bilder fra{" "}
+                <span className="font-medium text-foreground">
+                  {activeEvent.title}
+                </span>
               </p>
             </div>
           </div>
@@ -86,7 +96,7 @@ export default function BilderPage() {
 
         {/* Gallery */}
         {isLoading ? (
-          <FrisbeeLoader text="Henter bilder..." size="lg" />
+          <PhotoGallerySkeleton />
         ) : (
           <PhotoGallery photos={photos} events={events ?? []} />
         )}

@@ -4,6 +4,7 @@ import { fetchForecast, pickClosest, summarizeToday, isWithinForecastHorizon } f
 import type { WeatherSlice, WeatherSummary } from "@/app/types/weather.model";
 import { symbolLabel } from "@/lib/weatherSymbols";
 import WeatherIcon from "./WeatherIcon";
+import WeatherCardSkeleton from "./WeatherCardSkeleton";
 import AirIcon from "@mui/icons-material/Air";
 import OpacityIcon from "@mui/icons-material/Opacity";
 
@@ -57,7 +58,7 @@ export default function WeatherCard(props: WeatherCardProps) {
   }
 
   if (state.kind === "loading") {
-    return <div className={`h-16 rounded-lg bg-muted/40 animate-pulse ${className ?? ""}`} />;
+    return <WeatherCardSkeleton variant={variant} className={className} />;
   }
 
   if (state.kind === "error") {

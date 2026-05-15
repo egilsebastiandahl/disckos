@@ -5,7 +5,7 @@ import { Event } from "@/app/types/event.model";
 import TextImage from "./TextImage";
 import Link from "next/link";
 import useFetch from "@/app/hooks/useFetch";
-import FrisbeeLoader from "../loader/FrisbeeLoader";
+import AgendaItemSkeleton from "@/app/pages/agenda/components/AgendaItemSkeleton";
 
 export default function UpcomingEvent() {
   const { data, isLoading } = useFetch<Event[]>("/api/event");
@@ -18,7 +18,7 @@ export default function UpcomingEvent() {
   const nextEventLink = `pages/agenda#agenda-item-${nextEventIndex}`;
 
   if (isLoading) {
-    return <FrisbeeLoader size="lg" text="Henter neste event..." />;
+    return <AgendaItemSkeleton />;
   }
 
   if (!nextEvent) {

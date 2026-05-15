@@ -2,7 +2,7 @@
 
 import { Player } from "@/app/types/player.model";
 import useFetch from "@/app/hooks/useFetch";
-import FrisbeeLoader from "../loader/FrisbeeLoader";
+import HallOfFameSkeleton from "./HallOfFameSkeleton";
 
 function getInitials(name: string): string {
   return name
@@ -93,7 +93,7 @@ export default function HallOfFame() {
   const { data, isLoading, error } = useFetch<Player[]>("/api/public/hall-of-fame");
 
   if (isLoading) {
-    return <FrisbeeLoader size="md" text="Henter Hall of Fame..." />;
+    return <HallOfFameSkeleton />;
   }
 
   if (error || !data || data.length === 0) {

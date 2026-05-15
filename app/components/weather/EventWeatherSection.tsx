@@ -6,6 +6,7 @@ import { fetchForecast, isWithinForecastHorizon, pickClosest, sliceRange } from 
 import { symbolLabel } from "@/lib/weatherSymbols";
 import WeatherIcon from "./WeatherIcon";
 import HourlyForecastStrip from "./HourlyForecastStrip";
+import EventWeatherSectionSkeleton from "./EventWeatherSectionSkeleton";
 import AirIcon from "@mui/icons-material/Air";
 import OpacityIcon from "@mui/icons-material/Opacity";
 
@@ -57,12 +58,7 @@ export default function EventWeatherSection({ event, isNextEvent }: EventWeather
   const subClass = isNextEvent ? "text-primary-foreground/70" : "text-muted-foreground";
 
   if (state.kind === "loading") {
-    return (
-      <div className="flex flex-col gap-2">
-        <span className={`text-[11px] uppercase tracking-wider ${labelClass}`}>Forventet vær</span>
-        <div className="h-20 rounded-lg bg-muted/40 animate-pulse" />
-      </div>
-    );
+    return <EventWeatherSectionSkeleton isNextEvent={isNextEvent} />;
   }
 
   if (state.kind === "error") {
