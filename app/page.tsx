@@ -2,6 +2,7 @@ import HeaderSection from "./components/sections/HeaderSection";
 import UpcomingEvent from "./components/sections/UpcomingEvent";
 import TextImage from "./components/sections/TextImage";
 import HallOfFame from "./components/sections/HallOfFame";
+import TopWeatherLocations from "./components/sections/TopWeatherLocations";
 
 export default function Home() {
   return (
@@ -15,6 +16,9 @@ export default function Home() {
         </div>
         <section className="flex justify-center items-center w-full mx-4">
           <UpcomingEvent />
+        </section>
+        <section className="flex justify-center items-center w-full">
+          <TopWeatherLocations />
         </section>
         <section className="flex flex-col justify-center items-center m-auto text-center gap-4">
           <TextImage

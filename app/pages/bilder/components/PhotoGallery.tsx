@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { EventPhoto } from "@/app/types/event-photo.model";
-import { Event } from "@/app/types/event.model";
+import { type EventPhoto } from "@/app/types/event-photo.model";
+import { type Event } from "@/app/types/event.model";
 import CloseIcon from "@mui/icons-material/Close";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -16,7 +16,8 @@ export default function PhotoGallery({ photos, events }: PhotoGalleryProps) {
   const [selectedPhoto, setSelectedPhoto] = useState<EventPhoto | null>(null);
   const [filter, setFilter] = useState<string>("all");
 
-  const filteredPhotos = filter === "all" ? photos : photos.filter((p) => p.eventId === filter);
+  const filteredPhotos =
+    filter === "all" ? photos : photos.filter((p) => p.eventId === filter);
 
   const eventMap = new Map(events.map((e) => [e.id, e]));
 
@@ -38,7 +39,9 @@ export default function PhotoGallery({ photos, events }: PhotoGalleryProps) {
   }
 
   // Group photos by event for the collage effect
-  const eventsWithPhotos = Array.from(new Set(filteredPhotos.map((p) => p.eventId))).map((eventId) => ({
+  const eventsWithPhotos = Array.from(
+    new Set(filteredPhotos.map((p) => p.eventId))
+  ).map((eventId) => ({
     event: eventMap.get(eventId),
     photos: filteredPhotos.filter((p) => p.eventId === eventId),
   }));
@@ -47,7 +50,9 @@ export default function PhotoGallery({ photos, events }: PhotoGalleryProps) {
     return (
       <div className="text-center py-16">
         <p className="text-muted-foreground text-lg">Ingen bilder ennå.</p>
-        <p className="text-muted-foreground text-sm mt-1">Bilder lastet opp fra eventer vil dukke opp her.</p>
+        <p className="text-muted-foreground text-sm mt-1">
+          Bilder lastet opp fra eventer vil dukke opp her.
+        </p>
       </div>
     );
   }
@@ -102,7 +107,11 @@ export default function PhotoGallery({ photos, events }: PhotoGalleryProps) {
               )}
               <div className="columns-2 sm:columns-3 lg:columns-4 gap-3 space-y-3">
                 {eventPhotos.map((photo) => (
-                  <PhotoCard key={photo.id} photo={photo} onClick={() => openLightbox(photo)} />
+                  <PhotoCard
+                    key={photo.id}
+                    photo={photo}
+                    onClick={() => openLightbox(photo)}
+                  />
                 ))}
               </div>
             </section>
@@ -111,7 +120,11 @@ export default function PhotoGallery({ photos, events }: PhotoGalleryProps) {
       ) : (
         <div className="columns-2 sm:columns-3 lg:columns-4 gap-3 space-y-3">
           {filteredPhotos.map((photo) => (
-            <PhotoCard key={photo.id} photo={photo} onClick={() => openLightbox(photo)} />
+            <PhotoCard
+              key={photo.id}
+              photo={photo}
+              onClick={() => openLightbox(photo)}
+            />
           ))}
         </div>
       )}
@@ -149,14 +162,21 @@ export default function PhotoGallery({ photos, events }: PhotoGalleryProps) {
             <ChevronRightIcon className="text-white" />
           </button>
 
-          <div className="max-w-4xl max-h-[85vh] flex flex-col items-center" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="max-w-4xl max-h-[85vh] flex flex-col items-center"
+            onClick={(e) => e.stopPropagation()}
+          >
             <img
               src={selectedPhoto.imageUrl}
               alt={selectedPhoto.caption || "Event photo"}
               className="max-h-[75vh] max-w-full object-contain rounded-lg"
             />
             <div className="mt-3 text-center">
-              {selectedPhoto.caption && <p className="text-white text-sm mb-1">{selectedPhoto.caption}</p>}
+              {selectedPhoto.caption && (
+                <p className="text-white text-sm mb-1">
+                  {selectedPhoto.caption}
+                </p>
+              )}
               <p className="text-white/60 text-xs">
                 {selectedPhoto.displayName ?? "Ukjent"} •{" "}
                 {new Date(selectedPhoto.createdAt).toLocaleDateString("nb-NO", {
@@ -172,7 +192,13 @@ export default function PhotoGallery({ photos, events }: PhotoGalleryProps) {
   );
 }
 
-function PhotoCard({ photo, onClick }: { photo: EventPhoto; onClick: () => void }) {
+function PhotoCard({
+  photo,
+  onClick,
+}: {
+  photo: EventPhoto;
+  onClick: () => void;
+}) {
   return (
     <div
       className="break-inside-avoid cursor-pointer group relative overflow-hidden rounded-lg border border-border shadow-sm hover:shadow-md transition"
@@ -186,8 +212,14 @@ function PhotoCard({ photo, onClick }: { photo: EventPhoto; onClick: () => void 
       />
       <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       <div className="absolute bottom-0 left-0 right-0 p-2.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        {photo.caption && <p className="text-white text-xs font-medium line-clamp-2">{photo.caption}</p>}
-        <p className="text-white/70 text-xs mt-0.5">{photo.displayName ?? "Ukjent"}</p>
+        {photo.caption && (
+          <p className="text-white text-xs font-medium line-clamp-2">
+            {photo.caption}
+          </p>
+        )}
+        <p className="text-white/70 text-xs mt-0.5">
+          {photo.displayName ?? "Ukjent"}
+        </p>
       </div>
     </div>
   );
