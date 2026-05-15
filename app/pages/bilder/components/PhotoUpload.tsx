@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { Event } from "@/app/types/event.model";
+import { type Event } from "@/app/types/event.model";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -11,7 +11,10 @@ interface PhotoUploadProps {
   onUploadComplete: () => void;
 }
 
-export default function PhotoUpload({ activeEvent, onUploadComplete }: PhotoUploadProps) {
+export default function PhotoUpload({
+  activeEvent,
+  onUploadComplete,
+}: PhotoUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const [caption, setCaption] = useState("");
@@ -76,7 +79,7 @@ export default function PhotoUpload({ activeEvent, onUploadComplete }: PhotoUplo
       clearSelection();
       onUploadComplete();
     } catch {
-      setError("Noe gikk galt. Prøv igjen.");
+      setError("Noe gikk galt. Prøv igjen");
     } finally {
       setUploading(false);
     }
@@ -97,8 +100,12 @@ export default function PhotoUpload({ activeEvent, onUploadComplete }: PhotoUplo
       {!preview ? (
         <label className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-border rounded-xl p-8 cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition">
           <AddAPhotoIcon className="text-muted-foreground" fontSize="large" />
-          <span className="text-sm text-muted-foreground">Trykk for å velge bilde</span>
-          <span className="text-xs text-muted-foreground">JPEG, PNG eller WebP • Maks 10MB</span>
+          <span className="text-sm text-muted-foreground">
+            Trykk for å velge bilde
+          </span>
+          <span className="text-xs text-muted-foreground">
+            JPEG, PNG eller WebP • Maks 10MB
+          </span>
           <input
             ref={fileInputRef}
             type="file"
@@ -110,7 +117,11 @@ export default function PhotoUpload({ activeEvent, onUploadComplete }: PhotoUplo
       ) : (
         <div className="space-y-3">
           <div className="relative">
-            <img src={preview} alt="Preview" className="w-full max-h-64 object-cover rounded-lg" />
+            <img
+              src={preview}
+              alt="Preview"
+              className="w-full max-h-64 object-cover rounded-lg"
+            />
             <button
               onClick={clearSelection}
               className="absolute top-2 right-2 w-7 h-7 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-background transition"
@@ -138,10 +149,16 @@ export default function PhotoUpload({ activeEvent, onUploadComplete }: PhotoUplo
         </div>
       )}
 
-      {error && <p className="mt-3 text-sm text-destructive bg-destructive/10 rounded-lg px-3 py-2">{error}</p>}
+      {error && (
+        <p className="mt-3 text-sm text-destructive bg-destructive/10 rounded-lg px-3 py-2">
+          {error}
+        </p>
+      )}
 
       {success && (
-        <p className="mt-3 text-sm text-primary bg-primary/10 rounded-lg px-3 py-2">Bildet ble lastet opp! 🎉</p>
+        <p className="mt-3 text-sm text-primary bg-primary/10 rounded-lg px-3 py-2">
+          Bildet ble lastet opp! 🎉
+        </p>
       )}
     </div>
   );
