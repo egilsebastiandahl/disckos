@@ -154,8 +154,9 @@ export function scorePlayability(summary: WeatherSummary): number {
 export function isWithinForecastHorizon(isoDate: string, now = new Date()): boolean {
   const target = new Date(isoDate).getTime();
   if (!Number.isFinite(target)) return false;
+  if (target < now.getTime()) return false;
   const diffDays = (target - now.getTime()) / (1000 * 60 * 60 * 24);
-  return diffDays >= -0.5 && diffDays <= MET_FORECAST_HORIZON_DAYS;
+  return diffDays <= MET_FORECAST_HORIZON_DAYS;
 }
 
 export function sliceRange(forecast: MetForecast, fromIso: string, toIso: string): WeatherSlice[] {
