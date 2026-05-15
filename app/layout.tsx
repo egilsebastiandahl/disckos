@@ -3,6 +3,7 @@ import { Inter, Lora } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import NavigationHeader from "./components/navigation/NavigationHeader";
+import { AuthProvider } from "./components/auth/AuthProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -29,8 +30,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${lora.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <NavigationHeader />
-          {children}
+          <AuthProvider>
+            <NavigationHeader />
+            {children}
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

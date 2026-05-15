@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabaseClient";
+import { useAuth } from "../components/auth/AuthProvider";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { refreshProfile } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -23,24 +25,10 @@ export default function LoginPage() {
         return;
       }
       setMessage("Logged in successfully");
-      // ensure backend has profile and redirect new users to /profile to complete setup
-      try {
-        const session = res.data?.session;
-        const token = session?.access_token;
-        if (token) {
-          const profileRes = await fetch(`/api/profile`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          if (profileRes.ok) {
-            const profile = await profileRes.json();
-            if (!profile.username || !profile.displayName) {
-              router.push("/profile");
-              return;
-            }
-          }
-        }
-      } catch (e) {
-        // ignore and continue to home
+      const profile = await refreshProfile();
+      if (profile && (!profile.username || !profile.displayName)) {
+        router.push("/profile");
+        return;
       }
       router.push("/");
     } catch (err: any) {

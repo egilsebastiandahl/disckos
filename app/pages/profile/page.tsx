@@ -4,16 +4,16 @@ import { FormEvent, useEffect, useState } from "react";
 import { supabase } from "../../../lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import { Player } from "../../types/player.model";
-import { Profile } from "../../types/profile.model";
 import { NativeSelect } from "@/components/ui/native-select";
+import { useAuth } from "../../components/auth/AuthProvider";
 
 export default function ProfilePage() {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  const { session, profile, loading: authLoading, mutateProfile } = useAuth();
+  const [playersLoading, setPlayersLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [linkingPlayer, setLinkingPlayer] = useState(false);
   const [message, setMessage] = useState("");
-  const [profile, setProfile] = useState<Profile | null>(null);
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
@@ -21,55 +21,46 @@ export default function ProfilePage() {
   const [selectedPlayerId, setSelectedPlayerId] = useState<string>("");
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const { data: sessionData } = await supabase.auth.getSession();
-      const session = sessionData?.session;
-      if (!session) {
-        router.push("/login");
-        return;
+    if (authLoading) return;
+    if (!session) {
+      router.push("/login");
+      return;
+    }
+    if (profile) {
+      setUsername(profile.username ?? "");
+      setDisplayName(profile.displayName ?? "");
+      setBio(profile.bio ?? "");
+      setSelectedPlayerId(profile.playerId ?? "");
+    }
+  }, [authLoading, session, profile, router]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setPlayersLoading(true);
+      const res = await fetch(`/api/player`);
+      if (cancelled) return;
+      if (res.ok) {
+        const data = await res.json();
+        setPlayers(data);
       }
-      const token = session.access_token;
-
-      const [profileRes, playersRes] = await Promise.all([
-        fetch(`/api/profile`, { headers: { Authorization: `Bearer ${token}` } }),
-        fetch(`/api/player`),
-      ]);
-
-      if (!profileRes.ok) {
-        setMessage("Failed to load profile");
-        setLoading(false);
-        return;
-      }
-
-      const profileData = await profileRes.json();
-      setProfile(profileData);
-      setUsername(profileData.username ?? "");
-      setDisplayName(profileData.displayName ?? "");
-      setBio(profileData.bio ?? "");
-      setSelectedPlayerId(profileData.playerId ?? "");
-
-      if (playersRes.ok) {
-        const playersData = await playersRes.json();
-        setPlayers(playersData);
-      }
-
-      setLoading(false);
+      setPlayersLoading(false);
+    })();
+    return () => {
+      cancelled = true;
     };
-    fetchData();
-  }, [router]);
+  }, []);
 
   async function handleSave(e: FormEvent) {
     e.preventDefault();
     setSaving(true);
     setMessage("");
     const { data: sessionData } = await supabase.auth.getSession();
-    const session = sessionData?.session;
-    if (!session) {
+    const token = sessionData?.session?.access_token;
+    if (!token) {
       router.push("/login");
       return;
     }
-    const token = session.access_token;
     const res = await fetch(`/api/profile`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
@@ -82,7 +73,7 @@ export default function ProfilePage() {
       return;
     }
     const saved = await res.json();
-    setProfile(saved);
+    mutateProfile(saved);
     setUsername(saved.username ?? "");
     setDisplayName(saved.displayName ?? "");
     setBio(saved.bio ?? "");
@@ -93,12 +84,11 @@ export default function ProfilePage() {
     setLinkingPlayer(true);
     setMessage("");
     const { data: sessionData } = await supabase.auth.getSession();
-    const session = sessionData?.session;
-    if (!session) {
+    const token = sessionData?.session?.access_token;
+    if (!token) {
       router.push("/login");
       return;
     }
-    const token = session.access_token;
     const res = await fetch(`/api/profile/player`, {
       method: "PUT",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
@@ -111,12 +101,12 @@ export default function ProfilePage() {
       return;
     }
     const saved = await res.json();
-    setProfile(saved);
+    mutateProfile(saved);
     setSelectedPlayerId(saved.playerId ?? "");
     setMessage(saved.playerId ? "Player linked" : "Player unlinked");
   }
 
-  if (loading) return <div className="p-6">Loading...</div>;
+  if (authLoading || playersLoading) return <div className="p-6">Loading...</div>;
 
   return (
     <div className="max-w-3xl mx-auto p-6">

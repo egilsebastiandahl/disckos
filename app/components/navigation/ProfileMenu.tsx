@@ -1,71 +1,32 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { supabase } from "../../../lib/supabaseClient";
 import { useRouter } from "next/navigation";
+import { useAuth } from "../auth/AuthProvider";
 
 export default function ProfileMenu() {
-  const [session, setSession] = useState<any>(null);
-  const [profile, setProfile] = useState<any>(null);
+  const { session, profile, loading, signOut } = useAuth();
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const ref = useRef<HTMLDivElement | null>(null);
 
-  const fetchProfile = async () => {
-    const { data } = await supabase.auth.getSession();
-    const sess = data?.session;
-    setSession(sess);
-    if (sess) {
-      const token = sess.access_token;
-      try {
-        const res = await fetch(`/api/profile`, { headers: { Authorization: `Bearer ${token}` } });
-        if (res.ok) {
-          const json = await res.json();
-          setProfile(json);
-        }
-      } catch (e) {
-        console.warn("Failed fetching profile", e);
-      }
-    }
-  };
-
   useEffect(() => {
-    fetchProfile();
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, newSession) => {
-      setSession(newSession);
-      if (newSession) {
-        fetchProfile();
-      } else {
-        setProfile(null);
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    function onDoc(e: any) {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    function onDoc(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     }
     document.addEventListener("click", onDoc);
     return () => document.removeEventListener("click", onDoc);
   }, []);
 
   async function handleSignOut() {
-    await supabase.auth.signOut();
+    await signOut();
     router.push("/login");
   }
 
-  const initials = profile?.displayName
-    ? profile.displayName
-        .split(" ")
-        .map((s: string) => s[0])
-        .join("")
-        .slice(0, 2)
-        .toUpperCase()
-    : (session?.user?.email?.[0] ?? "U").toUpperCase();
+  if (loading) {
+    return <div className="ml-4 w-10 h-10 rounded-full bg-muted animate-pulse" />;
+  }
 
   if (!session) {
     return (
@@ -80,14 +41,19 @@ export default function ProfileMenu() {
     );
   }
 
+  const initials = profile?.displayName
+    ? profile.displayName
+        .split(" ")
+        .map((s) => s[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
+    : (session.user?.email?.[0] ?? "U").toUpperCase();
+
   return (
     <div className="relative ml-4" ref={ref}>
       <button
-        onClick={() => {
-          const willOpen = !open;
-          setOpen(willOpen);
-          if (willOpen) fetchProfile();
-        }}
+        onClick={() => setOpen((o) => !o)}
         className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold"
       >
         {profile?.avatarUrl ? (
@@ -100,7 +66,7 @@ export default function ProfileMenu() {
         <div className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-xl shadow-sm z-50">
           <div className="p-2">
             <div className="text-sm font-medium text-card-foreground">
-              {profile?.displayName ?? session?.user?.email}
+              {profile?.displayName ?? session.user?.email}
             </div>
             <div className="text-xs text-muted-foreground">@{profile?.username ?? "user"}</div>
           </div>
