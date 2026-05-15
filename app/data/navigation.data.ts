@@ -27,13 +27,13 @@ export const navigationData: {url: string, name: string}[] = [
         url: "/pages/bilder",
         name: "Bilder"
     },
+    {
+        url: "/pages/lokasjoner",
+        name: "Lokasjoner"
+    },
     // {
     //     url: "/pages/videos",
     //     name: "Videoer"
     // },
-    // {
-    //     url: "/pages/lokasjoner",
-    //     name: "Lokasjoner"
-    // }
 
-] 
+]

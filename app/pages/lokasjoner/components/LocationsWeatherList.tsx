@@ -1,0 +1,54 @@
+"use client";
+import type { Event } from "@/app/types/event.model";
+import useFetch from "@/app/hooks/useFetch";
+import { useLocationsForecasts } from "@/app/hooks/useLocationsForecasts";
+import FrisbeeLoader from "@/app/components/loader/FrisbeeLoader";
+import LocationWeatherCard from "@/app/components/weather/LocationWeatherCard";
+import WeatherAttribution from "@/app/components/weather/WeatherAttribution";
+
+export default function LocationsWeatherList() {
+  const { data: events, isLoading: eventsLoading, error: eventsError } = useFetch<Event[]>("/api/event");
+  const { forecasts, locations, isLoading: forecastsLoading } = useLocationsForecasts(events);
+
+  if (eventsLoading) {
+    return (
+      <div className="flex justify-center py-8">
+        <FrisbeeLoader text="Henter lokasjoner..." size="lg" />
+      </div>
+    );
+  }
+
+  if (eventsError) {
+    return <p className="text-muted-foreground">Klarte ikke hente lokasjoner.</p>;
+  }
+
+  if (locations.length === 0) {
+    return <p className="text-muted-foreground">Ingen lokasjoner enda.</p>;
+  }
+
+  if (forecastsLoading) {
+    return (
+      <div className="flex flex-col gap-4 w-full max-w-2xl mx-auto">
+        {locations.map((loc) => (
+          <div key={loc.id} className="h-48 rounded-xl bg-muted/40 animate-pulse" />
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-4 w-full max-w-2xl mx-auto">
+      <p className="text-sm text-muted-foreground text-center">
+        Sortert etter beste forhold for discgolf i dag (lite vind, lite nedbør, mildt vær).
+      </p>
+      {forecasts.map((entry, index) => (
+        <LocationWeatherCard
+          key={entry.location.id}
+          data={entry}
+          badge={index === 0 && !entry.error ? "Best i dag" : undefined}
+        />
+      ))}
+      <WeatherAttribution className="mt-4" />
+    </div>
+  );
+}

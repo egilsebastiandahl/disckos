@@ -1,4 +1,4 @@
-import { Event } from "@/app/types/event.model";
+import type { Event } from "@/app/types/event.model";
 import "../styles/agenda-item.css";
 import { Separator } from "@/components/ui/separator";
 import AgendaItemDetailedInformation from "./AgendaItemDetailedInformation";
@@ -43,7 +43,7 @@ export default function AgendaItem({ event, isNextEvent }: AgendaItemProps) {
         className={`mb-4 mt-2 ${isNextEvent ? "bg-primary-foreground/50" : "bg-border"} ${event.major ? "major-separator" : ""} `}
       />
       <p className="mb-4">{event.description}</p>
-      <AgendaItemDetailedInformation event={event} />
+      <AgendaItemDetailedInformation event={event} isNextEvent={isNextEvent} />
       {event?.placements && (
         <div>
           <Separator className="my-4 bg-foreground" />
