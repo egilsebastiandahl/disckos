@@ -46,6 +46,7 @@ export default function LocationsWeatherList() {
           key={entry.location.id}
           data={entry}
           badge={index === 0 && !entry.error ? "Best i dag" : undefined}
+          showScore
         />
       ))}
       <WeatherAttribution className="mt-4" />

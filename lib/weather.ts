@@ -163,6 +163,27 @@ export function scorePlayability(summary: WeatherSummary): number {
   return rainPenalty(summary.precipTotal) + summary.windMax * WIND_PER_MS + coldPenalty(summary.now.temperature);
 }
 
+export interface ScoreBreakdown {
+  rain: { mm: number; points: number };
+  wind: { ms: number; points: number };
+  cold: { temp: number; points: number };
+  total: number;
+}
+
+export function scoreBreakdown(summary: WeatherSummary): ScoreBreakdown {
+  const rain = { mm: summary.precipTotal, points: rainPenalty(summary.precipTotal) };
+  const wind = { ms: summary.windMax, points: summary.windMax * WIND_PER_MS };
+  const cold = { temp: summary.now.temperature, points: coldPenalty(summary.now.temperature) };
+  return { rain, wind, cold, total: rain.points + wind.points + cold.points };
+}
+
+export const SCORE_CONSTANTS = {
+  rainThresholdMm: RAIN_THRESHOLD_MM,
+  rainFixedPenalty: RAIN_FIXED_PENALTY,
+  rainPerMm: RAIN_PER_MM,
+  windPerMs: WIND_PER_MS,
+};
+
 export function isWithinForecastHorizon(isoDate: string, now = new Date()): boolean {
   const target = new Date(isoDate).getTime();
   if (!Number.isFinite(target)) return false;

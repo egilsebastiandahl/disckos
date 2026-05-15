@@ -4,7 +4,7 @@ import type { LocationForecast } from "@/app/hooks/useLocationsForecasts";
 import WeatherIcon from "./WeatherIcon";
 import HourlyForecastStrip from "./HourlyForecastStrip";
 import { symbolLabel } from "@/lib/weatherSymbols";
-import { dayRange, findBestSlice, sliceRange } from "@/lib/weather";
+import { dayRange, findBestSlice, scoreBreakdown, sliceRange } from "@/lib/weather";
 import PlaceIcon from "@mui/icons-material/Place";
 import AirIcon from "@mui/icons-material/Air";
 import OpacityIcon from "@mui/icons-material/Opacity";
@@ -15,6 +15,7 @@ interface LocationWeatherCardProps {
   badge?: string;
   compact?: boolean;
   showHourly?: boolean;
+  showScore?: boolean;
   className?: string;
 }
 
@@ -29,6 +30,7 @@ export default function LocationWeatherCard({
   badge,
   compact = false,
   showHourly = true,
+  showScore = false,
   className,
 }: LocationWeatherCardProps) {
   const { location, forecast, summary, score, error } = data;
@@ -37,7 +39,8 @@ export default function LocationWeatherCard({
   const hourly = forecast ? sliceRange(forecast, today.from, today.to) : [];
   const best = findBestSlice(hourly);
   const mapsUrl = `https://maps.google.com/?q=${location.lat},${location.lon}`;
-  const hasScore = Number.isFinite(score);
+  const hasScore = showScore && summary && Number.isFinite(score);
+  const breakdown = hasScore && summary ? scoreBreakdown(summary) : null;
 
   return (
     <Card className={cn("gap-3 py-4", className)}>
@@ -113,6 +116,40 @@ export default function LocationWeatherCard({
                 )}
                 <HourlyForecastStrip slices={hourly} bestTime={best?.time} />
               </div>
+            )}
+
+            {breakdown && (
+              <details className="mt-3 pt-3 border-t border-border text-xs text-muted-foreground group">
+                <summary className="cursor-pointer select-none hover:text-foreground transition-colors">
+                  Slik beregnes poengsummen ({Math.round(breakdown.total)})
+                </summary>
+                <ul className="mt-2 space-y-1 pl-2">
+                  <li className="flex justify-between gap-3">
+                    <span>
+                      Regn: {breakdown.rain.mm.toFixed(1)} mm{" "}
+                      {breakdown.rain.mm > 0.1 ? "(10 fast + 15/mm)" : "(tørt → 0)"}
+                    </span>
+                    <span className="tabular-nums font-medium text-foreground">+{breakdown.rain.points.toFixed(0)}</span>
+                  </li>
+                  <li className="flex justify-between gap-3">
+                    <span>Vind: {breakdown.wind.ms.toFixed(1)} m/s (2 per m/s)</span>
+                    <span className="tabular-nums font-medium text-foreground">+{breakdown.wind.points.toFixed(0)}</span>
+                  </li>
+                  <li className="flex justify-between gap-3">
+                    <span>
+                      Temp: {Math.round(breakdown.cold.temp)}°{" "}
+                      {breakdown.cold.points > 0 ? `(kaldt, ${breakdown.cold.points.toFixed(0)} under 5°)` : "(mildt → 0)"}
+                    </span>
+                    <span className="tabular-nums font-medium text-foreground">+{breakdown.cold.points.toFixed(0)}</span>
+                  </li>
+                  <li className="flex justify-between gap-3 border-t border-border pt-1 mt-1">
+                    <span className="font-medium text-foreground">Sum (lavere = bedre)</span>
+                    <span className="tabular-nums font-semibold text-foreground">
+                      {breakdown.total.toFixed(0)}
+                    </span>
+                  </li>
+                </ul>
+              </details>
             )}
 
             {!compact && location.description && (
