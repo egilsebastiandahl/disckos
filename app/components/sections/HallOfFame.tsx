@@ -1,6 +1,6 @@
 "use client";
 
-import { Player } from "@/app/types/player.model";
+import { HallOfFameEntry } from "@/app/types/hall-of-fame.model";
 import useFetch from "@/app/hooks/useFetch";
 import HallOfFameSkeleton from "./HallOfFameSkeleton";
 
@@ -22,7 +22,7 @@ function StatBadge({ label, value }: { label: string; value: string | number }) 
   );
 }
 
-function PlayerCard({ player, index }: { player: Player; index: number }) {
+function PlayerCard({ player, index }: { player: HallOfFameEntry; index: number }) {
   const accentColors = ["from-primary/20 to-warm/10", "from-warm/20 to-primary/10", "from-primary/15 to-chart-5/10"];
   const avatarColors = [
     "bg-primary text-primary-foreground",
@@ -60,25 +60,25 @@ function PlayerCard({ player, index }: { player: Player; index: number }) {
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4 w-full">
-        {player.roundsPlayed != null && <StatBadge label="Runder" value={player.roundsPlayed} />}
-        {player.averageScore != null && <StatBadge label="Snitt" value={player.averageScore.toFixed(1)} />}
-        {player.bestScore != null && <StatBadge label="Best" value={player.bestScore} />}
+        <StatBadge label="Runder" value={player.roundsPlayed} />
+        <StatBadge label="Snitt" value={player.roundsPlayed > 0 ? player.avgRoundScore.toFixed(1) : "–"} />
+        <StatBadge label="Best" value={player.bestRoundScore ?? "–"} />
       </div>
 
       {/* Highlight stats */}
-      {(player.birdieCount != null || player.aceCount != null) && (
+      {(player.birdieCount > 0 || player.aceCount > 0 || player.eagleCount > 0) && (
         <div className="flex gap-3 mt-3 flex-wrap justify-center">
-          {player.birdieCount != null && player.birdieCount > 0 && (
+          {player.birdieCount > 0 && (
             <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
               🐦 {player.birdieCount} birdie{player.birdieCount !== 1 && "s"}
             </span>
           )}
-          {player.aceCount != null && player.aceCount > 0 && (
+          {player.aceCount > 0 && (
             <span className="inline-flex items-center gap-1 rounded-full bg-warm/15 px-3 py-1 text-xs font-medium text-warm">
               🎯 {player.aceCount} ace{player.aceCount !== 1 && "s"}
             </span>
           )}
-          {player.eagleCount != null && player.eagleCount > 0 && (
+          {player.eagleCount > 0 && (
             <span className="inline-flex items-center gap-1 rounded-full bg-chart-5/15 px-3 py-1 text-xs font-medium text-chart-5">
               🦅 {player.eagleCount} eagle{player.eagleCount !== 1 && "s"}
             </span>
@@ -90,7 +90,7 @@ function PlayerCard({ player, index }: { player: Player; index: number }) {
 }
 
 export default function HallOfFame() {
-  const { data, isLoading, error } = useFetch<Player[]>("/api/public/hall-of-fame");
+  const { data, isLoading, error } = useFetch<HallOfFameEntry[]>("/api/public/hall-of-fame");
 
   if (isLoading) {
     return <HallOfFameSkeleton />;
