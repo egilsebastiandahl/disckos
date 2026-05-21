@@ -11,6 +11,10 @@ export const navigationData: { url: string; name: string }[] = [
     url: "/pages/results",
     name: "Resultater",
   },
+  {
+    url: "/pages/players",
+    name: "Spillere",
+  },
   // {
   //     url: "/pages/favorites",
   //     name: "Favoritter"

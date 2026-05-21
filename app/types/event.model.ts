@@ -1,7 +1,4 @@
 import { Location } from "./location.model";
-import { Placement } from "./placement.model";
-
-export type { Placement } from "./placement.model";
 
 export interface EventSignup {
   profileId: string;
@@ -17,7 +14,6 @@ export interface Event {
   location: Location;
   teamEvent: boolean;
   rounds: number;
-  placements?: Placement[];
   published?: boolean;
   major: boolean;
   signups?: EventSignup[];

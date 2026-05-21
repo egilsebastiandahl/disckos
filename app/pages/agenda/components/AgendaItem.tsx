@@ -3,19 +3,29 @@ import "../styles/agenda-item.css";
 import { Separator } from "@/components/ui/separator";
 import AgendaItemDetailedInformation from "./AgendaItemDetailedInformation";
 import EventSignupSection from "./EventSignupSection";
-import Podium from "@/app/components/podium/Podium";
+import EventStandingsSection from "@/app/components/standings/EventStandingsSection";
 import { dateStringToDateTimeFormatter } from "@/app/utils/dateFormatters";
+import SportsScoreIcon from "@mui/icons-material/SportsScore";
+import Link from "next/link";
 
 interface AgendaItemProps {
   event: Event;
   isNextEvent: boolean;
 }
 
+const SCORECARD_WINDOW_HOURS_BEFORE = 4;
+const SCORECARD_WINDOW_HOURS_AFTER = 24;
+
 export default function AgendaItem({ event, isNextEvent }: AgendaItemProps) {
   const currentTime = new Date();
   const eventTime = new Date(event.date);
   const isPastEvent = eventTime < currentTime;
   const majorEventClass = event.major ? "major" : "";
+  const hoursFromEvent =
+    (currentTime.getTime() - eventTime.getTime()) / (1000 * 60 * 60);
+  const showLiveScorecard =
+    hoursFromEvent >= -SCORECARD_WINDOW_HOURS_BEFORE &&
+    hoursFromEvent <= SCORECARD_WINDOW_HOURS_AFTER;
 
   return (
     <div
@@ -44,15 +54,18 @@ export default function AgendaItem({ event, isNextEvent }: AgendaItemProps) {
       />
       <p className="mb-4">{event.description}</p>
       <AgendaItemDetailedInformation event={event} isNextEvent={isNextEvent} />
-      {event?.placements && (
-        <div>
-          <Separator className="my-4 bg-foreground" />
-          <div className="flex flex-col justify-center items-center">
-            <h3 className="text-lg font-semibold">Podium</h3>
-            <Podium placements={event.placements} />
-          </div>
-        </div>
+
+      {showLiveScorecard && (
+        <Link
+          href={`/pages/scorecard/event/${event.id}`}
+          className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 font-semibold text-primary-foreground shadow-sm active:scale-[0.99]"
+        >
+          <SportsScoreIcon />
+          Skår live
+        </Link>
       )}
+
+      <EventStandingsSection eventId={event.id} isPastEvent={isPastEvent} />
     </div>
   );
 }
