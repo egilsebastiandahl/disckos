@@ -29,7 +29,7 @@ export default function AgendaItem({ event, isNextEvent }: AgendaItemProps) {
 
   return (
     <div
-      className={`agenda-item min-w-[300px] sm:min-w-md md:max-w-xl ${isPastEvent ? "past" : ""} ${isNextEvent ? "next" : ""} ${majorEventClass}`}
+      className={`agenda-item w-[300px] sm:min-w-md md:max-w-xl ${isPastEvent ? "past" : ""} ${isNextEvent ? "next" : ""} ${majorEventClass}`}
     >
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex flex-col gap-1">
