@@ -3,7 +3,7 @@
 import HeaderSection from "@/app/components/sections/HeaderSection";
 import RoundTable from "./components/RoundTable";
 import { useEffect, useState } from "react";
-import { Event } from "@/app/types/event.model";
+import { type Event } from "@/app/types/event.model";
 import EventSelector from "./components/EventSelector";
 import CreateRound from "./components/CreateRound";
 import Button from "@/app/components/button/Button";
@@ -26,23 +26,34 @@ export default function AdminRoundPage() {
 
   return (
     <>
-      <HeaderSection title="Runder" text="Her kan du lage, slette og endre runder." />
+      <HeaderSection
+        title="Runder"
+        text="Her kan du lage, slette og endre runder."
+      />
       <div className="flex flex-col gap-6">
         <section className="flex flex-col gap-4">
           <h2 className="text-lg text-muted-foreground font-bold">
-            <span className="text-foreground">STEG 1.</span> Velg event for å legge til / se runder
+            <span className="text-foreground">STEG 1.</span> Velg event for å
+            legge til / se runder
           </h2>
-          <EventSelector selectedEvent={selectedEvent} setSelectedEvent={setSelectedEvent} />
+          <EventSelector
+            selectedEvent={selectedEvent}
+            setSelectedEvent={setSelectedEvent}
+          />
         </section>
 
         {selectedEvent && (
           <section className="flex flex-col gap-4">
             <h2 className="text-lg text-muted-foreground font-bold">
-              <span className="text-foreground">STEG 2.</span> Rediger runder for event: {selectedEvent.title}
+              <span className="text-foreground">STEG 2.</span> Rediger runder
+              for event: {selectedEvent.title}
             </h2>
             <RoundTable key={roundTableKey} selectedEvent={selectedEvent} />
             {!isCreating && (
-              <Button onClick={() => setIsCreating(true)} className="self-start">
+              <Button
+                onClick={() => setIsCreating(true)}
+                className="self-start"
+              >
                 <span className="inline-flex items-center font-bold">
                   NY RUNDE&nbsp;
                   <PlusIcon className="size-4" />
@@ -56,7 +67,8 @@ export default function AdminRoundPage() {
           <section className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <h2 className="text-lg text-muted-foreground font-bold">
-                <span className="text-foreground">STEG 3.</span> Lag ny runde for: {selectedEvent.title}
+                <span className="text-foreground">STEG 3.</span> Lag ny runde
+                for: {selectedEvent.title}
               </h2>
               <button
                 onClick={() => setIsCreating(false)}

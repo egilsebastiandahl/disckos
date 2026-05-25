@@ -65,7 +65,9 @@ export default function AgendaItem({ event, isNextEvent }: AgendaItemProps) {
         </Link>
       )}
 
-      <EventStandingsSection eventId={event.id} isPastEvent={isPastEvent} />
+      {isPastEvent && (
+        <EventStandingsSection eventId={event.id} isPastEvent={isPastEvent} />
+      )}
     </div>
   );
 }

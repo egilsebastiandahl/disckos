@@ -1,50 +1,50 @@
 // ...existing code...
 export type ScoringFormat =
-    | "stroke"
-    | "best_shot"
-    | "worst_shot"
-    | "alternate"
-    | "match_play"
+  | "stroke"
+  | "best_shot"
+  | "worst_shot"
+  | "alternate"
+  | "match_play";
 
-export type Round = TeamRound | IndividualRound
+export type Round = TeamRound | IndividualRound;
 
 interface RoundBase {
-    roundId: string
-    eventId: string
-    scoringFormat: ScoringFormat
+  id: string;
+  eventId: string;
+  scoringFormat: ScoringFormat;
 }
 
 export interface TeamRound extends RoundBase {
-    eventType: "team"
-    holes: TeamHole[]
+  eventType: "team";
+  holes: TeamHole[];
 }
 
 export interface IndividualRound extends RoundBase {
-    eventType: "individual"
-    holes: IndividualHole[]
+  eventType: "individual";
+  holes: IndividualHole[];
 }
 
 interface TeamHole {
-    holeNumber: number
-    par: number
-    teamScores: TeamScore[]
-    scoringFormatOverride?: ScoringFormat
+  holeNumber: number;
+  par: number;
+  teamScores: TeamScore[];
+  scoringFormatOverride?: ScoringFormat;
 }
 
 interface IndividualHole {
-    holeNumber: number
-    par: number
-    playerScores: PlayerScore[]
-    scoringFormatOverride?: ScoringFormat
+  holeNumber: number;
+  par: number;
+  playerScores: PlayerScore[];
+  scoringFormatOverride?: ScoringFormat;
 }
 
 export interface PlayerScore {
-    playerId: string
-    throws: number
+  playerId: string;
+  throws: number;
 }
 
 export interface TeamScore {
-    teamId: string
-    memberScores: PlayerScore[]
-    teamThrows: number
+  teamId: string;
+  memberScores: PlayerScore[];
+  teamThrows: number;
 }
