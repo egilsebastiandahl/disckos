@@ -22,7 +22,7 @@ export default function ScorecardEventDispatchPage({
 
   useEffect(() => {
     if (data && data.length === 1) {
-      router.replace(`/pages/scorecard/${data[0].roundId}`);
+      router.replace(`/pages/scorecard/${data[0].id}`);
     }
   }, [data, router]);
 
@@ -60,9 +60,9 @@ export default function ScorecardEventDispatchPage({
       <h1 className="text-xl font-bold">Velg runde</h1>
       <ul className="flex flex-col gap-2">
         {data.map((r, idx) => (
-          <li key={r.roundId}>
+          <li key={r.id}>
             <Link
-              href={`/pages/scorecard/${r.roundId}`}
+              href={`/pages/scorecard/${r.id}`}
               className="block rounded-lg border border-border bg-card p-3 shadow-sm active:scale-[0.99]"
             >
               <span className="font-semibold">Runde {idx + 1}</span>
