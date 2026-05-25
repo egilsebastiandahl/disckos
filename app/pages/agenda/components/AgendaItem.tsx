@@ -29,13 +29,15 @@ export default function AgendaItem({ event, isNextEvent }: AgendaItemProps) {
 
   return (
     <div
-      className={`agenda-item w-[300px] sm:min-w-md md:max-w-xl ${isPastEvent ? "past" : ""} ${isNextEvent ? "next" : ""} ${majorEventClass}`}
+      className={`agenda-item w-[300px] md:w-[600px] ${isPastEvent ? "past" : ""} ${isNextEvent ? "next" : ""} ${majorEventClass}`}
     >
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex flex-col gap-1">
           <h2 className="text-xl font-bold">{event.title}</h2>
 
-          <p className={`text-lg  ${isNextEvent ? "text-primary-foreground" : "text-foreground"}`}>
+          <p
+            className={`text-lg  ${isNextEvent ? "text-primary-foreground" : "text-foreground"}`}
+          >
             {dateStringToDateTimeFormatter(event.date)}
           </p>
         </div>
