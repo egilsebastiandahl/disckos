@@ -77,10 +77,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "File and eventId are required" }, { status: 400 });
   }
 
-  // Validate file type
+  // Validate file type. Safari often reports an empty MIME for HEIC uploads,
+  // so fall back to inspecting the file extension when file.type is blank.
   const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"];
-  if (!allowedTypes.includes(file.type)) {
-    return NextResponse.json({ error: "Invalid file type. Use JPEG, PNG, or WebP." }, { status: 400 });
+  const allowedExts = ["jpg", "jpeg", "png", "webp", "heic", "heif"];
+  const extFromName = file.name.includes(".")
+    ? file.name.split(".").pop()!.toLowerCase()
+    : "";
+  const typeOk = allowedTypes.includes(file.type) || (!file.type && allowedExts.includes(extFromName));
+  if (!typeOk) {
+    return NextResponse.json({ error: "Invalid file type. Use JPEG, PNG, WebP or HEIC." }, { status: 400 });
   }
 
   // Validate file size (max 10MB)
@@ -103,18 +109,21 @@ export async function POST(req: NextRequest) {
   const eventDate = new Date(event.date);
   const now = new Date();
   const diffMs = Math.abs(now.getTime() - eventDate.getTime());
-  const oneDayMs = 24 * 60 * 60 * 1000;
+  const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
 
-  if (diffMs > oneDayMs) {
+  if (diffMs > threeDaysMs) {
     return NextResponse.json(
-      { error: "Kan kun laste opp bilder ±1 dag fra eventet." },
+      { error: "Kan kun laste opp bilder ±3 dager fra eventet." },
       { status: 403 }
     );
   }
 
-  // Upload file to Supabase Storage
-  const fileExt = file.name.split(".").pop() ?? "jpg";
-  const fileName = `${userId}/${eventId}/${Date.now()}.${fileExt}`;
+  // Upload file to Supabase Storage. Append a random suffix to avoid
+  // path collisions when several photos are uploaded in the same millisecond
+  // (e.g. a batch upload from the gallery picker).
+  const fileExt = file.name.includes(".") ? file.name.split(".").pop()!.toLowerCase() : "jpg";
+  const randomSuffix = crypto.randomUUID().slice(0, 8);
+  const fileName = `${userId}/${eventId}/${Date.now()}-${randomSuffix}.${fileExt}`;
 
   const { error: uploadError } = await supabase.storage
     .from("event-photos")

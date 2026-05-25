@@ -14,6 +14,30 @@ import Button from "@/app/components/button/Button";
 import { Users, User } from "lucide-react";
 import { adminPost } from "@/lib/adminClient";
 
+// Spring Boot validation errors come back as JSON: { message, errors: [{ field, defaultMessage }, ...] }
+// or ResponseStatusException as { message } / { error }. Pull out the most useful line for the user
+// instead of just showing "Bad Request".
+function extractErrorMessage(body: string, fallback: string): string {
+  if (!body) return fallback;
+  try {
+    const parsed = JSON.parse(body) as {
+      message?: string;
+      error?: string;
+      errors?: { field?: string; defaultMessage?: string }[];
+    };
+    if (parsed.errors && parsed.errors.length > 0) {
+      return parsed.errors
+        .map((e) => [e.field, e.defaultMessage].filter(Boolean).join(": "))
+        .join("; ");
+    }
+    if (parsed.message) return parsed.message;
+    if (parsed.error) return parsed.error;
+  } catch {
+    // not JSON
+  }
+  return body.length > 200 ? fallback : body;
+}
+
 export type HoleInput = {
   holeNumber: number;
   par: number;
@@ -24,9 +48,11 @@ export type HoleInput = {
 
 interface CreateRoundProps {
   selectedEvent: Event | null;
+  onCreated?: () => void;
+  onCancel?: () => void;
 }
 
-export default function CreateRound({ selectedEvent }: CreateRoundProps) {
+export default function CreateRound({ selectedEvent, onCreated, onCancel }: CreateRoundProps) {
   const isTeamEvent = selectedEvent?.teamEvent || false;
 
   const [scoringFormat, setScoringFormat] = useState<ScoringFormat>("stroke");
@@ -53,7 +79,10 @@ export default function CreateRound({ selectedEvent }: CreateRoundProps) {
         holeNumber: h.holeNumber,
         par: h.par,
         scoringFormatOverride: h.scoringFormatOverride ?? null,
-        playerScores: (h.playerScores ?? activePlayers.map((p) => ({ playerId: p.id, throws: h.par || 3 }))) || [],
+        playerScores:
+          h.playerScores && h.playerScores.length > 0
+            ? h.playerScores
+            : activePlayers.map((p) => ({ playerId: p.id, throws: h.par || 3 })),
       })),
     };
 
@@ -64,13 +93,14 @@ export default function CreateRound({ selectedEvent }: CreateRoundProps) {
       if (!res.ok) {
         const text = await res.text();
         console.error("Create round failed:", text);
-        alert("Kunne ikke opprette runden: " + res.statusText);
+        alert("Kunne ikke opprette runden: " + extractErrorMessage(text, res.statusText));
         return;
       }
 
       const data = await res.json();
       console.log("Round created:", data);
       alert("Runde opprettet!");
+      onCreated?.();
     } catch (err) {
       console.error(err);
       alert("Feil ved oppretting av runde");
@@ -124,13 +154,14 @@ export default function CreateRound({ selectedEvent }: CreateRoundProps) {
       if (!res.ok) {
         const text = await res.text();
         console.error("Create team round failed:", text);
-        alert("Kunne ikke opprette lagrunden: " + res.statusText);
+        alert("Kunne ikke opprette lagrunden: " + extractErrorMessage(text, res.statusText));
         return;
       }
 
       const data = await res.json();
       console.log("Team round created:", data);
       alert("Lagrunde opprettet!");
+      onCreated?.();
     } catch (err) {
       console.error(err);
       alert("Feil ved oppretting av lagrunde");
@@ -228,9 +259,16 @@ export default function CreateRound({ selectedEvent }: CreateRoundProps) {
         )}
       </section>
 
-      <Button className="self-end" onClick={handleCreateRound} disabled={isSubmitting}>
-        {isSubmitting ? "OPPRETTER..." : "OPPRETT RUNDE"}
-      </Button>
+      <div className="flex gap-2 self-end">
+        {onCancel && (
+          <Button onClick={onCancel} disabled={isSubmitting} variant="outline">
+            AVBRYT
+          </Button>
+        )}
+        <Button onClick={handleCreateRound} disabled={isSubmitting}>
+          {isSubmitting ? "OPPRETTER..." : "OPPRETT RUNDE"}
+        </Button>
+      </div>
     </div>
   );
 }

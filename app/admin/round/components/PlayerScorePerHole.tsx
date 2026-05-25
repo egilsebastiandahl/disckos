@@ -45,11 +45,11 @@ export default function PlayerScorePerHole({
       <div className="flex gap-2"></div>
       <Button
         onClick={() => setPlayerScoreForHole(hole?.holeNumber ?? -1, playerScore.playerId, playerScore.throws - 1)}
-        disabled={playerScore.throws <= 0}
+        disabled={playerScore.throws <= 1}
       >
         -
       </Button>
-      <span>{playerScore.throws >= 0 ? playerScore.throws : 0}</span>
+      <span>{playerScore.throws >= 1 ? playerScore.throws : 1}</span>
       <Button
         className="bg-red-500 border-background hover:text-red-500 hover:border-red-500"
         onClick={() => setPlayerScoreForHole(hole?.holeNumber ?? -1, playerScore.playerId, playerScore.throws + 1)}

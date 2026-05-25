@@ -12,12 +12,12 @@ import PhotoGallerySkeleton from "./components/PhotoGallerySkeleton";
 
 function getActiveEvent(events: Event[]): Event | null {
   const now = new Date();
-  const oneDayMs = 24 * 60 * 60 * 1000;
+  const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
 
   return (
     events.find((event) => {
       const eventDate = new Date(event.date);
-      return Math.abs(now.getTime() - eventDate.getTime()) <= oneDayMs;
+      return Math.abs(now.getTime() - eventDate.getTime()) <= threeDaysMs;
     }) ?? null
   );
 }
