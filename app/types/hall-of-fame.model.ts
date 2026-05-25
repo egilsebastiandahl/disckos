@@ -3,9 +3,11 @@ export interface HallOfFameEntry {
   name: string;
   catchphrase?: string;
   roundsPlayed: number;
-  avgRoundScore: number;
-  bestRoundScore: number | null;
-  birdieCount: number;
   aceCount: number;
   eagleCount: number;
+  birdieCount: number;
+  parCount: number;
+  bogeyCount: number;
+  doubleBogeyCount: number;
+  tripleBogeyOrWorseCount: number;
 }

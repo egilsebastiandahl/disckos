@@ -10,11 +10,14 @@ interface BackendPlayer {
 
 interface BackendPlayerStats {
   roundsPlayed: number;
-  avgRoundScore: number | string;
-  bestRoundScore: number | null;
-  birdieCount: number;
   aceCount: number;
   eagleCount: number;
+  birdieCount: number;
+  parCount: number;
+  singleBogeyCount: number;
+  doubleBogeyCount: number;
+  tripleBogeyCount: number;
+  worseThanTripleBogeyCount: number;
 }
 
 export async function GET() {
@@ -44,22 +47,27 @@ export async function GET() {
           ? await statsRes.json()
           : {
               roundsPlayed: 0,
-              avgRoundScore: 0,
-              bestRoundScore: null,
-              birdieCount: 0,
               aceCount: 0,
               eagleCount: 0,
+              birdieCount: 0,
+              parCount: 0,
+              singleBogeyCount: 0,
+              doubleBogeyCount: 0,
+              tripleBogeyCount: 0,
+              worseThanTripleBogeyCount: 0,
             };
         return {
           id: player.id,
           name: player.name,
           catchphrase: player.catchphrase,
           roundsPlayed: stats.roundsPlayed,
-          avgRoundScore: Number(stats.avgRoundScore),
-          bestRoundScore: stats.bestRoundScore,
-          birdieCount: stats.birdieCount,
           aceCount: stats.aceCount,
           eagleCount: stats.eagleCount,
+          birdieCount: stats.birdieCount,
+          parCount: stats.parCount,
+          bogeyCount: stats.singleBogeyCount,
+          doubleBogeyCount: stats.doubleBogeyCount,
+          tripleBogeyOrWorseCount: stats.tripleBogeyCount + stats.worseThanTripleBogeyCount,
         };
       })
     );

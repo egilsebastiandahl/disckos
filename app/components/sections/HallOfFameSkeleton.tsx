@@ -8,17 +8,14 @@ function PlayerCardSkeleton() {
       <Skeleton className="h-6 w-32 mb-2" />
       <Skeleton className="h-4 w-44" />
       <div className="w-12 h-px bg-border my-4" />
-      <div className="grid grid-cols-3 gap-4 w-full">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="flex flex-col items-center gap-1">
-            <Skeleton className="h-6 w-10" />
-            <Skeleton className="h-3 w-12" />
-          </div>
-        ))}
+      <div className="flex flex-col items-center gap-1 mb-4">
+        <Skeleton className="h-8 w-12" />
+        <Skeleton className="h-3 w-20" />
       </div>
-      <div className="flex gap-2 mt-3">
-        <Skeleton className="h-6 w-20 rounded-full" />
-        <Skeleton className="h-6 w-20 rounded-full" />
+      <div className="grid grid-cols-4 gap-1.5 w-full">
+        {Array.from({ length: 7 }).map((_, i) => (
+          <Skeleton key={i} className="h-12 rounded-lg" />
+        ))}
       </div>
     </div>
   );

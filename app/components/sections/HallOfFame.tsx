@@ -13,11 +13,31 @@ function getInitials(name: string): string {
     .slice(0, 2);
 }
 
-function StatBadge({ label, value }: { label: string; value: string | number }) {
+type ScoreVariant = "ace" | "eagle" | "birdie" | "par" | "bogey" | "double" | "triple";
+
+const scoreStyles: Record<ScoreVariant, string> = {
+  ace: "bg-warm/15 text-warm",
+  eagle: "bg-chart-5/15 text-chart-5",
+  birdie: "bg-primary/10 text-primary",
+  par: "bg-muted text-foreground",
+  bogey: "bg-destructive/10 text-destructive",
+  double: "bg-destructive/15 text-destructive",
+  triple: "bg-destructive/20 text-destructive",
+};
+
+function ScoreBadge({
+  label,
+  value,
+  variant,
+}: {
+  label: string;
+  value: number;
+  variant: ScoreVariant;
+}) {
   return (
-    <div className="flex flex-col items-center gap-0.5">
-      <span className="text-lg md:text-xl font-bold text-foreground">{value}</span>
-      <span className="text-[11px] md:text-xs text-muted-foreground uppercase tracking-wider">{label}</span>
+    <div className={`flex flex-col items-center justify-center rounded-lg px-2 py-1.5 ${scoreStyles[variant]}`}>
+      <span className="text-base md:text-lg font-bold leading-none">{value}</span>
+      <span className="text-[10px] md:text-[11px] uppercase tracking-wider mt-1 leading-none">{label}</span>
     </div>
   );
 }
@@ -58,33 +78,24 @@ function PlayerCard({ player, index }: { player: HallOfFameEntry; index: number 
       {/* Divider */}
       <div className="w-12 h-px bg-border my-4" />
 
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 w-full">
-        <StatBadge label="Runder" value={player.roundsPlayed} />
-        <StatBadge label="Snitt" value={player.roundsPlayed > 0 ? player.avgRoundScore.toFixed(1) : "–"} />
-        <StatBadge label="Best" value={player.bestRoundScore ?? "–"} />
+      {/* Rounds played */}
+      <div className="flex flex-col items-center mb-4">
+        <span className="text-2xl md:text-3xl font-bold text-foreground leading-none">{player.roundsPlayed}</span>
+        <span className="text-[11px] md:text-xs text-muted-foreground uppercase tracking-wider mt-1">
+          Runder spilt
+        </span>
       </div>
 
-      {/* Highlight stats */}
-      {(player.birdieCount > 0 || player.aceCount > 0 || player.eagleCount > 0) && (
-        <div className="flex gap-3 mt-3 flex-wrap justify-center">
-          {player.birdieCount > 0 && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-              🐦 {player.birdieCount} birdie{player.birdieCount !== 1 && "s"}
-            </span>
-          )}
-          {player.aceCount > 0 && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-warm/15 px-3 py-1 text-xs font-medium text-warm">
-              🎯 {player.aceCount} ace{player.aceCount !== 1 && "s"}
-            </span>
-          )}
-          {player.eagleCount > 0 && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-chart-5/15 px-3 py-1 text-xs font-medium text-chart-5">
-              🦅 {player.eagleCount} eagle{player.eagleCount !== 1 && "s"}
-            </span>
-          )}
-        </div>
-      )}
+      {/* Scoring breakdown */}
+      <div className="grid grid-cols-4 gap-1.5 w-full">
+        <ScoreBadge label="Ess" value={player.aceCount} variant="ace" />
+        <ScoreBadge label="Eagle" value={player.eagleCount} variant="eagle" />
+        <ScoreBadge label="Birdie" value={player.birdieCount} variant="birdie" />
+        <ScoreBadge label="Par" value={player.parCount} variant="par" />
+        <ScoreBadge label="Bogey" value={player.bogeyCount} variant="bogey" />
+        <ScoreBadge label="Doble" value={player.doubleBogeyCount} variant="double" />
+        <ScoreBadge label="Trippel+" value={player.tripleBogeyOrWorseCount} variant="triple" />
+      </div>
     </div>
   );
 }
