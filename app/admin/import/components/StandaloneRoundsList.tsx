@@ -21,7 +21,7 @@ function formatPlayedAt(playedAt: string | null) {
 
 /** Rounds that aren't part of an event. They count in player stats; this is where they're removed. */
 export default function StandaloneRoundsList({ refreshKey, onDeleted }: StandaloneRoundsListProps) {
-  const { data: rounds, isLoading, refetch } = useAdminFetch<StandaloneRound[]>("/api/admin/round/standalone");
+  const { data: rounds, isLoading, error: loadError, refetch } = useAdminFetch<StandaloneRound[]>("/api/admin/round/standalone");
   const [open, setOpen] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -58,7 +58,11 @@ export default function StandaloneRoundsList({ refreshKey, onDeleted }: Standalo
         <div>
           <h2 className="font-semibold">Frittstående runder</h2>
           <p className="text-sm text-muted-foreground">
-            {isLoading ? "Laster …" : `${count} runde${count === 1 ? "" : "r"} uten event – teller i spillerstatistikken`}
+            {isLoading
+              ? "Laster …"
+              : loadError
+                ? `Kunne ikke hente rundene (${loadError})`
+                : `${count} runde${count === 1 ? "" : "r"} uten event – teller i spillerstatistikken`}
           </p>
         </div>
         <ChevronDown className={cn("size-5 shrink-0 transition-transform", open && "rotate-180")} />
