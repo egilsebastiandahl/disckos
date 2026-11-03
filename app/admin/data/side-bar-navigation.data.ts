@@ -1,4 +1,4 @@
-import { Users, MapPin, UsersRound, CalendarDays, IterationCcw, Trophy } from "lucide-react";
+import { Users, MapPin, UsersRound, CalendarDays, IterationCcw, Trophy, FileUp } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
 export interface SideBarNavItem {
@@ -32,6 +32,11 @@ export const sideBarNavigationData: SideBarNavItem[] = [
         url: "/admin/round",
         name: "Runde",
         icon: IterationCcw,
+    },
+    {
+        url: "/admin/import",
+        name: "UDisc-import",
+        icon: FileUp,
     },
     {
         url: "/admin/result",

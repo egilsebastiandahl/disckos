@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import NavigationHeader from "./components/navigation/NavigationHeader";
 import { AuthProvider } from "./components/auth/AuthProvider";
+import ServiceWorkerRegistrar from "./components/pwa/ServiceWorkerRegistrar";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -35,6 +36,7 @@ export default function RootLayout({
             {children}
           </AuthProvider>
         </ThemeProvider>
+        <ServiceWorkerRegistrar />
       </body>
     </html>
   );
