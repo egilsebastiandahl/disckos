@@ -33,8 +33,8 @@ export default function ImportResults({ results, labelFor, onDismiss }: ImportRe
             )}
             <div>
               <div className="font-medium">
-                {labelFor(r)} – runde {r.roundOrdinal}
-                {r.createdRound && " (ny)"}
+                {labelFor(r)} –{" "}
+                {r.eventId ? `runde ${r.roundOrdinal}${r.createdRound ? " (ny)" : ""}` : "frittstående runde"}
               </div>
               {r.error ? (
                 <div className="text-destructive">{r.error}</div>

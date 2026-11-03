@@ -6,24 +6,26 @@ import HeaderSection from "@/app/components/sections/HeaderSection";
 import Button from "@/app/components/button/Button";
 import useAdminFetch from "@/app/hooks/useAdminFetch";
 import { MAX_UDISC_CSV_CHARS, udiscImportApi } from "@/app/api/admin/import/udiscImportApi";
+import type { Location } from "@/app/types/location.model";
 import type { SimplePlayer } from "@/app/types/player.model";
 import type { UdiscCardResult, UdiscPreview } from "@/app/types/udisc-import.model";
 import UdiscFileDrop from "./components/UdiscFileDrop";
 import ImportCardItem from "./components/ImportCardItem";
 import ImportResults from "./components/ImportResults";
-import { analyzeCard, type CardDraft, initialDraft, toCommitCard } from "./udiscImportDraft";
+import StandaloneRoundsList from "./components/StandaloneRoundsList";
+import { analyzeCard, type CardDraft, formatStartedAt, initialDraft, toCommitCard } from "./udiscImportDraft";
 import { SHARE_ERRORS, takeSharedCsv } from "./sharedFile";
 
 type Phase = "idle" | "previewing" | "committing";
 
 const errorText = (err: unknown) => (err instanceof Error ? err.message : String(err));
+const byName = <T extends { name: string }>(a: T, b: T) => a.name.localeCompare(b.name, "no");
 
 export default function AdminImportPage() {
   const { data: playerData, refetch: refetchPlayers } = useAdminFetch<SimplePlayer[]>("/api/player");
-  const players = useMemo(
-    () => [...(playerData ?? [])].sort((a, b) => a.name.localeCompare(b.name, "no")),
-    [playerData]
-  );
+  const { data: locationData, refetch: refetchLocations } = useAdminFetch<Location[]>("/api/admin/location");
+  const players = useMemo(() => [...(playerData ?? [])].sort(byName), [playerData]);
+  const locations = useMemo(() => [...(locationData ?? [])].sort(byName), [locationData]);
 
   const [csv, setCsv] = useState<string | null>(null);
   const [source, setSource] = useState("");
@@ -32,6 +34,7 @@ export default function AdminImportPage() {
   const [results, setResults] = useState<UdiscCardResult[] | null>(null);
   const [phase, setPhase] = useState<Phase>("idle");
   const [error, setError] = useState<string | null>(null);
+  const [standaloneRefresh, setStandaloneRefresh] = useState(0);
 
   const runPreview = useCallback(async (text: string, label: string) => {
     if (text.length > MAX_UDISC_CSV_CHARS) {
@@ -74,6 +77,19 @@ export default function AdminImportPage() {
   );
   const importable = cards.filter((c) => c.analysis.canImport);
   const importPlayerCount = importable.reduce((n, c) => n + c.analysis.importCount, 0);
+  const selectedCount = cards.filter((c) => c.draft.include).length;
+  const eventDayCount = cards.filter((c) => c.card.eventOptions.length > 0).length;
+
+  const setAllIncluded = (include: boolean) =>
+    setDrafts((d) => Object.fromEntries(Object.entries(d).map(([key, draft]) => [key, { ...draft, include }])));
+
+  // After an import or a delete, refresh everything that may have changed.
+  const refreshAfterWrite = useCallback(async () => {
+    refetchPlayers();
+    refetchLocations();
+    setStandaloneRefresh((n) => n + 1);
+    if (csv) await runPreview(csv, source);
+  }, [csv, source, runPreview, refetchPlayers, refetchLocations]);
 
   async function commit() {
     setPhase("committing");
@@ -83,9 +99,7 @@ export default function AdminImportPage() {
         importable.map(({ card, draft, analysis }) => toCommitCard(card, draft, analysis))
       );
       setResults(res);
-      refetchPlayers();
-      // Refresh so imported players now show as "Allerede importert".
-      if (csv) await runPreview(csv, source);
+      await refreshAfterWrite();
     } catch (err) {
       setError(errorText(err));
     } finally {
@@ -95,17 +109,18 @@ export default function AdminImportPage() {
 
   const labelFor = (r: UdiscCardResult) => {
     const card = preview?.cards.find((c) => c.key === r.key);
-    const event = card?.eventOptions.find((e) => e.id === r.eventId);
-    return [event?.title, card?.courseName].filter(Boolean).join(" · ") || r.key;
+    const event = r.eventId ? card?.eventOptions.find((e) => e.id === r.eventId) : undefined;
+    const parts = event ? [event.title, card?.courseName] : [card?.courseName, card && formatStartedAt(card.startedAt)];
+    return parts.filter(Boolean).join(" · ") || r.key;
   };
 
   const busy = phase !== "idle";
 
   return (
-    <div className="w-full space-y-8">
+    <div className="w-full space-y-6 md:space-y-8">
       <HeaderSection
         title="UDisc-import"
-        text="Last opp en CSV-eksport fra UDisc, så finner Disckos rundene som hører til eventene deres."
+        text="Last opp en CSV-eksport fra UDisc. Runder på event-dager kobles til eventet, resten blir frittstående runder som teller i statistikken."
       />
 
       {!preview && (
@@ -116,13 +131,13 @@ export default function AdminImportPage() {
           </h2>
           <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
             <li>
-              I UDisc-appen: <span className="text-foreground">Runder → ☰ → Eksporter til CSV</span>.
+              I UDisc: åpne runden (eller <span className="text-foreground">Runder → ☰</span>) og velg{" "}
+              <span className="text-foreground">Eksporter til CSV</span>.
             </li>
+            <li>Last opp filen her. Alle spillerne på kortet blir med.</li>
             <li>
-              Last opp filen her. Det holder at én på hvert kort gjør det – alle spillerne på kortet blir med.
-            </li>
-            <li>
-              Hele historikken din følger med, men bare runder spilt samme dag som et Disckos-event blir vist.
+              Runder spilt samme dag og på samme bane som et Disckos-event foreslås til eventet. Andre runder blir
+              frittstående, men teller i spillerstatistikken.
             </li>
           </ol>
           <p className="text-muted-foreground">
@@ -146,12 +161,23 @@ export default function AdminImportPage() {
 
       {preview && (
         <section className="space-y-4">
-          <p className="text-sm text-muted-foreground">
-            Fant {preview.cardsInFile} runde{preview.cardsInFile === 1 ? "" : "r"} i {source}.{" "}
-            {preview.cards.length === 0
-              ? "Ingen av dem ble spilt samme dag som et Disckos-event. Opprett eventet først, og last opp filen på nytt."
-              : `${preview.cards.length} ble spilt samme dag som et event.`}
-          </p>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="text-sm text-muted-foreground">
+              {preview.cardsInFile} runde{preview.cardsInFile === 1 ? "" : "r"} i {source}
+              {eventDayCount > 0 && ` · ${eventDayCount} på en event-dag`}
+            </p>
+            {cards.length > 1 && (
+              <div className="flex items-center gap-1 text-sm">
+                <span className="text-muted-foreground">{selectedCount} valgt ·</span>
+                <button onClick={() => setAllIncluded(true)} className="rounded px-1.5 py-0.5 text-primary hover:bg-primary/10">
+                  Velg alle
+                </button>
+                <button onClick={() => setAllIncluded(false)} className="rounded px-1.5 py-0.5 text-primary hover:bg-primary/10">
+                  Velg ingen
+                </button>
+              </div>
+            )}
+          </div>
 
           {cards.map(({ card, draft, analysis }) => (
             <ImportCardItem
@@ -160,12 +186,13 @@ export default function AdminImportPage() {
               draft={draft}
               analysis={analysis}
               players={players}
+              locations={locations}
               onChange={(next) => setDrafts((d) => ({ ...d, [card.key]: next }))}
             />
           ))}
 
           {cards.length > 0 && (
-            <div className="sticky bottom-4 flex items-center justify-between gap-4 rounded-xl border border-border bg-card/95 p-3 shadow-md backdrop-blur">
+            <div className="sticky bottom-3 flex items-center justify-between gap-3 rounded-xl border border-border bg-card/95 p-3 shadow-md backdrop-blur">
               <p className="text-sm text-muted-foreground">
                 {importable.length === 0
                   ? "Ingenting valgt for import."
@@ -181,6 +208,8 @@ export default function AdminImportPage() {
           )}
         </section>
       )}
+
+      <StandaloneRoundsList refreshKey={standaloneRefresh} onDeleted={refreshAfterWrite} />
     </div>
   );
 }

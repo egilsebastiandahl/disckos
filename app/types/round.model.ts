@@ -10,7 +10,8 @@ export type Round = TeamRound | IndividualRound;
 
 interface RoundBase {
   id: string;
-  eventId: string;
+  /** Null for standalone rounds (not part of an event). */
+  eventId: string | null;
   scoringFormat: ScoringFormat;
 }
 

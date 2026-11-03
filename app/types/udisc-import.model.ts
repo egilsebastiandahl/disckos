@@ -2,6 +2,7 @@
 
 export type PlayerMatch = "alias" | "exact" | "guess" | "none";
 export type LocationMatch = "alias" | "name" | "date_only" | "other_location";
+export type CourseMatch = "alias" | "name" | "none";
 
 export interface UdiscRoundOption {
   ordinal: number;
@@ -31,6 +32,13 @@ export interface UdiscPreviewPlayer {
   match: PlayerMatch;
 }
 
+export interface UdiscImportedRound {
+  roundId: string;
+  /** Null when the card was imported as a standalone round. */
+  eventId: string | null;
+  playerIds: string[];
+}
+
 export interface UdiscPreviewCard {
   key: string;
   courseName: string;
@@ -39,10 +47,16 @@ export interface UdiscPreviewCard {
   startedAt: string | null;
   pars: number[];
   players: UdiscPreviewPlayer[];
-  /** Every event on the card's date, best match first. */
+  /** Events on the card's date, best match first; empty when there was none. */
   eventOptions: UdiscEventOption[];
-  suggestedEventId: string;
+  /** Null = suggest a standalone round. */
+  suggestedEventId: string | null;
   suggestedRoundOrdinal: number;
+  /** Location for a standalone round; null when no Disckos location matches the course. */
+  suggestedLocationId: string | null;
+  courseMatch: CourseMatch;
+  /** Where this card was imported before, if it was. */
+  importedRound: UdiscImportedRound | null;
   selected: boolean;
   warnings: string[];
 }
@@ -61,8 +75,12 @@ export interface UdiscCommitPlayer {
 
 export interface UdiscCommitCard {
   key: string;
-  eventId: string;
-  roundOrdinal: number;
+  /** Omitted = standalone round. */
+  eventId?: string;
+  roundOrdinal?: number;
+  locationId?: string;
+  newLocationName?: string;
+  startedAt?: string;
   courseName: string;
   pars: number[];
   players: UdiscCommitPlayer[];
@@ -70,11 +88,21 @@ export interface UdiscCommitCard {
 
 export interface UdiscCardResult {
   key: string;
-  eventId: string;
+  eventId: string | null;
   roundId: string | null;
-  roundOrdinal: number;
+  roundOrdinal: number | null;
   createdRound: boolean;
   importedPlayers: string[];
   skippedPlayers: string[];
   error: string | null;
+}
+
+/** GET /admin/round/standalone */
+export interface StandaloneRound {
+  roundId: string;
+  playedAt: string | null;
+  locationId: string | null;
+  locationName: string | null;
+  pars: number[];
+  players: { playerId: string; name: string; totalStrokes: number; holesPlayed: number }[];
 }

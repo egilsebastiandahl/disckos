@@ -28,10 +28,10 @@ export default function RecentRoundsChart({ rounds }: RecentRoundsChartProps) {
   const data = [...rounds]
     .sort(
       (a, b) =>
-        new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime()
+        new Date(a.playedAt).getTime() - new Date(b.playedAt).getTime()
     )
     .map((r) => ({
-      date: new Date(r.eventDate).toLocaleDateString("no", {
+      date: new Date(r.playedAt).toLocaleDateString("no", {
         day: "numeric",
         month: "short",
       }),

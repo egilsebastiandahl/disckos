@@ -40,8 +40,10 @@ export interface PlayerStatsByLocation {
 
 export interface PlayerRoundSummary {
   roundId: string;
-  eventId: string;
-  eventDate: string;
+  /** Null for standalone rounds (not part of an event). */
+  eventId: string | null;
+  /** The event's date, or a standalone round's own start time. */
+  playedAt: string;
   locationId: string | null;
   locationName: string | null;
   totalStrokes: number;
