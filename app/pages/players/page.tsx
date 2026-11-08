@@ -2,11 +2,11 @@
 
 import { useAuth } from "@/app/components/auth/AuthProvider";
 import FrisbeeLoader from "@/app/components/loader/FrisbeeLoader";
+import PlayerIcon from "@/app/components/icons/PlayerIcon";
 import HeaderSection from "@/app/components/sections/HeaderSection";
 import useFetch from "@/app/hooks/useFetch";
 import { type Player } from "@/app/types/player.model";
 import { cn } from "@/lib/utils";
-import PersonIcon from "@mui/icons-material/Person";
 import { Check, Swords, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -105,7 +105,7 @@ export default function PlayersIndexPage() {
               const content = (
                 <>
                   <div className="relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-muted">
-                    <PersonIcon />
+                    <PlayerIcon gender={p.gender} />
                     {compareMode && (
                       <span
                         className={cn(

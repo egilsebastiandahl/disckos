@@ -1,5 +1,5 @@
+import PlayerIcon from "@/app/components/icons/PlayerIcon";
 import { type Player } from "@/app/types/player.model";
-import PersonIcon from "@mui/icons-material/Person";
 
 interface PlayerHeaderProps {
   player: Player;
@@ -20,7 +20,7 @@ export default function PlayerHeader({ player }: PlayerHeaderProps) {
   return (
     <header className="mb-8 flex flex-col items-center gap-2 text-center">
       <div className="flex h-20 w-20 items-center justify-center rounded-full bg-card shadow-md">
-        <PersonIcon style={{ fontSize: "3rem" }} />
+        <PlayerIcon gender={player.gender} style={{ fontSize: "3rem" }} />
       </div>
       <h1 className="text-3xl font-bold">{player.name}</h1>
       {player.catchphrase && (
