@@ -120,6 +120,9 @@ export function summarizeToday(forecast: MetForecast, referenceDate = new Date()
       bestNowDelta = delta;
     }
   }
+  // An old cached forecast has no entries near "now"; its closest entry would be shown as
+  // today's weather (e.g. 16° in November). Better to show nothing than the wrong day.
+  if (bestNowDelta > 3 * 60 * 60 * 1000) return null;
 
   const todayEntries = series.filter((entry) => {
     const t = new Date(entry.time).getTime();

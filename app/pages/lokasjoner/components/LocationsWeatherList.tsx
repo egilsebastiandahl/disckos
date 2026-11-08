@@ -1,5 +1,5 @@
 "use client";
-import type { Event } from "@/app/types/event.model";
+import type { Location } from "@/app/types/location.model";
 import useFetch from "@/app/hooks/useFetch";
 import { useLocationsForecasts } from "@/app/hooks/useLocationsForecasts";
 import LocationWeatherCard from "@/app/components/weather/LocationWeatherCard";
@@ -10,12 +10,12 @@ import DiscInBasket from "@/app/components/animations/DiscInBasket";
 const DEFAULT_SKELETON_COUNT = 3;
 
 export default function LocationsWeatherList() {
-  const { data: events, isLoading: eventsLoading, error: eventsError } = useFetch<Event[]>("/api/event");
-  const { forecasts, locations, isLoading: forecastsLoading } = useLocationsForecasts(events);
+  const { data: allLocations, isLoading: locationsLoading, error: locationsError } = useFetch<Location[]>("/api/location");
+  const { forecasts, locations, isLoading: forecastsLoading } = useLocationsForecasts(allLocations);
 
-  const isLoading = eventsLoading || forecastsLoading;
+  const isLoading = locationsLoading || forecastsLoading;
 
-  if (eventsError) {
+  if (locationsError) {
     return <p className="text-muted-foreground">Klarte ikke hente lokasjoner.</p>;
   }
 

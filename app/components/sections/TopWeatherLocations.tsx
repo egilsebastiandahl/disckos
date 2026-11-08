@@ -1,5 +1,5 @@
 "use client";
-import type { Event } from "@/app/types/event.model";
+import type { Location } from "@/app/types/location.model";
 import useFetch from "@/app/hooks/useFetch";
 import { useLocationsForecasts } from "@/app/hooks/useLocationsForecasts";
 import LocationWeatherCard from "../weather/LocationWeatherCard";
@@ -10,12 +10,12 @@ import Link from "next/link";
 const BADGES = ["Best i dag", "2. plass", "3. plass"];
 
 export default function TopWeatherLocations() {
-  const { data: events, isLoading: eventsLoading } =
-    useFetch<Event[]>("/api/event");
+  const { data: allLocations, isLoading: locationsLoading } =
+    useFetch<Location[]>("/api/location");
   const { forecasts, isLoading: forecastsLoading } =
-    useLocationsForecasts(events);
+    useLocationsForecasts(allLocations);
 
-  const isLoading = eventsLoading || forecastsLoading;
+  const isLoading = locationsLoading || forecastsLoading;
   const playable = forecasts.filter((f) => !f.error && f.summary).slice(0, 3);
   if (!isLoading && playable.length === 0) return null;
 

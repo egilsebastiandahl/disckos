@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import type { Event } from "@/app/types/event.model";
 import type { Location } from "@/app/types/location.model";
 import type { MetForecast, WeatherSummary } from "@/app/types/weather.model";
 import { fetchForecast, scorePlayability, summarizeToday } from "@/lib/weather";
@@ -13,24 +12,30 @@ export interface LocationForecast {
   error: boolean;
 }
 
-function dedupeLocations(events: Event[]): Location[] {
-  const seen = new Map<string, Location>();
-  for (const ev of events) {
-    const loc = ev.location;
-    if (!loc || !loc.id || !Number.isFinite(loc.lat) || !Number.isFinite(loc.lon)) continue;
-    if (!seen.has(loc.id)) seen.set(loc.id, loc);
-  }
-  return Array.from(seen.values());
+/**
+ * Courses we can fetch weather for. Courses created by the UDisc import start out at
+ * 0, 0 (no coordinates yet); asking MET about those would return the weather in the
+ * Gulf of Guinea, which tends to win "best weather today".
+ */
+function withCoordinates(locations: Location[]): Location[] {
+  return locations.filter(
+    (loc) =>
+      loc.id &&
+      Number.isFinite(loc.lat) &&
+      Number.isFinite(loc.lon) &&
+      !(loc.lat === 0 && loc.lon === 0)
+  );
 }
 
-export function useLocationsForecasts(events: Event[] | undefined): {
+/** Today's forecast for every course, best conditions first. */
+export function useLocationsForecasts(allLocations: Location[] | undefined): {
   forecasts: LocationForecast[];
   locations: Location[];
   isLoading: boolean;
 } {
-  const locations = useMemo(() => dedupeLocations(events ?? []), [events]);
-  const [forecasts, setForecasts] = useState<LocationForecast[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const locations = useMemo(() => withCoordinates(allLocations ?? []), [allLocations]);
+  // Remember which list the forecasts belong to, so a new list counts as loading right away.
+  const [result, setResult] = useState<{ for: Location[]; forecasts: LocationForecast[] } | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -60,12 +65,12 @@ export function useLocationsForecasts(events: Event[] | undefined): {
     ).then((results) => {
       if (controller.signal.aborted) return;
       results.sort((a, b) => a.score - b.score);
-      setForecasts(results);
-      setIsLoading(false);
+      setResult({ for: locations, forecasts: results });
     });
 
     return () => controller.abort();
   }, [locations]);
 
-  return { forecasts, locations, isLoading };
+  const isLoading = result?.for !== locations;
+  return { forecasts: isLoading ? [] : result.forecasts, locations, isLoading };
 }
