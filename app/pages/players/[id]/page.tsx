@@ -8,8 +8,11 @@ import {
   type PlayerStats,
   type PlayerStatsByLocation,
 } from "@/app/types/player-stats.model";
+import { type PlayerRanks, type RankLadder } from "@/app/types/course-rank.model";
+import Link from "next/link";
 import { use } from "react";
 import CourseBreakdown from "./components/CourseBreakdown";
+import CourseRanks from "./components/CourseRanks";
 import PlayerHeader from "./components/PlayerHeader";
 import RecentRoundsChart from "./components/RecentRoundsChart";
 import RecentRoundsList from "./components/RecentRoundsList";
@@ -30,6 +33,9 @@ export default function PlayerProfilePage({ params }: PlayerProfilePageProps) {
   const recent = useFetch<PlayerRoundSummary[]>(
     `/api/player/${id}/rounds?limit=20`
   );
+  // Ranks are a bonus section: if they fail to load, the rest of the page still shows.
+  const ranks = useFetch<PlayerRanks>(`/api/player/${id}/ranks`);
+  const ladder = useFetch<RankLadder>("/api/rank/ladder");
 
   const isLoading =
     player.isLoading ||
@@ -59,6 +65,21 @@ export default function PlayerProfilePage({ params }: PlayerProfilePageProps) {
 
       {stats.data && stats.data.holesPlayed > 0 ? (
         <>
+          {ranks.data && ladder.data && ranks.data.courses.length > 0 && (
+            <section className="mb-10">
+              <div className="mb-3 flex items-baseline justify-between gap-2">
+                <h2 className="text-xl font-semibold">Rank per bane</h2>
+                <Link
+                  href="/pages/rank"
+                  className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                >
+                  Slik funker det
+                </Link>
+              </div>
+              <CourseRanks courses={ranks.data.courses} ladder={ladder.data} />
+            </section>
+          )}
+
           <section className="mb-10">
             <h2 className="mb-3 text-xl font-semibold">Statistikk</h2>
             <StatGrid stats={stats.data} />

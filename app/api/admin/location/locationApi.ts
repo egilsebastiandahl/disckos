@@ -19,6 +19,7 @@ const updateLocation = async (id: string, location: {
     description: string;
     lat: number;
     lon: number;
+    rankOffset?: number;
 }) => {
     return adminPut(`/api/admin/location/${id}`, location);
 }

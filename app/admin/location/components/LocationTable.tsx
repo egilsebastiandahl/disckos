@@ -25,7 +25,7 @@ interface LocationTableProps {
 export default function LocationTable({ locations, isLoading, onChanged }: LocationTableProps) {
   const [editLocation, setEditLocation] = useState<Location | null>(null);
   const [deleteLocation, setDeleteLocation] = useState<Location | null>(null);
-  const [editForm, setEditForm] = useState({ name: "", description: "", lat: "", lon: "" });
+  const [editForm, setEditForm] = useState({ name: "", description: "", lat: "", lon: "", rankOffset: "" });
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -35,6 +35,7 @@ export default function LocationTable({ locations, isLoading, onChanged }: Locat
       description: location.description,
       lat: String(location.lat),
       lon: String(location.lon),
+      rankOffset: String(location.rankOffset ?? 0),
     });
     setEditLocation(location);
   }
@@ -48,6 +49,7 @@ export default function LocationTable({ locations, isLoading, onChanged }: Locat
         description: editForm.description,
         lat: parseFloat(editForm.lat) || 0,
         lon: parseFloat(editForm.lon) || 0,
+        rankOffset: parseFloat(editForm.rankOffset) || 0,
       });
       if (!res.ok) throw new Error("Update failed");
       setEditLocation(null);
@@ -179,6 +181,20 @@ export default function LocationTable({ locations, isLoading, onChanged }: Locat
                   onChange={(e) => setEditForm((f) => ({ ...f, lon: e.target.value }))}
                 />
               </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-rank-offset">Rank-justering (kast per 18 hull)</Label>
+              <Input
+                id="edit-rank-offset"
+                type="number"
+                step="0.5"
+                value={editForm.rankOffset}
+                onChange={(e) => setEditForm((f) => ({ ...f, rankOffset: e.target.value }))}
+              />
+              <p className="text-xs text-muted-foreground">
+                0 = par er rettferdig. Positivt tall = lett bane (snill par), det kreves bedre score for samme
+                rank. Negativt = vanskelig bane.
+              </p>
             </div>
           </div>
           <DialogFooter>

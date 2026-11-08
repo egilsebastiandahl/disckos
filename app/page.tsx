@@ -1,6 +1,5 @@
 import HeaderSection from "./components/sections/HeaderSection";
 import UpcomingEvent from "./components/sections/UpcomingEvent";
-import HallOfFame from "./components/sections/HallOfFame";
 import TopWeatherLocations from "./components/sections/TopWeatherLocations";
 import HeroDiscArc from "./components/animations/HeroDiscArc";
 
@@ -22,9 +21,9 @@ export default function Home() {
           <TopWeatherLocations />
         </section>
 
-        <section className="flex justify-center items-center w-full">
+        {/* <section className="flex justify-center items-center w-full">
           <HallOfFame />
-        </section>
+        </section> */}
 
         <section className="flex justify-center items-center w-full text-sm text-muted-foreground">
           &copy; 2026 Disckos. Laget med ❤️ av Disckos-teamet.
