@@ -5,7 +5,7 @@ import {
 } from "@/app/components/rank/rankStyles";
 import { type CourseRank, type RankLadder } from "@/app/types/course-rank.model";
 import { cn } from "@/lib/utils";
-import { ArrowDown, ArrowUp, ChevronRight, Moon } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 interface CourseRanksProps {
@@ -37,7 +37,7 @@ function CourseRankCard({ course, ladder }: { course: CourseRank; ladder: RankLa
   const { tier, lastChange } = course;
   const placementRounds = ladder.placementRounds;
   const consideredRounds = Math.min(course.roundsPlayed, ladder.windowRounds);
-  const showChange = !course.inactive && lastChange && isRecent(lastChange.playedAt);
+  const showChange = lastChange && isRecent(lastChange.playedAt);
 
   return (
     <Link
@@ -47,7 +47,6 @@ function CourseRankCard({ course, ladder }: { course: CourseRank; ladder: RankLa
       <RankBadge
         tier={tier}
         size="md"
-        inactive={course.inactive}
         placementDone={course.roundsPlayed}
         placementTotal={placementRounds}
         className="mb-1"
@@ -59,12 +58,6 @@ function CourseRankCard({ course, ladder }: { course: CourseRank; ladder: RankLa
             {course.locationName}
           </span>
           {showChange && <ChangeChip up={lastChange.up} placed={!lastChange.fromTier} />}
-          {course.inactive && tier && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">
-              <Moon className="size-3" aria-hidden />
-              Inaktiv
-            </span>
-          )}
         </div>
 
         {tier ? (

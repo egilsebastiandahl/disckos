@@ -8,7 +8,6 @@ interface RankBadgeProps {
   /** Null shows the "unranked" medallion. */
   tier: RankTier | null;
   size?: keyof typeof SIZES;
-  inactive?: boolean;
   /** Unranked only: placement rounds played so far, out of [placementTotal]. */
   placementDone?: number;
   placementTotal?: number;
@@ -22,7 +21,6 @@ interface RankBadgeProps {
 export default function RankBadge({
   tier,
   size = "md",
-  inactive = false,
   placementDone = 0,
   placementTotal = 0,
   className,
@@ -64,13 +62,9 @@ export default function RankBadge({
 
   return (
     <div
-      className={cn(
-        "relative inline-flex shrink-0 transition",
-        inactive && "opacity-55 grayscale",
-        className
-      )}
+      className={cn("relative inline-flex shrink-0", className)}
       style={{ width: px, height: px }}
-      title={inactive ? `${tier.name} (inaktiv)` : tier.name}
+      title={tier.name}
       aria-label={tier.name}
     >
       <div

@@ -88,7 +88,6 @@ function CourseCell({ rank, side, winner }: { rank?: CourseRank; side: Side; win
       <RankBadge
         tier={rank.tier}
         size="sm"
-        inactive={rank.inactive}
         placementDone={rank.roundsPlayed}
         placementTotal={rank.tier ? 0 : placementTotal}
       />

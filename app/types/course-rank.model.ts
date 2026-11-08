@@ -25,7 +25,6 @@ export interface RankLadder {
   placementRounds: number;
   windowRounds: number;
   countedRounds: number;
-  inactiveAfterDays: number;
   tiers: RankTier[];
 }
 
@@ -54,7 +53,6 @@ export interface CourseRank {
   /** 0..1 towards nextTier. */
   progress: number | null;
   lastPlayedAt: string;
-  inactive: boolean;
   lastChange: RankChange | null;
 }
 

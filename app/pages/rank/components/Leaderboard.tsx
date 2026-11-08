@@ -5,7 +5,6 @@ import {
   type LeaderboardEntry,
   type RankLadder,
 } from "@/app/types/course-rank.model";
-import { cn } from "@/lib/utils";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import Link from "next/link";
 
@@ -67,10 +66,10 @@ export default function Leaderboard({ course, ladder }: LeaderboardProps) {
 function RankedRow({ entry, position }: { entry: LeaderboardEntry; position: number }) {
   const { rank } = entry;
   const change = rank.lastChange;
-  const showChange = !rank.inactive && change && change.fromTier && isRecent(change.playedAt);
+  const showChange = change && change.fromTier && isRecent(change.playedAt);
 
   return (
-    <li className={cn("border-t border-border first:border-t-0", rank.inactive && "opacity-70")}>
+    <li className="border-t border-border first:border-t-0">
       <Link
         href={`/pages/players/${entry.playerId}`}
         className="flex items-center gap-3 px-3 py-2.5 transition hover:bg-muted/40"
@@ -78,7 +77,7 @@ function RankedRow({ entry, position }: { entry: LeaderboardEntry; position: num
         <span className="w-6 text-right text-sm font-semibold text-muted-foreground tabular-nums">
           {position}
         </span>
-        <RankBadge tier={rank.tier} size="sm" inactive={rank.inactive} className="mb-1" />
+        <RankBadge tier={rank.tier} size="sm" className="mb-1" />
         <div className="flex min-w-0 flex-1 flex-col">
           <span className="flex items-center gap-1.5 truncate font-medium">
             {entry.playerName}
@@ -91,7 +90,6 @@ function RankedRow({ entry, position }: { entry: LeaderboardEntry; position: num
           </span>
           <span className="truncate text-xs text-muted-foreground">
             {rank.tier?.name}
-            {rank.inactive && " · inaktiv"}
           </span>
         </div>
         <div className="flex flex-col items-end">
