@@ -3,7 +3,10 @@
 import FrisbeeLoader from "@/app/components/loader/FrisbeeLoader";
 import HeaderSection from "@/app/components/sections/HeaderSection";
 import useFetch from "@/app/hooks/useFetch";
-import { type CourseLeaderboard, type RankLadder } from "@/app/types/course-rank.model";
+import {
+  type CourseLeaderboard,
+  type RankLadder,
+} from "@/app/types/course-rank.model";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
@@ -43,12 +46,15 @@ function RankContent() {
 
   if (courses.error || ladder.error || !courses.data || !ladder.data) {
     return (
-      <p className="text-center text-muted-foreground">Klarte ikke å hente rangeringen.</p>
+      <p className="text-center text-muted-foreground">
+        Klarte ikke å hente rangeringen.
+      </p>
     );
   }
 
   const selected =
-    courses.data.find((c) => c.locationId === searchParams.get("bane")) ?? courses.data[0];
+    courses.data.find((c) => c.locationId === searchParams.get("bane")) ??
+    courses.data[0];
 
   const selectCourse = (locationId: string) => {
     router.replace(`${pathname}?bane=${locationId}`, { scroll: false });
@@ -62,7 +68,10 @@ function RankContent() {
         </p>
       ) : (
         <>
-          <nav aria-label="Velg bane" className="mb-6 flex flex-wrap justify-center gap-2">
+          <nav
+            aria-label="Velg bane"
+            className="mb-6 flex flex-wrap justify-center gap-2"
+          >
             {courses.data.map((c) => (
               <button
                 key={c.locationId}
@@ -82,7 +91,9 @@ function RankContent() {
           </nav>
 
           <section className="mb-12">
-            <h2 className="mb-3 text-xl font-semibold">{selected.locationName}</h2>
+            <h2 className="mb-3 text-xl font-semibold">
+              {selected.locationName}
+            </h2>
             <Leaderboard course={selected} ladder={ladder.data} />
           </section>
         </>
@@ -93,18 +104,19 @@ function RankContent() {
         <ul className="mb-6 list-disc space-y-1 pl-5 text-sm text-muted-foreground">
           <li>
             Ranken din på en bane er snittet av dine{" "}
-            <strong className="text-foreground">{ladder.data.countedRounds} beste</strong> av de{" "}
-            <strong className="text-foreground">{ladder.data.windowRounds} siste</strong> rundene
-            der. En dårlig dag teller lite – men gamle gode runder faller ut etter hvert.
+            <strong className="text-foreground">
+              {ladder.data.countedRounds} beste
+            </strong>{" "}
+            av de{" "}
+            <strong className="text-foreground">
+              {ladder.data.windowRounds} siste
+            </strong>{" "}
+            rundene der.
           </li>
           <li>
-            Du blir plassert etter {ladder.data.placementRounds} fullførte runder på banen.
+            Du blir plassert etter {ladder.data.placementRounds} fullførte
+            runder på banen.
           </li>
-          <li>
-            Etter {ladder.data.inactiveAfterDays} dager uten runde på banen blir ranken grå. Den
-            kommer tilbake så snart du spiller igjen.
-          </li>
-          <li>Både event-runder og vanlige runder teller, så lenge alle hull er spilt.</li>
         </ul>
         <LadderList ladder={ladder.data} course={selected} />
       </section>

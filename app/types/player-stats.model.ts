@@ -51,3 +51,24 @@ export interface PlayerRoundSummary {
   toPar: number;
   holesPlayed: number;
 }
+
+/** Rounds two players both finished, from playerId's point of view. */
+export interface HeadToHead {
+  playerId: string;
+  opponentId: string;
+  wins: number;
+  losses: number;
+  ties: number;
+  /** Newest first. */
+  rounds: HeadToHeadRound[];
+}
+
+export interface HeadToHeadRound {
+  roundId: string;
+  playedAt: string;
+  locationId: string;
+  locationName: string | null;
+  holes: number;
+  toPar: number;
+  opponentToPar: number;
+}
