@@ -107,7 +107,17 @@ export default function CourseProgressChart({ rounds }: CourseProgressChartProps
               tickFormatter={(v: number) => formatToPar(v)}
             />
             <ReferenceLine y={0} stroke="currentColor" strokeOpacity={0.4} />
+            {/* Theme colours: Recharts' default white box shows the label in the page's light text on dark mode. */}
             <Tooltip
+              contentStyle={{
+                backgroundColor: "var(--popover)",
+                borderColor: "var(--border)",
+                borderRadius: "var(--radius)",
+                color: "var(--popover-foreground)",
+              }}
+              labelStyle={{ color: "var(--popover-foreground)", fontWeight: 500 }}
+              itemStyle={{ color: "var(--popover-foreground)" }}
+              cursor={{ stroke: "var(--muted-foreground)", strokeOpacity: 0.5 }}
               formatter={(value) => [formatToPar(Number(value)), "Mot par"]}
               labelFormatter={(label, payload) => {
                 const p = payload?.[0]?.payload as { strokes?: number } | undefined;
