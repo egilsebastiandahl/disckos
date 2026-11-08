@@ -12,6 +12,9 @@ export interface PlayerStats {
   worstRoundScore: number | null;
   bestRoundToPar: number | null;
   worstRoundToPar: number | null;
+  /** Course of the best / worst finished round. */
+  bestRoundLocationName: string | null;
+  worstRoundLocationName: string | null;
   aceCount: number;
   eagleCount: number;
   birdieCount: number;
@@ -50,6 +53,8 @@ export interface PlayerRoundSummary {
   totalPar: number;
   toPar: number;
   holesPlayed: number;
+  /** Holes in the round; equal to holesPlayed when the player finished it. */
+  roundHoles: number;
 }
 
 /** Rounds two players both finished, from playerId's point of view. */

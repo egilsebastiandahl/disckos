@@ -22,22 +22,17 @@ export default function StatGrid({ stats }: StatGridProps) {
         value={stats.holesPlayed}
         hint={`Snitt ${formatAvg(stats.avgStrokesPerHole)} kast/hull`}
       />
-      <StatCard
-        label="Snitt pr. runde"
-        value={formatAvg(stats.avgRoundScore)}
-        hint={`${formatToPar(Number(stats.avgRoundToPar.toFixed(2)))} mot par`}
-        emphasis={stats.avgRoundToPar < 0 ? "positive" : stats.avgRoundToPar > 0 ? "negative" : "neutral"}
-      />
+      {/* The backend picks these by score to par, among rounds the player finished. */}
       <StatCard
         label="Beste runde"
-        value={stats.bestRoundScore ?? "–"}
-        hint={formatToPar(stats.bestRoundToPar)}
+        value={formatToPar(stats.bestRoundToPar)}
+        hint={stats.bestRoundLocationName ?? undefined}
         emphasis="positive"
       />
       <StatCard
         label="Verste runde"
-        value={stats.worstRoundScore ?? "–"}
-        hint={formatToPar(stats.worstRoundToPar)}
+        value={formatToPar(stats.worstRoundToPar)}
+        hint={stats.worstRoundLocationName ?? undefined}
         emphasis="negative"
       />
       <StatCard label="Ess (hole-in-one)" value={stats.aceCount} emphasis="positive" />

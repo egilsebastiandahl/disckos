@@ -42,7 +42,10 @@ export default function RecentRoundsList({ rounds }: RecentRoundsListProps) {
                 {r.locationName ?? "Ukjent bane"}
               </span>
               <span className="text-xs text-muted-foreground">
-                {formatDate(r.playedAt)} · {r.holesPlayed} hull
+                {formatDate(r.playedAt)} ·{" "}
+                {r.holesPlayed < r.roundHoles
+                  ? `${r.holesPlayed}/${r.roundHoles} hull (ikke fullført)`
+                  : `${r.holesPlayed} hull`}
               </span>
             </div>
             <div className="flex flex-shrink-0 items-baseline gap-2 tabular-nums">

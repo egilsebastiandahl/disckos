@@ -11,7 +11,7 @@ import {
 import Link from "next/link";
 import CourseBreakdown from "./CourseBreakdown";
 import CourseRanks from "./CourseRanks";
-import RecentRoundsChart from "./RecentRoundsChart";
+import CourseProgressChart from "./CourseProgressChart";
 import RecentRoundsList from "./RecentRoundsList";
 import StatGrid from "./StatGrid";
 
@@ -31,7 +31,8 @@ export default function PlayerStatsSections({
 }: PlayerStatsSectionsProps) {
   const stats = useFetch<PlayerStats>(`/api/player/${playerId}/stats`);
   const byLocation = useFetch<PlayerStatsByLocation>(`/api/player/${playerId}/stats/by-location`);
-  const recent = useFetch<PlayerRoundSummary[]>(`/api/player/${playerId}/rounds?limit=20`);
+  // Every round, newest first: the per-course chart needs the full history, the list shows the latest.
+  const recent = useFetch<PlayerRoundSummary[]>(`/api/player/${playerId}/rounds?limit=1000`);
   // Ranks are a bonus section: if they fail to load, the rest still shows.
   const ranks = useFetch<PlayerRanks>(`/api/player/${playerId}/ranks`);
   const ladder = useFetch<RankLadder>("/api/rank/ladder");
@@ -72,9 +73,9 @@ export default function PlayerStatsSections({
 
       {recent.data && recent.data.length > 0 && (
         <section className="mb-10">
-          <h2 className="mb-3 text-xl font-semibold">Utvikling</h2>
+          <h2 className="mb-3 text-xl font-semibold">Utvikling per bane</h2>
           <div className="rounded-lg border border-border bg-card p-4 shadow-sm">
-            <RecentRoundsChart rounds={recent.data} />
+            <CourseProgressChart rounds={recent.data} />
           </div>
         </section>
       )}
@@ -89,7 +90,7 @@ export default function PlayerStatsSections({
       {recent.data && (
         <section className="mb-10">
           <h2 className="mb-3 text-xl font-semibold">Siste runder</h2>
-          <RecentRoundsList rounds={recent.data} />
+          <RecentRoundsList rounds={recent.data.slice(0, 20)} />
         </section>
       )}
     </>
