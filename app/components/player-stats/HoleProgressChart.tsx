@@ -199,7 +199,9 @@ export default function HoleProgressChart({ playerId, locationId }: HoleProgress
                     return p?.fullDate ?? String(label);
                   }}
                 />
+                {/* No draw-in animation, for the same reason as in CourseProgressChart. */}
                 <Line
+                  isAnimationActive={false}
                   type="monotone"
                   dataKey="throws"
                   stroke="#22c55e"

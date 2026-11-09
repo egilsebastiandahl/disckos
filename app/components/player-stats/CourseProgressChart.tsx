@@ -120,7 +120,11 @@ export default function CourseProgressChart({ courses, selected, onSelect }: Cou
                 return p?.strokes ? `${label} · ${p.strokes} kast` : String(label);
               }}
             />
+            {/* No draw-in animation: Recharts sizes it to the path at the start, so switching
+                course (or the container settling its width) left the line cut short or gone
+                until the animation ended. */}
             <Line
+              isAnimationActive={false}
               type="monotone"
               dataKey="toPar"
               stroke="#22c55e"
