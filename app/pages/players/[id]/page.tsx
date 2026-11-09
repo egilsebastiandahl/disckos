@@ -19,22 +19,22 @@ export default function PlayerProfilePage({ params }: PlayerProfilePageProps) {
 
   if (player.isLoading) {
     return (
-      <main className="flex min-h-[60vh] w-full items-center justify-center p-8">
+      <div className="flex min-h-[60vh] w-full items-center justify-center p-8">
         <FrisbeeLoader size="lg" text="Henter spiller…" />
-      </main>
+      </div>
     );
   }
 
   if (player.error || !player.data) {
     return (
-      <main className="flex min-h-[60vh] w-full items-center justify-center p-8">
+      <div className="flex min-h-[60vh] w-full items-center justify-center p-8">
         <p className="text-muted-foreground">Fant ikke spilleren.</p>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 py-8 md:px-8">
+    <div className="mx-auto w-full max-w-5xl px-4 py-8 md:px-8">
       <PlayerHeader player={player.data} />
       <div className="-mt-4 mb-8 flex justify-center">
         <Link
@@ -46,6 +46,6 @@ export default function PlayerProfilePage({ params }: PlayerProfilePageProps) {
         </Link>
       </div>
       <PlayerStatsSections playerId={id} />
-    </main>
+    </div>
   );
 }

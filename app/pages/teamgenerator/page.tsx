@@ -110,7 +110,7 @@ export default function TeamGeneratorPage() {
     <>
       <HeaderSection title="Lagbygger" text="Velg spillere og generer tilfeldige lag på et blunk!" />
 
-      <main className={styles.container}>
+      <div className={styles.container}>
         {/* ── Step 1: Player Selection ── */}
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
@@ -298,7 +298,7 @@ export default function TeamGeneratorPage() {
             </div>
           </section>
         )}
-      </main>
+      </div>
     </>
   );
 }

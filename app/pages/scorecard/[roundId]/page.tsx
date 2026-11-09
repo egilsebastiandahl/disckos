@@ -65,35 +65,35 @@ export default function ScorecardPage({ params }: ScorecardPageProps) {
 
   if (isLoading) {
     return (
-      <main className="flex min-h-[80vh] items-center justify-center p-4">
+      <div className="flex min-h-[80vh] items-center justify-center p-4">
         <FrisbeeLoader text="Henter runden…" />
-      </main>
+      </div>
     );
   }
 
   if (loadError) {
     return (
-      <main className="mx-auto flex min-h-[60vh] max-w-md flex-col items-center justify-center gap-2 p-4 text-center">
+      <div className="mx-auto flex min-h-[60vh] max-w-md flex-col items-center justify-center gap-2 p-4 text-center">
         <p className="font-semibold">Klarte ikke å laste scorecard</p>
         <p className="text-sm text-muted-foreground">{loadError}</p>
-      </main>
+      </div>
     );
   }
 
   if (!round) {
     return (
-      <main className="flex min-h-[60vh] items-center justify-center p-4">
+      <div className="flex min-h-[60vh] items-center justify-center p-4">
         <p className="text-muted-foreground">Ingen runde funnet.</p>
-      </main>
+      </div>
     );
   }
 
   const hole = round.holes[currentIndex];
   if (!hole) {
     return (
-      <main className="flex min-h-[60vh] items-center justify-center p-4">
+      <div className="flex min-h-[60vh] items-center justify-center p-4">
         <p className="text-muted-foreground">Ingen hull i runden.</p>
-      </main>
+      </div>
     );
   }
 
@@ -130,7 +130,7 @@ export default function ScorecardPage({ params }: ScorecardPageProps) {
         </div>
       )}
 
-      <main className="mx-auto flex max-w-md flex-col gap-3 px-3 py-4">
+      <div className="mx-auto flex max-w-md flex-col gap-3 px-3 py-4">
         {sortedScores.map((score) => (
           <PlayerScoreRow
             key={score.playerId}
@@ -144,7 +144,7 @@ export default function ScorecardPage({ params }: ScorecardPageProps) {
             disabled={!isAuthed}
           />
         ))}
-      </main>
+      </div>
 
       <HoleJumpGrid
         totalHoles={round.holes.length}

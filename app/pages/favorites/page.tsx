@@ -171,7 +171,7 @@ export default function FavoritesPage() {
   return (
     <>
       <HeaderSection title="Favoritter" text="Her er favoritt-discene til hele gjengen!" />
-      <main>
+      <div>
         <section>Her er neste seksjonen</section>
         {grid.map((row, i) => {
           return (
@@ -186,7 +186,7 @@ export default function FavoritesPage() {
             </div>
           );
         })}
-      </main>
+      </div>
     </>
   );
 }

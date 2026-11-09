@@ -31,13 +31,13 @@ export default function AgendaPage() {
         buttonClick={onGoToNextEventClick}
         buttonId={NESTE_EVENT_BUTTON_ID}
       />
-      <main className="flex max-w-7xl mx-auto sm:px-6 lg:px-8 justify-center">
+      <div className="flex max-w-7xl mx-auto sm:px-6 lg:px-8 justify-center">
         {isLoading ? (
           <AgendaListSkeleton />
         ) : (
           <AgendaList events={events ?? []} />
         )}
-      </main>
+      </div>
     </>
   );
 }

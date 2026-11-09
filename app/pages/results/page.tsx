@@ -85,7 +85,7 @@ export default function ResultsPage() {
         title="Resultater"
         text="Resultater fra tidligere arrangementer."
       />
-      <main className="mx-auto w-full max-w-3xl px-4 pb-16">
+      <div className="mx-auto w-full max-w-3xl px-4 pb-16">
         {isLoading ? (
           <ResultsSkeleton />
         ) : pastEvents.length === 0 ? (
@@ -100,7 +100,7 @@ export default function ResultsPage() {
             ))}
           </div>
         )}
-      </main>
+      </div>
     </>
   );
 }

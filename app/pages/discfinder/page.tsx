@@ -19,7 +19,7 @@ const DiscFinderPage = () => {
         title="DiscFinder"
         text="Bruk input feltene for å finne din perfekte disc!"
       />
-      <main className="flex w-full flex-col items-center justify-between sm:items-start gap-4 md:gap-8">
+      <div className="flex w-full flex-col items-center justify-between sm:items-start gap-4 md:gap-8">
         <section className="grid grid-cols-2 gap-4 w-full p-4 md:p-16 md:grid-cols-4">
           <DiscInput
             min={1}
@@ -58,7 +58,7 @@ const DiscFinderPage = () => {
           {/* Her kan vi legge til en knapp for å søke etter disker basert på input verdier */}
           <Button>Finn Discer</Button>
         </section>
-      </main>
+      </div>
     </>
   );
 };

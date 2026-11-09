@@ -7,9 +7,9 @@ export default function VideosPage() {
         title="Videoer"
         text="Her er videoer fra tidligere arrangementer, samt tips til spilling!"
       />
-      <main>
+      <div>
         <section>Her er neste seksjonen</section>
-      </main>
+      </div>
     </>
   );
 }

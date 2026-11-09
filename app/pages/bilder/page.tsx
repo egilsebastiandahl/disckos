@@ -69,7 +69,7 @@ export default function BilderPage() {
         text="Minner fra eventene våre. Del dine egne bilder når et event pågår!"
       />
 
-      <main className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         {/* Upload section — only visible to authenticated users during active event */}
         {session && activeEvent && (
           <div className="mb-10 max-w-md mx-auto">
@@ -100,7 +100,7 @@ export default function BilderPage() {
         ) : (
           <PhotoGallery photos={photos} events={events ?? []} />
         )}
-      </main>
+      </div>
     </>
   );
 }

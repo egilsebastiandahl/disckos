@@ -8,9 +8,9 @@ const LokasjonerPage = () => {
         title="Baner"
         text="Her er hvor det er best å spille i dag!"
       />
-      <main className="flex max-w-7xl mx-auto sm:px-6 lg:px-8 justify-center">
+      <div className="flex max-w-7xl mx-auto sm:px-6 lg:px-8 justify-center">
         <LocationsWeatherList />
-      </main>
+      </div>
     </>
   );
 };

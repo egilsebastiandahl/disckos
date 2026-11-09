@@ -28,35 +28,35 @@ export default function ScorecardEventDispatchPage({
 
   if (isLoading || (data && data.length === 1)) {
     return (
-      <main className="flex min-h-[60vh] items-center justify-center p-4">
+      <div className="flex min-h-[60vh] items-center justify-center p-4">
         <FrisbeeLoader text="Finner riktig runde…" />
-      </main>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <main className="mx-auto max-w-md p-4 text-center">
+      <div className="mx-auto max-w-md p-4 text-center">
         <p className="text-muted-foreground">
           Klarte ikke å hente runder for arrangementet.
         </p>
-      </main>
+      </div>
     );
   }
 
   if (!data || data.length === 0) {
     return (
-      <main className="mx-auto max-w-md p-4 text-center">
+      <div className="mx-auto max-w-md p-4 text-center">
         <p className="text-muted-foreground">
           Det er ikke opprettet noen runder for dette arrangementet enda. Be en
           admin opprette en runde først.
         </p>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="mx-auto flex max-w-md flex-col gap-3 p-4">
+    <div className="mx-auto flex max-w-md flex-col gap-3 p-4">
       <h1 className="text-xl font-bold">Velg runde</h1>
       <ul className="flex flex-col gap-2">
         {data.map((r, idx) => (
@@ -74,6 +74,6 @@ export default function ScorecardEventDispatchPage({
           </li>
         ))}
       </ul>
-    </main>
+    </div>
   );
 }
