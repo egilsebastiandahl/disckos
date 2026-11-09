@@ -6,7 +6,7 @@ import useFetch from "@/app/hooks/useFetch";
 import { type Player } from "@/app/types/player.model";
 import { NativeSelect } from "@/components/ui/native-select";
 import { cn } from "@/lib/utils";
-import { ArrowLeftRight } from "lucide-react";
+import { ArrowLeftRight, ArrowUpDown } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
@@ -16,7 +16,10 @@ import { SIDE, type Side } from "./compareStyles";
 export default function ComparePage() {
   return (
     <>
-      <HeaderSection title="Sammenlign" text="Hvem er egentlig best? Nå får dere svaret." />
+      <HeaderSection
+        title="Sammenlign"
+        text="Hvem er egentlig best? Nå får dere svaret."
+      />
       <Suspense fallback={<Loading />}>
         <CompareContent />
       </Suspense>
@@ -50,16 +53,22 @@ function CompareContent() {
 
   if (players.isLoading) return <Loading />;
   if (players.error || !players.data) {
-    return <p className="text-center text-muted-foreground">Klarte ikke å hente spillere.</p>;
+    return (
+      <p className="text-center text-muted-foreground">
+        Klarte ikke å hente spillere.
+      </p>
+    );
   }
 
-  const sorted = [...players.data].sort((x, y) => x.name.localeCompare(y.name, "no"));
+  const sorted = [...players.data].sort((x, y) =>
+    x.name.localeCompare(y.name, "no")
+  );
   const playerA = sorted.find((p) => p.id === a);
   const playerB = sorted.find((p) => p.id === b);
 
   return (
     <main className="mx-auto w-full max-w-4xl px-4 pb-12 md:px-8">
-      <div className="mb-10 grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-4">
+      <div className="mx-auto mb-10 grid w-full max-w-sm grid-cols-1 items-center gap-3 sm:max-w-none sm:grid-cols-[1fr_auto_1fr] sm:gap-4">
         <PlayerPicker
           side="a"
           value={a}
@@ -67,8 +76,10 @@ function CompareContent() {
           exclude={b}
           onChange={(id) => setPlayers(id, b)}
         />
-        <div className="flex flex-col items-center gap-1">
-          <span className="font-serif text-xl font-bold text-muted-foreground">VS</span>
+        <div className="flex items-center justify-center gap-2 sm:flex-col sm:gap-1">
+          <span className="font-serif text-xl font-bold text-muted-foreground">
+            VS
+          </span>
           <button
             type="button"
             onClick={() => setPlayers(b, a)}
@@ -77,7 +88,8 @@ function CompareContent() {
             aria-label="Bytt side"
             title="Bytt side"
           >
-            <ArrowLeftRight className="size-4" />
+            <ArrowUpDown className="size-4 sm:hidden" />
+            <ArrowLeftRight className="hidden size-4 sm:block" />
           </button>
         </div>
         <PlayerPicker
@@ -93,7 +105,9 @@ function CompareContent() {
         // Keyed so switching players resets everything the comparison fetched.
         <Comparison key={`${a}-${b}`} playerA={playerA} playerB={playerB} />
       ) : (
-        <p className="text-center text-muted-foreground">Velg to spillere over for å sammenligne.</p>
+        <p className="text-center text-muted-foreground">
+          Velg to spillere over for å sammenligne.
+        </p>
       )}
     </main>
   );
