@@ -1,7 +1,7 @@
 export const navigationData: { url: string; name: string }[] = [
   {
     url: "/pages/agenda",
-    name: "Agenda",
+    name: "Kalender",
   },
   {
     url: "/pages/lokasjoner",
