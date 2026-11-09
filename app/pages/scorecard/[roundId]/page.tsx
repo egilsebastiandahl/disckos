@@ -65,7 +65,7 @@ export default function ScorecardPage({ params }: ScorecardPageProps) {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-[80vh] items-center justify-center p-4">
+      <div className="flex min-h-[80vh] items-center justify-center py-4">
         <FrisbeeLoader text="Henter runden…" />
       </div>
     );
@@ -73,7 +73,7 @@ export default function ScorecardPage({ params }: ScorecardPageProps) {
 
   if (loadError) {
     return (
-      <div className="mx-auto flex min-h-[60vh] max-w-md flex-col items-center justify-center gap-2 p-4 text-center">
+      <div className="mx-auto flex min-h-[60vh] max-w-md flex-col items-center justify-center gap-2 py-4 text-center">
         <p className="font-semibold">Klarte ikke å laste scorecard</p>
         <p className="text-sm text-muted-foreground">{loadError}</p>
       </div>
@@ -82,7 +82,7 @@ export default function ScorecardPage({ params }: ScorecardPageProps) {
 
   if (!round) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center p-4">
+      <div className="flex min-h-[60vh] items-center justify-center py-4">
         <p className="text-muted-foreground">Ingen runde funnet.</p>
       </div>
     );
@@ -91,7 +91,7 @@ export default function ScorecardPage({ params }: ScorecardPageProps) {
   const hole = round.holes[currentIndex];
   if (!hole) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center p-4">
+      <div className="flex min-h-[60vh] items-center justify-center py-4">
         <p className="text-muted-foreground">Ingen hull i runden.</p>
       </div>
     );
@@ -130,7 +130,7 @@ export default function ScorecardPage({ params }: ScorecardPageProps) {
         </div>
       )}
 
-      <div className="mx-auto flex max-w-md flex-col gap-3 px-3 py-4">
+      <div className="mx-auto flex max-w-md flex-col gap-3 py-4">
         {sortedScores.map((score) => (
           <PlayerScoreRow
             key={score.playerId}

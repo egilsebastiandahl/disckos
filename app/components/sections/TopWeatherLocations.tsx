@@ -20,7 +20,7 @@ export default function TopWeatherLocations() {
   if (!isLoading && playable.length === 0) return null;
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4">
+    <div className="w-full max-w-5xl mx-auto">
       <div className="text-center mb-6 md:mb-8">
         <h2 className="text-3xl md:text-4xl font-bold font-serif text-foreground">
           Hvor er det best vær?

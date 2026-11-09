@@ -112,7 +112,7 @@ export default function ProfilePage() {
 
   if (authLoading || playersLoading) {
     return (
-      <div className="flex min-h-[60vh] w-full items-center justify-center p-8">
+      <div className="flex min-h-[60vh] w-full items-center justify-center py-8">
         <FrisbeeLoader size="lg" text="Henter profil…" />
       </div>
     );
@@ -122,7 +122,7 @@ export default function ProfilePage() {
   const name = profile?.displayName || profile?.playerName || profile?.username || "Min profil";
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 py-8 md:px-8">
+    <div className="mx-auto w-full max-w-5xl py-8">
       <header className="mb-8 flex flex-col items-center gap-3 text-center">
         <h1 className="text-3xl font-bold">{name}</h1>
         {profile?.bio && <p className="max-w-md text-muted-foreground">{profile.bio}</p>}

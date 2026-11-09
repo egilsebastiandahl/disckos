@@ -61,7 +61,7 @@ function RankContent() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-4 pb-12 md:px-8">
+    <div className="mx-auto w-full max-w-4xl pb-12">
       {!selected ? (
         <p className="text-center text-muted-foreground">
           Ingen fullførte runder enda. Spill en runde for å komme på stigen!

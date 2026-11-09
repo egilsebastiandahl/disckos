@@ -28,7 +28,7 @@ export default function ScorecardEventDispatchPage({
 
   if (isLoading || (data && data.length === 1)) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center p-4">
+      <div className="flex min-h-[60vh] items-center justify-center py-4">
         <FrisbeeLoader text="Finner riktig runde…" />
       </div>
     );
@@ -36,7 +36,7 @@ export default function ScorecardEventDispatchPage({
 
   if (error) {
     return (
-      <div className="mx-auto max-w-md p-4 text-center">
+      <div className="mx-auto max-w-md py-4 text-center">
         <p className="text-muted-foreground">
           Klarte ikke å hente runder for arrangementet.
         </p>
@@ -46,7 +46,7 @@ export default function ScorecardEventDispatchPage({
 
   if (!data || data.length === 0) {
     return (
-      <div className="mx-auto max-w-md p-4 text-center">
+      <div className="mx-auto max-w-md py-4 text-center">
         <p className="text-muted-foreground">
           Det er ikke opprettet noen runder for dette arrangementet enda. Be en
           admin opprette en runde først.
@@ -56,7 +56,7 @@ export default function ScorecardEventDispatchPage({
   }
 
   return (
-    <div className="mx-auto flex max-w-md flex-col gap-3 p-4">
+    <div className="mx-auto flex max-w-md flex-col gap-3 py-4">
       <h1 className="text-xl font-bold">Velg runde</h1>
       <ul className="flex flex-col gap-2">
         {data.map((r, idx) => (

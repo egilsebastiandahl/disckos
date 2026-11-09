@@ -8,13 +8,13 @@ export default function Home() {
     <div className="flex justify-center font-sans p-4">
       <HeroDiscArc />
       <main className="flex w-full flex-col items-center justify-between pt-16 md:pt-32 sm:items-start gap-8 md:gap-16">
-        <section className="flex w-full justify-center items-center px-4 md:px-0">
+        <section className="flex w-full justify-center items-center">
           <HeaderSection
             title="Velkommen til Disckos"
             text="Her kan du følge med på når vi skal spille! Lag deg en profil!"
           />
         </section>
-        <section className="flex justify-center items-center w-full mx-4">
+        <section className="flex justify-center items-center w-full">
           <UpcomingEvent />
         </section>
         <section className="flex justify-center items-center w-full">

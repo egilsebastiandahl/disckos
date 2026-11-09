@@ -23,7 +23,7 @@ function PlayerCardSkeleton() {
 
 export default function HallOfFameSkeleton() {
   return (
-    <div className="w-full max-w-5xl mx-auto px-4">
+    <div className="w-full max-w-5xl mx-auto">
       <div className="text-center mb-8 md:mb-12">
         <Skeleton className="h-10 w-56 mx-auto" />
         <Skeleton className="h-4 w-80 mx-auto mt-3" />

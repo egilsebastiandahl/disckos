@@ -3,5 +3,5 @@ export default function PagesLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <main className="font-sans p-8 md:p-20">{children}</main>;
+  return <main className="font-sans px-4 py-8 md:px-8 md:py-20">{children}</main>;
 }

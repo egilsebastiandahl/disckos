@@ -59,7 +59,7 @@ export default function PlayersIndexPage() {
             : "Klikk på en spiller for å se profil og statistikk."
         }
       />
-      <div className={cn("mx-auto w-full max-w-4xl px-4 md:px-8", compareMode ? "pb-28" : "pb-8")}>
+      <div className={cn("mx-auto w-full max-w-4xl", compareMode ? "pb-28" : "pb-8")}>
         {isLoading && (
           <div className="flex min-h-[40vh] items-center justify-center">
             <FrisbeeLoader text="Henter spillere…" />

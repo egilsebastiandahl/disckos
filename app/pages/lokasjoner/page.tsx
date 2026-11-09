@@ -8,7 +8,7 @@ const LokasjonerPage = () => {
         title="Baner"
         text="Her er hvor det er best å spille i dag!"
       />
-      <div className="flex max-w-7xl mx-auto sm:px-6 lg:px-8 justify-center">
+      <div className="flex max-w-7xl mx-auto justify-center">
         <LocationsWeatherList />
       </div>
     </>

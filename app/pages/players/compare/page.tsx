@@ -67,7 +67,7 @@ function CompareContent() {
   const playerB = sorted.find((p) => p.id === b);
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-4 pb-12 md:px-8">
+    <div className="mx-auto w-full max-w-4xl pb-12">
       <div className="mx-auto mb-10 grid w-full max-w-sm grid-cols-1 items-center gap-3 sm:max-w-none sm:grid-cols-[1fr_auto_1fr] sm:gap-4">
         <PlayerPicker
           side="a"

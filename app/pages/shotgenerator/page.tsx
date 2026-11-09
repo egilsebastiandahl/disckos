@@ -127,7 +127,7 @@ const ShotgeneratorPage = () => {
         title="Shot-generator"
         text="Her kan du rulle om hvilket kast du skal bruke!"
       />
-      <div className="flex flex-col max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 items-center w-full">
+      <div className="flex flex-col max-w-7xl mx-auto items-center w-full">
         <ShotButtons style={{ marginBottom: 36 }} onPress={generateShot} />
         {currentShot && (
           <section className="w-full mb-12">
