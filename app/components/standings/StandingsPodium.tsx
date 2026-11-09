@@ -4,7 +4,6 @@ import {
   type IndividualStandingEntry,
   type TeamStandingEntry,
 } from "@/app/types/event-standings.model";
-import Bubble from "@/app/components/bubble/Bubble";
 import FlagIcon from "@mui/icons-material/Flag";
 import PeopleIcon from "@mui/icons-material/People";
 import PersonIcon from "@mui/icons-material/Person";
@@ -38,46 +37,44 @@ export function StandingsPodiumIndividual({ entries }: PodiumIndividualProps) {
   const order = [2, 1, 3];
 
   return (
-    <Bubble>
-      <div className="flex items-end justify-center gap-4">
-        {order.map((pos) => {
-          const items = byPos.get(pos) ?? [];
-          return (
-            <div
-              key={pos}
-              className={`flex flex-col items-center ${pos !== 1 ? "mt-4" : ""}`}
-            >
-              {items.length > 1 ? (
-                <PeopleIcon style={podiumStyle(pos)} />
+    <div className="flex items-end justify-center gap-4">
+      {order.map((pos) => {
+        const items = byPos.get(pos) ?? [];
+        return (
+          <div
+            key={pos}
+            className={`flex flex-col items-center ${pos !== 1 ? "mt-4" : ""}`}
+          >
+            {items.length > 1 ? (
+              <PeopleIcon style={podiumStyle(pos)} />
+            ) : (
+              <PersonIcon style={podiumStyle(pos)} />
+            )}
+            <div className="flex flex-col items-center text-sm">
+              {items.length === 0 ? (
+                <span className="text-muted-foreground">—</span>
               ) : (
-                <PersonIcon style={podiumStyle(pos)} />
-              )}
-              <div className="flex flex-col items-center text-sm">
-                {items.length === 0 ? (
-                  <span className="text-muted-foreground">—</span>
-                ) : (
-                  items.map((e) => (
-                    <Link
-                      key={e.playerId}
-                      href={`/pages/players/${e.playerId}`}
-                      className="font-semibold hover:underline"
-                    >
-                      {e.playerName}
-                    </Link>
-                  ))
-                )}
-              </div>
-              {items[0] && (
-                <span className="flex items-center gap-1 text-sm tabular-nums">
-                  <FlagIcon fontSize="small" />
-                  {items[0].totalStrokes} ({formatToPar(items[0].toPar)})
-                </span>
+                items.map((e) => (
+                  <Link
+                    key={e.playerId}
+                    href={`/pages/players/${e.playerId}`}
+                    className="font-semibold hover:underline"
+                  >
+                    {e.playerName}
+                  </Link>
+                ))
               )}
             </div>
-          );
-        })}
-      </div>
-    </Bubble>
+            {items[0] && (
+              <span className="flex items-center gap-1 text-sm tabular-nums">
+                <FlagIcon fontSize="small" />
+                {items[0].totalStrokes} ({formatToPar(items[0].toPar)})
+              </span>
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
@@ -90,41 +87,39 @@ export function StandingsPodiumTeam({ entries }: PodiumTeamProps) {
   if (top3.length === 0) return null;
 
   return (
-    <Bubble>
-      <div className="flex flex-col items-center gap-3">
-        {top3.map((entry) => (
-          <div
-            key={entry.teamId}
-            className="flex w-full max-w-md flex-col items-center gap-1 rounded-lg border border-border bg-card/50 px-3 py-2"
-          >
-            <div className="flex w-full items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <PeopleIcon style={podiumStyle(entry.position)} />
-                <span className="font-bold">{entry.teamName}</span>
-              </div>
-              <span className="flex items-center gap-1 text-sm tabular-nums">
-                <FlagIcon fontSize="small" />
-                {entry.totalStrokes} ({formatToPar(entry.toPar)})
-              </span>
+    <div className="flex w-full flex-col items-center gap-3">
+      {top3.map((entry) => (
+        <div
+          key={entry.teamId}
+          className="flex w-full max-w-md flex-col items-center gap-1 rounded-lg border border-border bg-card/50 px-3 py-2"
+        >
+          <div className="flex w-full items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <PeopleIcon style={podiumStyle(entry.position)} />
+              <span className="font-bold">{entry.teamName}</span>
             </div>
-            {entry.members.length > 0 && (
-              <div className="flex flex-wrap justify-center gap-x-2 text-xs text-muted-foreground">
-                {entry.members.map((m, i) => (
-                  <span key={m.playerId}>
-                    <Link
-                      href={`/pages/players/${m.playerId}`}
-                      className="hover:underline"
-                    >
-                      {m.playerName}
-                    </Link>
-                    {i < entry.members.length - 1 && ","}
-                  </span>
-                ))}
-              </div>
-            )}
+            <span className="flex items-center gap-1 text-sm tabular-nums">
+              <FlagIcon fontSize="small" />
+              {entry.totalStrokes} ({formatToPar(entry.toPar)})
+            </span>
           </div>
-        ))}
-      </div>
-    </Bubble>
+          {entry.members.length > 0 && (
+            <div className="flex flex-wrap justify-center gap-x-2 text-xs text-muted-foreground">
+              {entry.members.map((m, i) => (
+                <span key={m.playerId}>
+                  <Link
+                    href={`/pages/players/${m.playerId}`}
+                    className="hover:underline"
+                  >
+                    {m.playerName}
+                  </Link>
+                  {i < entry.members.length - 1 && ","}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
   );
 }
