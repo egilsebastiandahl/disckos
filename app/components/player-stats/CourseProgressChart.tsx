@@ -2,7 +2,7 @@
 
 import { type PlayerRoundSummary } from "@/app/types/player-stats.model";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { chartTooltipStyle } from "./chartTooltip";
 import {
   CartesianGrid,
   Line,
@@ -14,27 +14,22 @@ import {
   YAxis,
 } from "recharts";
 
-interface CourseProgressChartProps {
-  /** All the player's rounds, any order. */
-  rounds: PlayerRoundSummary[];
-}
-
 const formatToPar = (n: number): string => (n === 0 ? "E" : n > 0 ? `+${n}` : `${n}`);
 
-interface Course {
+export interface ProgressCourse {
   locationId: string;
   name: string;
+  /** The player's finished rounds there. */
   rounds: PlayerRoundSummary[];
 }
 
 /**
- * Score to par over time on one course at a time. A trend across different courses says more
- * about which course was played than about the player, so courses are never mixed.
+ * Courses with at least 2 finished rounds, most played first. Only finished rounds count:
+ * half a round's score isn't comparable to a full one.
  */
-export default function CourseProgressChart({ rounds }: CourseProgressChartProps) {
-  const byCourse = new Map<string, Course>();
+export function progressCourses(rounds: PlayerRoundSummary[]): ProgressCourse[] {
+  const byCourse = new Map<string, ProgressCourse>();
   for (const r of rounds) {
-    // Only finished rounds: half a round's score isn't comparable to a full one.
     if (!r.locationId || r.holesPlayed !== r.roundHoles) continue;
     const course = byCourse.get(r.locationId) ?? {
       locationId: r.locationId,
@@ -44,13 +39,23 @@ export default function CourseProgressChart({ rounds }: CourseProgressChartProps
     course.rounds.push(r);
     byCourse.set(r.locationId, course);
   }
-  const courses = [...byCourse.values()]
+  return [...byCourse.values()]
     .filter((c) => c.rounds.length >= 2)
     .sort((a, b) => b.rounds.length - a.rounds.length || a.name.localeCompare(b.name, "no"));
+}
 
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const selected = courses.find((c) => c.locationId === selectedId) ?? courses[0];
+interface CourseProgressChartProps {
+  courses: ProgressCourse[];
+  /** Undefined when the player has no course with 2 finished rounds. */
+  selected: ProgressCourse | undefined;
+  onSelect: (locationId: string) => void;
+}
 
+/**
+ * Score to par over time on one course at a time. A trend across different courses says more
+ * about which course was played than about the player, so courses are never mixed.
+ */
+export default function CourseProgressChart({ courses, selected, onSelect }: CourseProgressChartProps) {
   if (!selected) {
     return (
       <p className="text-sm text-muted-foreground">
@@ -76,7 +81,7 @@ export default function CourseProgressChart({ rounds }: CourseProgressChartProps
             <button
               key={c.locationId}
               type="button"
-              onClick={() => setSelectedId(c.locationId)}
+              onClick={() => onSelect(c.locationId)}
               aria-pressed={c.locationId === selected.locationId}
               className={cn(
                 "rounded-full border px-3 py-1 text-sm transition",
@@ -107,17 +112,8 @@ export default function CourseProgressChart({ rounds }: CourseProgressChartProps
               tickFormatter={(v: number) => formatToPar(v)}
             />
             <ReferenceLine y={0} stroke="currentColor" strokeOpacity={0.4} />
-            {/* Theme colours: Recharts' default white box shows the label in the page's light text on dark mode. */}
             <Tooltip
-              contentStyle={{
-                backgroundColor: "var(--popover)",
-                borderColor: "var(--border)",
-                borderRadius: "var(--radius)",
-                color: "var(--popover-foreground)",
-              }}
-              labelStyle={{ color: "var(--popover-foreground)", fontWeight: 500 }}
-              itemStyle={{ color: "var(--popover-foreground)" }}
-              cursor={{ stroke: "var(--muted-foreground)", strokeOpacity: 0.5 }}
+              {...chartTooltipStyle}
               formatter={(value) => [formatToPar(Number(value)), "Mot par"]}
               labelFormatter={(label, payload) => {
                 const p = payload?.[0]?.payload as { strokes?: number } | undefined;

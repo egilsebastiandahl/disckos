@@ -57,6 +57,18 @@ export interface PlayerRoundSummary {
   roundHoles: number;
 }
 
+/** GET /api/player/{id}/holes?locationId=…: one round on that course, hole by hole. */
+export interface PlayerHoleRound {
+  roundId: string;
+  playedAt: string;
+  /** UDisc layout of an imported round; null for rounds created in Disckos. */
+  layoutName: string | null;
+  /** Par per hole, hole 1 first. */
+  pars: number[];
+  /** Throws per hole; null where the player has no score. Same length as pars. */
+  throws: (number | null)[];
+}
+
 /** Rounds two players both finished, from playerId's point of view. */
 export interface HeadToHead {
   playerId: string;

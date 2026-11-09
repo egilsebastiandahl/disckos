@@ -9,9 +9,11 @@ import {
   type PlayerStatsByLocation,
 } from "@/app/types/player-stats.model";
 import Link from "next/link";
+import { useMemo, useState } from "react";
 import CourseBreakdown from "./CourseBreakdown";
 import CourseRanks from "./CourseRanks";
-import CourseProgressChart from "./CourseProgressChart";
+import CourseProgressChart, { progressCourses } from "./CourseProgressChart";
+import HoleProgressChart from "./HoleProgressChart";
 import RecentRoundsList from "./RecentRoundsList";
 import StatGrid from "./StatGrid";
 
@@ -36,6 +38,11 @@ export default function PlayerStatsSections({
   // Ranks are a bonus section: if they fail to load, the rest still shows.
   const ranks = useFetch<PlayerRanks>(`/api/player/${playerId}/ranks`);
   const ladder = useFetch<RankLadder>("/api/rank/ladder");
+
+  // One course choice drives both "Utvikling per bane" and "Utvikling per hull".
+  const courses = useMemo(() => progressCourses(recent.data ?? []), [recent.data]);
+  const [courseId, setCourseId] = useState<string | null>(null);
+  const selectedCourse = courses.find((c) => c.locationId === courseId) ?? courses[0];
 
   if (stats.isLoading || byLocation.isLoading || recent.isLoading) {
     return (
@@ -75,7 +82,24 @@ export default function PlayerStatsSections({
         <section className="mb-10">
           <h2 className="mb-3 text-xl font-semibold">Utvikling per bane</h2>
           <div className="rounded-lg border border-border bg-card p-4 shadow-sm">
-            <CourseProgressChart rounds={recent.data} />
+            <CourseProgressChart courses={courses} selected={selectedCourse} onSelect={setCourseId} />
+          </div>
+        </section>
+      )}
+
+      {selectedCourse && (
+        <section className="mb-10">
+          <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-2">
+            <h2 className="text-xl font-semibold">Utvikling per hull</h2>
+            <span className="text-sm text-muted-foreground">{selectedCourse.name}</span>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4 shadow-sm">
+            {/* Keyed by course, so the chosen layout and hole start over on a new course. */}
+            <HoleProgressChart
+              key={selectedCourse.locationId}
+              playerId={playerId}
+              locationId={selectedCourse.locationId}
+            />
           </div>
         </section>
       )}
