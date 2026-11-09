@@ -30,6 +30,10 @@ export interface UdiscPreviewPlayer {
   throws: (number | null)[];
   suggestedPlayerId: string | null;
   match: PlayerMatch;
+  /** A doubles row ("A + B"); never imported. */
+  doubles: boolean;
+  /** A score on every hole; unfinished rounds are never imported. */
+  complete: boolean;
 }
 
 export interface UdiscImportedRound {
@@ -61,9 +65,34 @@ export interface UdiscPreviewCard {
   warnings: string[];
 }
 
+export interface UdiscPreviewLayout {
+  name: string;
+  /** Holes and par of the most recent card on this layout. */
+  holes: number;
+  par: number;
+  cards: number;
+  lastPlayed: string | null;
+  /** Suggested: do rounds on this layout count in the rank ladder? */
+  countsForRank: boolean;
+  /** The suggestion is an earlier decision for this location. */
+  remembered: boolean;
+}
+
+export interface UdiscPreviewCourse {
+  courseName: string;
+  /** Location for the course's standalone rounds; null when none matches. */
+  suggestedLocationId: string | null;
+  courseMatch: CourseMatch;
+  cards: number;
+  /** Most recently played first. */
+  layouts: UdiscPreviewLayout[];
+}
+
 export interface UdiscPreview {
   cardsInFile: number;
   cards: UdiscPreviewCard[];
+  /** Most cards first. */
+  courses: UdiscPreviewCourse[];
 }
 
 export interface UdiscCommitPlayer {
@@ -84,6 +113,9 @@ export interface UdiscCommitCard {
   courseName: string;
   pars: number[];
   players: UdiscCommitPlayer[];
+  layoutName?: string;
+  /** Whether rounds on this layout count in the rank ladder of the card's location. */
+  layoutCountsForRank?: boolean;
 }
 
 export interface UdiscCardResult {

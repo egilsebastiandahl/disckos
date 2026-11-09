@@ -10,6 +10,7 @@ import type { LocationMatch, PlayerMatch, UdiscPreviewCard } from "@/app/types/u
 import {
   type CardAnalysis,
   type CardDraft,
+  type CourseDraft,
   type PlayerStatusKind,
   formatStartedAt,
   formatToPar,
@@ -22,6 +23,8 @@ import {
 interface ImportCardItemProps {
   card: UdiscPreviewCard;
   draft: CardDraft;
+  /** The choices made for this card's course in "Baner i filen". */
+  course: CourseDraft | undefined;
   analysis: CardAnalysis;
   players: SimplePlayer[];
   locations: Location[];
@@ -46,12 +49,23 @@ const STATUS_CLASS: Record<PlayerStatusKind, string> = {
   done: "text-muted-foreground",
   duplicate: "text-destructive",
   empty: "text-muted-foreground",
+  unfinished: "text-muted-foreground",
+  doubles: "text-muted-foreground",
 };
 
-export default function ImportCardItem({ card, draft, analysis, players, locations, onChange }: ImportCardItemProps) {
+/** Rows that are never imported, so there's nothing to link. */
+const NOT_IMPORTABLE: PlayerStatusKind[] = ["empty", "unfinished", "doubles"];
+
+export default function ImportCardItem({ card, draft, course, analysis, players, locations, onChange }: ImportCardItemProps) {
   const { event } = analysis;
   const standalone = draft.target === STANDALONE;
   const coursePar = card.pars.reduce((a, b) => a + b, 0);
+  const included = draft.include && !analysis.courseSkipped;
+  const layoutCounts = course?.countsForRank[card.layoutName] ?? true;
+  const locationLabel =
+    course?.locationChoice === NEW_LOCATION
+      ? `${course.newLocationName.trim() || card.courseName} (ny)`
+      : (locations.find((l) => l.id === course?.locationChoice)?.name ?? "—");
   const badge = standalone
     ? { label: "Uten event", className: "bg-muted text-muted-foreground" }
     : event && EVENT_BADGE[event.locationMatch];
@@ -72,13 +86,14 @@ export default function ImportCardItem({ card, draft, analysis, players, locatio
     <article
       className={cn(
         "rounded-xl border bg-card shadow-sm transition-opacity",
-        draft.include ? "border-primary/40" : "border-border opacity-75"
+        included ? "border-primary/40" : "border-border opacity-75"
       )}
     >
       <header className="flex items-start gap-3 p-4">
         <input
           type="checkbox"
-          checked={draft.include}
+          checked={included}
+          disabled={analysis.courseSkipped}
           onChange={(e) => onChange({ ...draft, include: e.target.checked })}
           className="mt-1 size-5 shrink-0 accent-primary"
           aria-label={`Importer kortet fra ${card.courseName}`}
@@ -91,11 +106,17 @@ export default function ImportCardItem({ card, draft, analysis, players, locatio
             )}
           </div>
           <p className="text-sm text-muted-foreground">
-            {card.layoutName && <>{card.layoutName} · </>}
+            {card.layoutName && (
+              <>
+                {card.layoutName}
+                {!layoutCounts && <span className="text-warm"> (teller ikke i rangering)</span>} ·{" "}
+              </>
+            )}
             {formatStartedAt(card.startedAt)} · {card.pars.length} hull · par {coursePar}
           </p>
-          {!draft.include && (
+          {!included && (
             <p className="mt-1 truncate text-sm text-muted-foreground">
+              {analysis.courseSkipped && "Banen importeres ikke · "}
               {card.players.map((p) => p.udiscName).join(", ")}
               {card.importedRound && " · importert før"}
             </p>
@@ -103,7 +124,7 @@ export default function ImportCardItem({ card, draft, analysis, players, locatio
         </div>
       </header>
 
-      {draft.include && (
+      {included && (
         <>
           <div className="grid gap-4 border-t border-border p-4 sm:grid-cols-2">
             <label className="space-y-1.5 text-sm">
@@ -122,29 +143,10 @@ export default function ImportCardItem({ card, draft, analysis, players, locatio
 
             {standalone ? (
               <div className="space-y-1.5 text-sm">
-                <label htmlFor={`${card.key}-location`} className="text-muted-foreground">
-                  Bane
-                </label>
-                <NativeSelect
-                  id={`${card.key}-location`}
-                  value={draft.locationChoice}
-                  onChange={(e) => onChange({ ...draft, locationChoice: e.target.value })}
-                >
-                  <option value={NEW_LOCATION}>+ Ny lokasjon</option>
-                  {locations.map((l) => (
-                    <option key={l.id} value={l.id}>
-                      {l.name}
-                    </option>
-                  ))}
-                </NativeSelect>
-                {draft.locationChoice === NEW_LOCATION && (
-                  <Input
-                    value={draft.newLocationName}
-                    onChange={(e) => onChange({ ...draft, newLocationName: e.target.value })}
-                    placeholder="Navn på lokasjonen"
-                    aria-label="Navn på ny lokasjon"
-                  />
-                )}
+                <span className="text-muted-foreground">Lokasjon</span>
+                <p className="py-1.5 font-medium">
+                  {locationLabel} <span className="font-normal text-muted-foreground">· endres under «Baner i filen»</span>
+                </p>
               </div>
             ) : (
               <label className="space-y-1.5 text-sm">
@@ -196,6 +198,7 @@ export default function ImportCardItem({ card, draft, analysis, players, locatio
                 const status = analysis.players[i];
                 const { total, toPar } = formatToPar(row.throws, card.pars);
                 const hint = PLAYER_MATCH_HINT[row.match];
+                const linkable = !NOT_IMPORTABLE.includes(status.kind);
                 return (
                   <li
                     key={`${row.udiscName}-${i}`}
@@ -212,8 +215,9 @@ export default function ImportCardItem({ card, draft, analysis, players, locatio
                     </div>
                     <div className="col-span-2 space-y-1.5 sm:col-span-1">
                       <NativeSelect
-                        value={choice.choice}
+                        value={linkable ? choice.choice : SKIP}
                         onChange={(e) => setPlayer(i, { choice: e.target.value })}
+                        disabled={!linkable}
                         aria-label={`Disckos-spiller for ${row.udiscName}`}
                       >
                         <option value={SKIP}>— Hopp over —</option>
@@ -224,7 +228,7 @@ export default function ImportCardItem({ card, draft, analysis, players, locatio
                           </option>
                         ))}
                       </NativeSelect>
-                      {choice.choice === NEW_PLAYER && (
+                      {linkable && choice.choice === NEW_PLAYER && (
                         <Input
                           value={choice.newName}
                           onChange={(e) => setPlayer(i, { newName: e.target.value })}
