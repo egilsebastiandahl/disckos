@@ -1,6 +1,7 @@
 import HeaderSection from "./components/sections/HeaderSection";
 import UpcomingEvent from "./components/sections/UpcomingEvent";
 import TopWeatherLocations from "./components/sections/TopWeatherLocations";
+import ClubStats from "./components/sections/ClubStats";
 import HeroDiscArc from "./components/animations/HeroDiscArc";
 
 export default function Home() {
@@ -19,6 +20,9 @@ export default function Home() {
         </section>
         <section className="flex justify-center items-center w-full">
           <TopWeatherLocations />
+        </section>
+        <section className="flex justify-center items-center w-full">
+          <ClubStats />
         </section>
 
         {/* <section className="flex justify-center items-center w-full">
