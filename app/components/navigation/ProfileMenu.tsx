@@ -4,9 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../auth/AuthProvider";
+import usePendingConfirmations from "@/app/hooks/usePendingConfirmations";
 
 export default function ProfileMenu() {
   const { session, profile, loading, signOut } = useAuth();
+  // Rounds others uploaded with this player on the card, waiting for a yes or no.
+  const { confirmations } = usePendingConfirmations();
+  const waiting = confirmations.length;
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const ref = useRef<HTMLDivElement | null>(null);
@@ -54,12 +58,18 @@ export default function ProfileMenu() {
     <div className="relative ml-4" ref={ref}>
       <button
         onClick={() => setOpen((o) => !o)}
-        className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold"
+        className="relative w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold"
+        aria-label={waiting > 0 ? `Profilmeny, ${waiting} runder venter på deg` : "Profilmeny"}
       >
         {profile?.avatarUrl ? (
           <img src={profile.avatarUrl} alt="avatar" className="w-10 h-10 rounded-full" />
         ) : (
           initials
+        )}
+        {waiting > 0 && (
+          <span className="absolute -right-1 -top-1 flex min-w-5 h-5 items-center justify-center rounded-full border-2 border-background bg-warm px-1 text-[10px] font-bold text-white tabular-nums">
+            {waiting}
+          </span>
         )}
       </button>
       {open && (
@@ -73,6 +83,16 @@ export default function ProfileMenu() {
           <div className="border-t border-border" />
           <Link href="/pages/profile" className="block px-3 py-2 text-sm hover:bg-accent rounded-md">
             Din profil
+          </Link>
+          {waiting > 0 && (
+            <Link href="/pages/profile" className="flex items-center justify-between px-3 py-2 text-sm text-warm hover:bg-accent rounded-md">
+              Bekreft runder
+              <span className="rounded-full bg-warm/15 px-1.5 text-xs font-semibold tabular-nums">{waiting}</span>
+            </Link>
+          )}
+          {/* New members land here too: the page asks them to choose their player first. */}
+          <Link href="/pages/last-opp" className="block px-3 py-2 text-sm hover:bg-accent rounded-md">
+            Last opp runder
           </Link>
           {profile?.isAdmin && (
             <Link href="/admin" className="block px-3 py-2 text-sm hover:bg-accent rounded-md">

@@ -9,7 +9,7 @@ import { MAX_UDISC_CSV_CHARS, udiscImportApi } from "@/app/api/admin/import/udis
 import type { Location } from "@/app/types/location.model";
 import type { SimplePlayer } from "@/app/types/player.model";
 import type { UdiscCardResult, UdiscPreview } from "@/app/types/udisc-import.model";
-import UdiscFileDrop from "./components/UdiscFileDrop";
+import UdiscFileDrop from "@/app/components/udisc/UdiscFileDrop";
 import ImportCardItem from "./components/ImportCardItem";
 import ImportCoursesPanel from "./components/ImportCoursesPanel";
 import ImportPlayersPanel from "./components/ImportPlayersPanel";
@@ -26,7 +26,7 @@ import {
   type PlayerDraft,
   toCommitCard,
 } from "./udiscImportDraft";
-import { SHARE_ERRORS, takeSharedCsv } from "./sharedFile";
+import { SHARE_ERRORS, takeSharedCsv } from "@/app/components/udisc/sharedFile";
 
 type Phase = "idle" | "previewing" | "committing";
 

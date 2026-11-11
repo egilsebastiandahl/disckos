@@ -6,6 +6,7 @@ import { Player } from "@/app/types/player.model";
 import { Profile } from "@/app/types/profile.model";
 import CreatePlayer from "./components/CreatePlayer";
 import ProfilesTable from "./components/ProfilesTable";
+import LinkRequests from "./components/LinkRequests";
 import HeaderSection from "@/app/components/sections/HeaderSection";
 import { Users, UserCheck, UserX } from "lucide-react";
 
@@ -54,6 +55,8 @@ export default function AdminPlayerPage() {
           </div>
         </div>
       </div>
+
+      <LinkRequests onDecided={refetchProfiles} />
 
       {/* Profiles table */}
       <section className="space-y-3">

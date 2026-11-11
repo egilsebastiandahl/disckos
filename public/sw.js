@@ -4,15 +4,16 @@
  * Its only job is the Web Share Target declared in app/manifest.ts. When someone
  * shares a UDisc CSV export to the installed Disckos app (Android), the browser
  * POSTs the file to /share-target. We stash it in Cache Storage and redirect to
- * the import page, which reads it (app/admin/import/sharedFile.ts) and sends it
- * with the admin's Supabase token. The server can't do this hand-off itself,
- * because the token lives in the browser.
+ * the member upload page (admins can pass it on to the admin import from there),
+ * which reads it (app/components/udisc/sharedFile.ts) and sends it with the
+ * user's Supabase token. The server can't do this hand-off itself, because the
+ * token lives in the browser.
  *
  * It deliberately caches nothing else: every other request goes to the network
  * as if there were no service worker.
  */
 
-// Keep in sync with app/admin/import/sharedFile.ts.
+// Keep in sync with app/components/udisc/sharedFile.ts.
 const SHARE_CACHE = "disckos-udisc-share";
 const SHARE_KEY = "/__udisc-share/latest.csv";
 
@@ -27,7 +28,7 @@ self.addEventListener("fetch", (event) => {
 });
 
 async function receiveShare(request) {
-  const redirect = (query) => Response.redirect(new URL(`/admin/import${query}`, self.location.origin).href, 303);
+  const redirect = (query) => Response.redirect(new URL(`/pages/last-opp${query}`, self.location.origin).href, 303);
   try {
     const form = await request.formData();
     const file = form.getAll("file").find((f) => typeof f === "object" && f !== null);

@@ -4,25 +4,21 @@ import { type FormEvent, useEffect, useState } from "react";
 import { supabase } from "../../../lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import type { Player } from "../../types/player.model";
-import { NativeSelect } from "@/components/ui/native-select";
 import { useAuth } from "../../components/auth/AuthProvider";
 import FrisbeeLoader from "@/app/components/loader/FrisbeeLoader";
 import PlayerStatsSections from "@/app/components/player-stats/PlayerStatsSections";
-import { ExternalLink, Swords, UserRoundPlus } from "lucide-react";
+import PendingConfirmations from "@/app/components/member/PendingConfirmations";
+import PlayerOnboarding from "@/app/components/member/PlayerOnboarding";
+import { ExternalLink, FileUp, Swords, UserRoundPlus } from "lucide-react";
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { session, profile, loading: authLoading, mutateProfile } = useAuth();
-  const [playersLoading, setPlayersLoading] = useState(true);
+  const { session, profile, loading: authLoading, mutateProfile, refreshProfile } = useAuth();
   const [saving, setSaving] = useState(false);
-  const [linkingPlayer, setLinkingPlayer] = useState(false);
   const [message, setMessage] = useState("");
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
-  const [players, setPlayers] = useState<Player[]>([]);
-  const [selectedPlayerId, setSelectedPlayerId] = useState<string>("");
 
   useEffect(() => {
     if (authLoading) return;
@@ -34,26 +30,8 @@ export default function ProfilePage() {
       setUsername(profile.username ?? "");
       setDisplayName(profile.displayName ?? "");
       setBio(profile.bio ?? "");
-      setSelectedPlayerId(profile.playerId ?? "");
     }
   }, [authLoading, session, profile, router]);
-
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      setPlayersLoading(true);
-      const res = await fetch(`/api/player`);
-      if (cancelled) return;
-      if (res.ok) {
-        const data = await res.json();
-        setPlayers(data);
-      }
-      setPlayersLoading(false);
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   async function handleSave(e: FormEvent) {
     e.preventDefault();
@@ -84,33 +62,7 @@ export default function ProfilePage() {
     setMessage("Profilen er lagret");
   }
 
-  async function handleLinkPlayer() {
-    setLinkingPlayer(true);
-    setMessage("");
-    const { data: sessionData } = await supabase.auth.getSession();
-    const token = sessionData?.session?.access_token;
-    if (!token) {
-      router.push("/login");
-      return;
-    }
-    const res = await fetch(`/api/profile/player`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ playerId: selectedPlayerId || null }),
-    });
-    setLinkingPlayer(false);
-    if (!res.ok) {
-      const text = await res.text();
-      setMessage(text || "Klarte ikke å koble spiller");
-      return;
-    }
-    const saved = await res.json();
-    mutateProfile(saved);
-    setSelectedPlayerId(saved.playerId ?? "");
-    setMessage(saved.playerId ? "Spiller koblet" : "Spiller frakoblet");
-  }
-
-  if (authLoading || playersLoading) {
+  if (authLoading) {
     return (
       <div className="flex min-h-[60vh] w-full items-center justify-center py-8">
         <FrisbeeLoader size="lg" text="Henter profil…" />
@@ -142,9 +94,18 @@ export default function ProfilePage() {
               <Swords className="size-4" aria-hidden />
               Sammenlign deg med noen
             </Link>
+            <Link
+              href="/pages/last-opp"
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-sm shadow-sm transition hover:bg-muted"
+            >
+              <FileUp className="size-4" aria-hidden />
+              Last opp runder fra UDisc
+            </Link>
           </div>
         )}
       </header>
+
+      <PendingConfirmations />
 
       {linkedPlayerId ? (
         <PlayerStatsSections
@@ -206,32 +167,14 @@ export default function ProfilePage() {
         <hr className="my-6 border-border" />
 
         <div>
-          <h3 className="text-lg font-semibold mb-2">Koble til spillerprofil</h3>
-          <p className="text-sm text-muted-foreground mb-3">
-            Er du spiller? Koble kontoen din til spillerprofilen din for å få statistikken din her.
-          </p>
-          <div className="flex items-center gap-2">
-            <NativeSelect value={selectedPlayerId} onChange={(e) => setSelectedPlayerId(e.target.value)}>
-              <option value="">Ingen spiller koblet</option>
-              {players.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
-            </NativeSelect>
-            <button
-              type="button"
-              onClick={handleLinkPlayer}
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-xl shadow-sm hover:bg-primary/85 transition"
-              disabled={linkingPlayer}
-            >
-              {linkingPlayer ? "Lagrer..." : selectedPlayerId ? "Koble" : "Koble fra"}
-            </button>
-          </div>
-          {profile?.playerName && (
-            <p className="text-sm text-muted-foreground mt-2">
-              Koblet til: <span className="font-medium text-foreground">{profile.playerName}</span>
+          <h3 className="text-lg font-semibold mb-2">Spillerprofil</h3>
+          {profile?.playerId ? (
+            <p className="text-sm text-muted-foreground">
+              Koblet til <span className="font-medium text-foreground">{profile.playerName}</span>. Feil spiller? Si fra til en
+              admin, så ordner de det.
             </p>
+          ) : (
+            <PlayerOnboarding defaultName={profile?.displayName ?? ""} onLinked={refreshProfile} />
           )}
         </div>
       </section>
