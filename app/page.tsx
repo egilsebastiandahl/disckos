@@ -1,19 +1,22 @@
-import HeaderSection from "./components/sections/HeaderSection";
 import UpcomingEvent from "./components/sections/UpcomingEvent";
 import TopWeatherLocations from "./components/sections/TopWeatherLocations";
 import ClubStats from "./components/sections/ClubStats";
 import HeroDiscArc from "./components/animations/HeroDiscArc";
+import UploadRoundsSection from "./components/sections/UploadRoundsSection";
 
 export default function Home() {
   return (
     <div className="flex justify-center font-sans p-4">
       <HeroDiscArc />
       <main className="flex w-full flex-col items-center justify-between pt-16 md:pt-32 sm:items-start gap-8 md:gap-16">
-        <section className="flex w-full justify-center items-center">
+        {/* <section className="flex w-full justify-center items-center">
           <HeaderSection
             title="Velkommen til Disckos"
             text="Her kan du følge med på når vi skal spille! Lag deg en profil!"
           />
+        </section> */}
+        <section className="flex justify-center items-center w-full">
+          <UploadRoundsSection />
         </section>
         <section className="flex justify-center items-center w-full">
           <UpcomingEvent />
