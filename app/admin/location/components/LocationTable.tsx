@@ -1,7 +1,9 @@
 "use client";
 
 import { Location } from "@/app/types/location.model";
+import { type CourseDifficulty } from "@/app/types/player-rating.model";
 import { locationApi } from "@/app/api/admin/location/locationApi";
+import useFetch from "@/app/hooks/useFetch";
 import { useState } from "react";
 import { Pencil, Trash2, MapPin } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -28,6 +30,10 @@ export default function LocationTable({ locations, isLoading, onChanged }: Locat
   const [editForm, setEditForm] = useState({ name: "", description: "", lat: "", lon: "", rankOffset: "" });
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  // What the rating model has learned about each course, to set rank_offset from data.
+  const difficulties = useFetch<CourseDifficulty[]>("/api/rating/courses");
+  const difficultyOf = new Map((difficulties.data ?? []).map((d) => [d.locationId, d]));
+  const editSuggestion = editLocation ? difficultyOf.get(editLocation.id) : undefined;
 
   function openEdit(location: Location) {
     setEditForm({
@@ -94,6 +100,7 @@ export default function LocationTable({ locations, isLoading, onChanged }: Locat
               <TableHead>Navn</TableHead>
               <TableHead>Beskrivelse</TableHead>
               <TableHead>Koordinater</TableHead>
+              <TableHead>Rank-justering</TableHead>
               <TableHead className="text-right w-24">Handlinger</TableHead>
             </TableRow>
           </TableHeader>
@@ -115,6 +122,9 @@ export default function LocationTable({ locations, isLoading, onChanged }: Locat
                   ) : (
                     <span className="text-muted-foreground italic text-xs">Ikke satt</span>
                   )}
+                </TableCell>
+                <TableCell>
+                  <OffsetCell offset={location.rankOffset ?? 0} suggestion={difficultyOf.get(location.id)} />
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-1">
@@ -195,6 +205,26 @@ export default function LocationTable({ locations, isLoading, onChanged }: Locat
                 0 = par er rettferdig. Positivt tall = lett bane (snill par), det kreves bedre score for samme
                 rank. Negativt = vanskelig bane.
               </p>
+              {editSuggestion && (
+                <div className="flex items-center justify-between gap-3 rounded-md bg-muted/60 px-3 py-2 text-xs">
+                  <span>
+                    Forslag fra ratingen:{" "}
+                    <strong className="tabular-nums">{formatOffset(editSuggestion.suggestedRankOffset)}</strong>{" "}
+                    <span className="text-muted-foreground">
+                      ({describeDifficulty(Number(editSuggestion.difficulty))}, fra {editSuggestion.rounds} runder)
+                    </span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setEditForm((f) => ({ ...f, rankOffset: String(editSuggestion.suggestedRankOffset) }))
+                    }
+                    className="shrink-0 rounded-md border border-border bg-background px-2 py-1 font-medium transition-colors hover:bg-muted"
+                  >
+                    Bruk forslag
+                  </button>
+                </div>
+              )}
             </div>
           </div>
           <DialogFooter>
@@ -243,5 +273,31 @@ export default function LocationTable({ locations, isLoading, onChanged }: Locat
         </DialogContent>
       </Dialog>
     </>
+  );
+}
+
+const formatOffset = (n: number): string => (n > 0 ? `+${n}` : n === 0 ? "0" : `${n}`);
+
+/** Fitted difficulty in words: positive = the course plays harder than its par says. */
+const describeDifficulty = (difficulty: number): string => {
+  const strokes = Math.abs(difficulty).toFixed(1);
+  if (Math.abs(difficulty) < 0.25) return "par er rettferdig";
+  return difficulty > 0
+    ? `spiller ${strokes} kast tyngre enn par per 18 hull`
+    : `spiller ${strokes} kast lettere enn par per 18 hull`;
+};
+
+/** Current rank_offset, with the rating model's suggestion when it differs. */
+function OffsetCell({ offset, suggestion }: { offset: number; suggestion: CourseDifficulty | undefined }) {
+  const differs = suggestion && suggestion.suggestedRankOffset !== offset;
+  return (
+    <div className="flex flex-col text-xs tabular-nums">
+      <span className="font-mono">{formatOffset(offset)}</span>
+      {differs && (
+        <span className="text-muted-foreground" title={`Fra ${suggestion.rounds} runder`}>
+          forslag {formatOffset(suggestion.suggestedRankOffset)}
+        </span>
+      )}
+    </div>
   );
 }

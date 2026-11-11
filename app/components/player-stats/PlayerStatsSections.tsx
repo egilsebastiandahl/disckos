@@ -1,8 +1,10 @@
 "use client";
 
 import FrisbeeLoader from "@/app/components/loader/FrisbeeLoader";
+import RatingCard from "@/app/components/rating/RatingCard";
 import useFetch from "@/app/hooks/useFetch";
 import { type PlayerRanks, type RankLadder } from "@/app/types/course-rank.model";
+import { type PlayerRatingDetail } from "@/app/types/player-rating.model";
 import {
   type PlayerRoundSummary,
   type PlayerStats,
@@ -38,6 +40,12 @@ export default function PlayerStatsSections({
   // Ranks are a bonus section: if they fail to load, the rest still shows.
   const ranks = useFetch<PlayerRanks>(`/api/player/${playerId}/ranks`);
   const ladder = useFetch<RankLadder>("/api/rank/ladder");
+  // Also a bonus section, like ranks.
+  const rating = useFetch<PlayerRatingDetail>(`/api/player/${playerId}/rating`);
+  const roundRatings = useMemo(
+    () => new Map((rating.data?.rounds ?? []).map((r) => [r.roundId, r.rating])),
+    [rating.data]
+  );
 
   // One course choice drives both "Utvikling per bane" and "Utvikling per hull".
   const courses = useMemo(() => progressCourses(recent.data ?? []), [recent.data]);
@@ -58,6 +66,13 @@ export default function PlayerStatsSections({
 
   return (
     <>
+      {rating.data && rating.data.roundsPlayed > 0 && (
+        <section className="mb-10">
+          <h2 className="mb-3 text-xl font-semibold">Disckos Rating</h2>
+          <RatingCard detail={rating.data} />
+        </section>
+      )}
+
       {ranks.data && ladder.data && ranks.data.courses.length > 0 && (
         <section className="mb-10">
           <div className="mb-3 flex items-baseline justify-between gap-2">
@@ -114,7 +129,7 @@ export default function PlayerStatsSections({
       {recent.data && (
         <section className="mb-10">
           <h2 className="mb-3 text-xl font-semibold">Siste runder</h2>
-          <RecentRoundsList rounds={recent.data.slice(0, 20)} />
+          <RecentRoundsList rounds={recent.data.slice(0, 20)} ratings={roundRatings} />
         </section>
       )}
     </>

@@ -2,6 +2,8 @@ import { type PlayerRoundSummary } from "@/app/types/player-stats.model";
 
 interface RecentRoundsListProps {
   rounds: PlayerRoundSummary[];
+  /** Disckos Rating of each complete round, by round id. */
+  ratings?: Map<string, number>;
 }
 
 const formatToPar = (n: number): string => {
@@ -16,7 +18,7 @@ const formatDate = (iso: string): string =>
     year: "numeric",
   });
 
-export default function RecentRoundsList({ rounds }: RecentRoundsListProps) {
+export default function RecentRoundsList({ rounds, ratings }: RecentRoundsListProps) {
   if (rounds.length === 0) {
     return (
       <p className="text-sm text-muted-foreground">Ingen runder enda.</p>
@@ -32,6 +34,7 @@ export default function RecentRoundsList({ rounds }: RecentRoundsListProps) {
             : r.toPar > 0
               ? "text-red-600 dark:text-red-400"
               : "";
+        const rating = ratings?.get(r.roundId);
         return (
           <li
             key={r.roundId}
@@ -49,6 +52,14 @@ export default function RecentRoundsList({ rounds }: RecentRoundsListProps) {
               </span>
             </div>
             <div className="flex flex-shrink-0 items-baseline gap-2 tabular-nums">
+              {rating !== undefined && (
+                <span
+                  className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground"
+                  title="Rundens rating: scoren med banens vanskelighet trukket fra"
+                >
+                  {rating}
+                </span>
+              )}
               <span className="text-lg font-bold">{r.totalStrokes}</span>
               <span className={`text-sm font-semibold ${toParColor}`}>
                 {formatToPar(r.toPar)}

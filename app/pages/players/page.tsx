@@ -5,21 +5,45 @@ import FrisbeeLoader from "@/app/components/loader/FrisbeeLoader";
 import PlayerIcon from "@/app/components/icons/PlayerIcon";
 import HeaderSection from "@/app/components/sections/HeaderSection";
 import useFetch from "@/app/hooks/useFetch";
+import { type PlayerRating } from "@/app/types/player-rating.model";
 import { type Player } from "@/app/types/player.model";
 import { cn } from "@/lib/utils";
 import { Check, Swords, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+
+type SortBy = "rating" | "name";
 
 export default function PlayersIndexPage() {
   const { data, isLoading, error } = useFetch<Player[]>("/api/player");
+  // Ratings are a bonus: without them the list is simply alphabetical.
+  const ratings = useFetch<PlayerRating[]>("/api/rating");
   const { profile } = useAuth();
   const router = useRouter();
   const [compareMode, setCompareMode] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState<SortBy>("rating");
 
-  const players = data ? [...data].sort((a, b) => a.name.localeCompare(b.name, "no")) : [];
+  // The backend returns ratings in standings order; remember each player's place in it.
+  const ratingOf = useMemo(
+    () => new Map((ratings.data ?? []).map((r, order) => [r.playerId, { ...r, order }])),
+    [ratings.data]
+  );
+  const hasRatings = (ratings.data ?? []).some((r) => r.rating !== null);
+  const byRating = sortBy === "rating" && hasRatings;
+
+  const players = data
+    ? [...data].sort((a, b) => {
+        if (byRating) {
+          // Players without a complete round go last (Infinity === Infinity falls through to name).
+          const orderA = ratingOf.get(a.id)?.order ?? Infinity;
+          const orderB = ratingOf.get(b.id)?.order ?? Infinity;
+          if (orderA !== orderB) return orderA - orderB;
+        }
+        return a.name.localeCompare(b.name, "no");
+      })
+    : [];
   const nameOf = (id: string) => players.find((p) => p.id === id)?.name ?? "";
 
   const startCompare = () => {
@@ -76,7 +100,36 @@ export default function PlayersIndexPage() {
           </p>
         )}
         {players.length > 1 && (
-          <div className="mb-4 flex justify-end">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            {hasRatings && !compareMode ? (
+              <div
+                role="group"
+                aria-label="Sorter spillere"
+                className="inline-flex rounded-full border border-border bg-card p-0.5 text-sm shadow-sm"
+              >
+                {(
+                  [
+                    ["rating", "Rating"],
+                    ["name", "Navn"],
+                  ] as const
+                ).map(([value, label]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setSortBy(value)}
+                    aria-pressed={sortBy === value}
+                    className={cn(
+                      "rounded-full px-3 py-1 transition",
+                      sortBy === value ? "bg-primary text-primary-foreground" : "hover:bg-muted"
+                    )}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <span />
+            )}
             {compareMode ? (
               <button
                 type="button"
@@ -102,6 +155,7 @@ export default function PlayersIndexPage() {
           <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {players.map((p) => {
               const isSelected = selected.includes(p.id);
+              const rating = ratingOf.get(p.id);
               const content = (
                 <>
                   <div className="relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-muted">
@@ -118,7 +172,7 @@ export default function PlayersIndexPage() {
                       </span>
                     )}
                   </div>
-                  <div className="flex min-w-0 flex-col text-left">
+                  <div className="flex min-w-0 flex-1 flex-col text-left">
                     <span className="truncate font-semibold">{p.name}</span>
                     {p.catchphrase && (
                       <span className="truncate text-xs italic text-muted-foreground">
@@ -126,6 +180,17 @@ export default function PlayersIndexPage() {
                       </span>
                     )}
                   </div>
+                  {rating && rating.rating !== null && (
+                    <div className="flex flex-shrink-0 flex-col items-end tabular-nums" title="Disckos Rating">
+                      <span className={cn("text-lg font-bold leading-tight", !rating.active && "text-muted-foreground")}>
+                        {rating.rating}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        {rating.position !== null ? `#${rating.position}` : "inaktiv"}
+                        {rating.provisional && " · foreløpig"}
+                      </span>
+                    </div>
+                  )}
                 </>
               );
               const cardClass =
