@@ -1,5 +1,6 @@
 import { authedJson } from "@/lib/authedClient";
 import type {
+  HeldUpload,
   MemberImportCommitResult,
   MemberImportPreview,
   MemberUpload,
@@ -26,8 +27,13 @@ const commit = (csv: string, uploaderName: string, cardKeys: string[]) =>
 const myUploads = () => authedJson<MemberUpload[]>("/api/member/uploads");
 const undoUpload = (id: string) => authedJson<void>(`/api/member/uploads/${id}`, { method: "DELETE" });
 
+/** Rounds on courses waiting for an admin, and ones that were turned away. */
+const myHeldUploads = () => authedJson<HeldUpload[]>("/api/member/held-uploads");
+/** Takes back a waiting round, or clears away one that was turned away. */
+const removeHeldUpload = (id: string) => authedJson<void>(`/api/member/held-uploads/${id}`, { method: "DELETE" });
+
 const myConfirmations = () => authedJson<ScoreConfirmation[]>("/api/member/confirmations");
 const decide = (id: string, confirm: boolean) =>
   authedJson<ScoreConfirmation>(`/api/member/confirmations/${id}/${confirm ? "confirm" : "reject"}`, { method: "POST" });
 
-export const memberImportApi = { preview, commit, myUploads, undoUpload, myConfirmations, decide };
+export const memberImportApi = { preview, commit, myUploads, undoUpload, myHeldUploads, removeHeldUpload, myConfirmations, decide };

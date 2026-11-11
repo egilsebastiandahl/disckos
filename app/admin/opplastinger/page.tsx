@@ -4,7 +4,9 @@ import HeaderSection from "@/app/components/sections/HeaderSection";
 import MemberUploadList from "@/app/components/member/MemberUploadList";
 import ScoreConfirmationCard from "@/app/components/member/ScoreConfirmationCard";
 import useAdminFetch from "@/app/hooks/useAdminFetch";
-import type { MemberUpload, ScoreConfirmation } from "@/app/types/member-import.model";
+import type { CourseRequest, MemberUpload, ScoreConfirmation } from "@/app/types/member-import.model";
+import type { Location } from "@/app/types/location.model";
+import CourseRequestCard from "./components/CourseRequestCard";
 import {
   Dialog,
   DialogContent,
@@ -27,10 +29,13 @@ async function failure(res: Response): Promise<string> {
 
 /** Member UDisc uploads: confirm or reject scores on players' behalf, flag odd rounds, undo uploads. */
 export default function AdminUploadsPage() {
+  const courses = useAdminFetch<CourseRequest[]>("/api/admin/course-requests");
+  const locations = useAdminFetch<Location[]>("/api/location");
   const confirmations = useAdminFetch<ScoreConfirmation[]>("/api/admin/score-confirmations");
   const uploads = useAdminFetch<MemberUpload[]>("/api/admin/member-uploads");
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [undoing, setUndoing] = useState<MemberUpload | null>(null);
 
   async function decide(id: string, confirm: boolean) {
@@ -71,7 +76,7 @@ export default function AdminUploadsPage() {
     <div className="w-full space-y-8">
       <HeaderSection
         title="Opplastinger"
-        text="Runder medlemmene har lastet opp fra UDisc. Egen score teller med en gang; andre på kortet må bekrefte sin – eller du gjør det for dem."
+        text="Runder medlemmene har lastet opp fra UDisc. Egen score teller med en gang; andre på kortet må bekrefte sin – eller du gjør det for dem. Runder på nye baner venter på deg."
       />
 
       {error && (
@@ -79,6 +84,42 @@ export default function AdminUploadsPage() {
           {error}
         </p>
       )}
+
+      {notice && (
+        <p role="status" className="rounded-md border border-primary/40 bg-primary/10 px-3 py-2 text-sm">
+          {notice}
+        </p>
+      )}
+
+      <section className="space-y-3">
+        <h2 className="text-lg font-semibold">Nye baner</h2>
+        <p className="text-sm text-muted-foreground">
+          Medlemmer har lastet opp runder på baner Disckos ikke kjenner. Rundene venter til du oppretter banen, kobler den til
+          en bane som finnes under et annet navn, eller avviser den.
+        </p>
+        {courses.isLoading ? (
+          <p className="text-sm text-muted-foreground">Laster…</p>
+        ) : !courses.data?.length ? (
+          <p className="text-sm text-muted-foreground">Ingen nye baner venter.</p>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {courses.data.map((r) => (
+              <CourseRequestCard
+                key={r.id}
+                request={r}
+                locations={locations.data ?? []}
+                onDecided={(summary) => {
+                  setNotice(summary);
+                  courses.refetch();
+                  confirmations.refetch();
+                  uploads.refetch();
+                  locations.refetch();
+                }}
+              />
+            ))}
+          </div>
+        )}
+      </section>
 
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">Venter på bekreftelse</h2>

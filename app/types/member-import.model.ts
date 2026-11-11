@@ -6,7 +6,9 @@ export type MemberCardStatus =
   | "DOUBLES"
   | "UNFINISHED"
   | "INCOMPLETE_CARD"
-  | "UNKNOWN_COURSE"
+  /** A course Disckos doesn't know yet: uploadable, but held until an admin creates or links it. */
+  | "NEW_COURSE"
+  | "ALREADY_WAITING"
   | "EVENT_DAY"
   | "IN_EVENT"
   | "ALREADY_UPLOADED"
@@ -51,6 +53,8 @@ export interface MemberCardResult {
   createdRound: boolean;
   askedPlayers: string[];
   error: string | null;
+  /** Set when the round waits for an admin to approve this (new) course instead. */
+  heldForCourse: string | null;
 }
 
 export interface MemberImportCommitResult {
@@ -95,4 +99,41 @@ export interface MemberUpload {
   confirmations: { playerName: string | null; udiscName: string; status: ConfirmationStatus }[];
   /** Admin list only: much better than the rating model expected. */
   unlikely: { expectedToParPer18: number; actualToParPer18: number } | null;
+}
+
+/** A member's round on a course waiting for an admin, or one that was turned away. */
+export interface HeldUpload {
+  id: string;
+  courseName: string;
+  layoutName: string;
+  /** Norwegian local time, no offset. */
+  startedAt: string;
+  holes: number;
+  strokes: number | null;
+  toPar: number | null;
+  status: "pending" | "discarded";
+  reason: string | null;
+}
+
+/** GET /admin/course-requests: a UDisc course members uploaded rounds on, waiting for an admin. */
+export interface CourseRequest {
+  id: string;
+  udiscCourse: string;
+  requestedBy: string | null;
+  createdAt: string | null;
+  rounds: number;
+  uploaders: string[];
+  layouts: string[];
+  holes: number[];
+  firstPlayed: string | null;
+  lastPlayed: string | null;
+  /** Existing Disckos courses with a similar name, best first. */
+  suggestions: { id: string; name: string }[];
+}
+
+export interface CourseDecisionResult {
+  locationId: string | null;
+  locationName: string | null;
+  released: number;
+  notAdded: string[];
 }

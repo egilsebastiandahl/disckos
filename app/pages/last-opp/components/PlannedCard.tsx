@@ -1,13 +1,17 @@
 import type { MemberCardStatus, MemberPreviewCard, OtherPlayerStatus } from "@/app/types/member-import.model";
 import { courseLabel, formatPlayed, formatToPar, toParClass } from "@/app/components/member/memberFormat";
 import { cn } from "@/lib/utils";
+import { MapPinPlus } from "lucide-react";
+
+/** Cards that can be uploaded: straight in, or held for an admin to approve a new course. */
+export const UPLOADABLE: readonly MemberCardStatus[] = ["READY", "NEW_COURSE"];
 
 /** Why a card isn't uploaded, in plain Norwegian. */
-export const skipReason: Record<Exclude<MemberCardStatus, "READY">, string> = {
+export const skipReason: Record<Exclude<MemberCardStatus, "READY" | "NEW_COURSE">, string> = {
   ALREADY_UPLOADED: "Allerede i Disckos",
+  ALREADY_WAITING: "Lastet opp før – venter på at en admin godkjenner banen",
   EVENT_DAY: "Spilt på en Disckos-dag – en admin legger den inn i eventet",
   IN_EVENT: "Allerede lagt inn i et event",
-  UNKNOWN_COURSE: "Banen finnes ikke i Disckos ennå – en admin må importere den første gang",
   NOT_ON_CARD: "Du er ikke med på kortet",
   DOUBLES: "Double-runde (støttes ikke ennå)",
   UNFINISHED: "Du fullførte ikke runden",
@@ -67,6 +71,12 @@ export default function PlannedCard({ card, checked, onToggle }: PlannedCardProp
             <span className="text-xs text-muted-foreground">
               {formatPlayed(card.startedAt)} · {card.holes} hull
             </span>
+            {card.status === "NEW_COURSE" && (
+              <span className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-warm">
+                <MapPinPlus className="size-3.5 shrink-0" aria-hidden />
+                Ny bane i Disckos – runden teller når en admin har godkjent banen
+              </span>
+            )}
           </div>
           {card.ownStrokes !== null && card.ownToPar !== null && (
             <span className="tabular-nums">

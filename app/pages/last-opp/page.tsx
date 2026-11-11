@@ -9,6 +9,7 @@ import { SHARE_ERRORS, putSharedCsv, takeSharedCsv } from "@/app/components/udis
 import UdiscFileDrop from "@/app/components/udisc/UdiscFileDrop";
 import { MAX_UDISC_CSV_CHARS, memberImportApi } from "@/app/api/member/memberImportApi";
 import type {
+  HeldUpload,
   MemberCardResult,
   MemberCardStatus,
   MemberImportPreview,
@@ -27,7 +28,8 @@ import { CheckCircle2, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import PlannedCard, { skipReason } from "./components/PlannedCard";
+import HeldUploadList from "./components/HeldUploadList";
+import PlannedCard, { UPLOADABLE, skipReason } from "./components/PlannedCard";
 
 type Phase = "idle" | "planning" | "uploading";
 
@@ -84,15 +86,17 @@ function Uploader({ isAdmin }: { isAdmin: boolean }) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [results, setResults] = useState<MemberCardResult[] | null>(null);
   const [uploads, setUploads] = useState<MemberUpload[] | null>(null);
+  const [held, setHeld] = useState<HeldUpload[]>([]);
   const [undoing, setUndoing] = useState<MemberUpload | null>(null);
   const [undoBusy, setUndoBusy] = useState(false);
 
   const loadUploads = useCallback(async () => {
-    try {
-      setUploads(await memberImportApi.myUploads());
-    } catch {
-      setUploads([]);
-    }
+    const [mine, waiting] = await Promise.all([
+      memberImportApi.myUploads().catch((): MemberUpload[] => []),
+      memberImportApi.myHeldUploads().catch((): HeldUpload[] => []),
+    ]);
+    setUploads(mine);
+    setHeld(waiting);
   }, []);
 
   useEffect(() => {
@@ -111,7 +115,7 @@ function Uploader({ isAdmin }: { isAdmin: boolean }) {
       const result = await memberImportApi.preview(text, uploaderName);
       setCsv(text);
       setPreview(result);
-      setSelected(new Set(result.cards.filter((c) => c.status === "READY").map((c) => c.key)));
+      setSelected(new Set(result.cards.filter((c) => UPLOADABLE.includes(c.status)).map((c) => c.key)));
     } catch (err) {
       setError(errorText(err));
     } finally {
@@ -131,10 +135,10 @@ function Uploader({ isAdmin }: { isAdmin: boolean }) {
     });
   }, [plan]);
 
-  const ready = useMemo(() => preview?.cards.filter((c) => c.status === "READY") ?? [], [preview]);
+  const ready = useMemo(() => preview?.cards.filter((c) => UPLOADABLE.includes(c.status)) ?? [], [preview]);
   const skipped = useMemo(() => {
     const groups = new Map<MemberCardStatus, number>();
-    for (const c of preview?.cards ?? []) if (c.status !== "READY") groups.set(c.status, (groups.get(c.status) ?? 0) + 1);
+    for (const c of preview?.cards ?? []) if (!UPLOADABLE.includes(c.status)) groups.set(c.status, (groups.get(c.status) ?? 0) + 1);
     return [...groups.entries()].sort((a, b) => b[1] - a[1]);
   }, [preview]);
   const chosen = ready.filter((c) => selected.has(c.key));
@@ -172,12 +176,22 @@ function Uploader({ isAdmin }: { isAdmin: boolean }) {
     }
   }
 
+  async function removeHeld(id: string) {
+    try {
+      await memberImportApi.removeHeldUpload(id);
+      await loadUploads();
+    } catch (err) {
+      setError(errorText(err));
+    }
+  }
+
   async function openInAdminImport() {
     if (csv && (await putSharedCsv(csv))) router.push("/admin/import?shared=1");
   }
 
   const busy = phase !== "idle";
-  const uploaded = results?.filter((r) => !r.error) ?? [];
+  const uploaded = results?.filter((r) => !r.error && !r.heldForCourse) ?? [];
+  const waiting = results?.filter((r) => !r.error && r.heldForCourse) ?? [];
   const failed = results?.filter((r) => r.error) ?? [];
 
   return (
@@ -195,6 +209,12 @@ function Uploader({ isAdmin }: { isAdmin: boolean }) {
             <span className="font-medium">
               {uploaded.length === 1 ? "1 runde lastet opp." : `${uploaded.length} runder lastet opp.`}
             </span>
+            {waiting.length > 0 && (
+              <span className="text-muted-foreground">
+                {waiting.length === 1 ? "1 runde venter" : `${waiting.length} runder venter`} på at en admin godkjenner
+                {" "}ny bane: {[...new Set(waiting.map((r) => r.heldForCourse))].join(", ")}.
+              </span>
+            )}
             {uploaded.some((r) => r.askedPlayers.length > 0) && (
               <span className="text-muted-foreground">
                 Spurt om å bekrefte: {[...new Set(uploaded.flatMap((r) => r.askedPlayers))].join(", ")}.
@@ -317,7 +337,7 @@ function Uploader({ isAdmin }: { isAdmin: boolean }) {
                   <ul className="mt-2 space-y-1 text-muted-foreground">
                     {skipped.map(([status, count]) => (
                       <li key={status}>
-                        {count} × {skipReason[status as Exclude<MemberCardStatus, "READY">]}
+                        {count} × {skipReason[status as keyof typeof skipReason]}
                       </li>
                     ))}
                   </ul>
@@ -364,7 +384,10 @@ function Uploader({ isAdmin }: { isAdmin: boolean }) {
         {uploads === null ? (
           <FrisbeeLoader text="Henter opplastinger…" />
         ) : (
-          <MemberUploadList uploads={uploads} busyId={undoBusy ? undoing?.id : null} onUndo={setUndoing} />
+          <div className="flex flex-col gap-3">
+            <HeldUploadList held={held} onRemove={removeHeld} />
+            <MemberUploadList uploads={uploads} busyId={undoBusy ? undoing?.id : null} onUndo={setUndoing} />
+          </div>
         )}
       </section>
 
