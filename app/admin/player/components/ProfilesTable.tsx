@@ -3,9 +3,19 @@
 import { useState } from "react";
 import { Profile } from "@/app/types/profile.model";
 import { Player } from "@/app/types/player.model";
-import { CheckCircle, XCircle, User, Shield, Link2, Unlink } from "lucide-react";
+import { CheckCircle, XCircle, User, Shield, Link2, Unlink, Crown } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useAuth } from "@/app/components/auth/AuthProvider";
 import { adminPut, adminDelete } from "@/lib/adminClient";
 
 interface ProfilesTableProps {
@@ -15,8 +25,21 @@ interface ProfilesTableProps {
   onUpdate: () => void;
 }
 
+/** An admin role change waiting for the owner to confirm it. */
+interface PendingAdminChange {
+  profile: Profile;
+  admin: boolean;
+}
+
+const nameOf = (profile: Profile) => profile.displayName || profile.username || "denne profilen";
+
 export default function ProfilesTable({ profiles, players, isLoading, onUpdate }: ProfilesTableProps) {
   const [loadingProfileId, setLoadingProfileId] = useState<string | null>(null);
+  // Only owners can give and revoke the admin role; everyone else sees it read-only.
+  const { profile: me } = useAuth();
+  const canManageAdmins = me?.isOwner === true;
+  const [pendingAdmin, setPendingAdmin] = useState<PendingAdminChange | null>(null);
+  const [adminError, setAdminError] = useState<string | null>(null);
 
   if (isLoading) {
     return <div className="flex items-center justify-center py-12 text-muted-foreground">Laster profiler...</div>;
@@ -55,94 +78,182 @@ export default function ProfilesTable({ profiles, players, isLoading, onUpdate }
     }
   }
 
+  async function confirmAdminChange() {
+    if (!pendingAdmin) return;
+    const { profile, admin } = pendingAdmin;
+    setLoadingProfileId(profile.id);
+    setAdminError(null);
+    try {
+      const path = `/api/admin/profiles/${profile.id}/admin`;
+      const res = admin ? await adminPut(path) : await adminDelete(path);
+      if (!res.ok) {
+        setAdminError(
+          res.status === 403
+            ? "Bare eiere kan gi og fjerne admin-tilgang."
+            : res.status === 409
+              ? "En eier er alltid admin."
+              : "Kunne ikke endre admin-tilgang. Prøv igjen."
+        );
+        return;
+      }
+      onUpdate();
+    } catch (e) {
+      console.error(e);
+      setAdminError("Kunne ikke endre admin-tilgang. Prøv igjen.");
+    } finally {
+      setLoadingProfileId(null);
+      setPendingAdmin(null);
+    }
+  }
+
   return (
-    <div className="rounded-xl border border-border bg-card overflow-hidden">
-      <Table>
-        <TableHeader>
-          <TableRow className="bg-muted/50 hover:bg-muted/50">
-            <TableHead className="w-12"></TableHead>
-            <TableHead>Bruker</TableHead>
-            <TableHead>Visningsnavn</TableHead>
-            <TableHead className="text-center">Koblet til spiller</TableHead>
-            <TableHead>Spiller</TableHead>
-            <TableHead className="text-center w-12">Admin</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {profiles.map((profile) => (
-            <TableRow key={profile.id} className="group">
-              <TableCell>
-                {profile.avatarUrl ? (
-                  <img
-                    src={profile.avatarUrl}
-                    alt=""
-                    className="size-8 rounded-full object-cover border border-border"
-                  />
-                ) : (
-                  <div className="size-8 rounded-full bg-muted flex items-center justify-center">
-                    <User className="size-4 text-muted-foreground" />
-                  </div>
-                )}
-              </TableCell>
-              <TableCell className="font-medium">
-                {profile.username || <span className="text-muted-foreground italic">Ingen brukernavn</span>}
-              </TableCell>
-              <TableCell>{profile.displayName || <span className="text-muted-foreground italic">—</span>}</TableCell>
-              <TableCell className="text-center">
-                {profile.playerId ? (
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
-                    <CheckCircle className="size-3.5" />
-                    Koblet
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
-                    <XCircle className="size-3.5" />
-                    Ikke koblet
-                  </span>
-                )}
-              </TableCell>
-              <TableCell>
-                {profile.playerId ? (
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium text-primary">{profile.playerName}</span>
-                    <button
-                      onClick={() => handleUnlinkPlayer(profile.id)}
-                      disabled={loadingProfileId === profile.id}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive disabled:opacity-50"
-                      title="Fjern kobling"
-                    >
-                      <Unlink className="size-3.5" />
-                    </button>
-                  </div>
-                ) : (
-                  <Select
-                    onValueChange={(playerId) => handleLinkPlayer(profile.id, playerId)}
-                    disabled={loadingProfileId === profile.id}
-                  >
-                    <SelectTrigger size="sm" className="h-7 text-xs gap-1 text-muted-foreground">
-                      <Link2 className="size-3" />
-                      <SelectValue placeholder="Koble spiller..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {availablePlayers.map((player) => (
-                        <SelectItem key={player.id} value={player.id}>
-                          {player.name}
-                        </SelectItem>
-                      ))}
-                      {availablePlayers.length === 0 && (
-                        <div className="px-2 py-1.5 text-xs text-muted-foreground">Ingen ledige spillere</div>
-                      )}
-                    </SelectContent>
-                  </Select>
-                )}
-              </TableCell>
-              <TableCell className="text-center">
-                {profile.isAdmin && <Shield className="size-4 text-warm mx-auto" />}
-              </TableCell>
+    <>
+      {adminError && (
+        <p role="alert" className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+          {adminError}
+        </p>
+      )}
+      <div className="rounded-xl border border-border bg-card overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-muted/50 hover:bg-muted/50">
+              <TableHead className="w-12"></TableHead>
+              <TableHead>Bruker</TableHead>
+              <TableHead>Visningsnavn</TableHead>
+              <TableHead className="text-center">Koblet til spiller</TableHead>
+              <TableHead>Spiller</TableHead>
+              <TableHead className="text-center w-12">Admin</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+          </TableHeader>
+          <TableBody>
+            {profiles.map((profile) => (
+              <TableRow key={profile.id} className="group">
+                <TableCell>
+                  {profile.avatarUrl ? (
+                    <img
+                      src={profile.avatarUrl}
+                      alt=""
+                      className="size-8 rounded-full object-cover border border-border"
+                    />
+                  ) : (
+                    <div className="size-8 rounded-full bg-muted flex items-center justify-center">
+                      <User className="size-4 text-muted-foreground" />
+                    </div>
+                  )}
+                </TableCell>
+                <TableCell className="font-medium">
+                  {profile.username || <span className="text-muted-foreground italic">Ingen brukernavn</span>}
+                </TableCell>
+                <TableCell>{profile.displayName || <span className="text-muted-foreground italic">—</span>}</TableCell>
+                <TableCell className="text-center">
+                  {profile.playerId ? (
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                      <CheckCircle className="size-3.5" />
+                      Koblet
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
+                      <XCircle className="size-3.5" />
+                      Ikke koblet
+                    </span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {profile.playerId ? (
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-primary">{profile.playerName}</span>
+                      <button
+                        onClick={() => handleUnlinkPlayer(profile.id)}
+                        disabled={loadingProfileId === profile.id}
+                        className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive disabled:opacity-50"
+                        title="Fjern kobling"
+                      >
+                        <Unlink className="size-3.5" />
+                      </button>
+                    </div>
+                  ) : (
+                    <Select
+                      onValueChange={(playerId) => handleLinkPlayer(profile.id, playerId)}
+                      disabled={loadingProfileId === profile.id}
+                    >
+                      <SelectTrigger size="sm" className="h-7 text-xs gap-1 text-muted-foreground">
+                        <Link2 className="size-3" />
+                        <SelectValue placeholder="Koble spiller..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availablePlayers.map((player) => (
+                          <SelectItem key={player.id} value={player.id}>
+                            {player.name}
+                          </SelectItem>
+                        ))}
+                        {availablePlayers.length === 0 && (
+                          <div className="px-2 py-1.5 text-xs text-muted-foreground">Ingen ledige spillere</div>
+                        )}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </TableCell>
+                <TableCell className="text-center">
+                  {profile.isOwner ? (
+                    <span title="Eier: alltid admin, kan gi og fjerne admin-tilgang" className="inline-flex">
+                      <Crown className="size-4 text-warm mx-auto" aria-label="Eier" />
+                    </span>
+                  ) : canManageAdmins ? (
+                    <Switch
+                      checked={profile.isAdmin}
+                      onCheckedChange={(admin) => setPendingAdmin({ profile, admin })}
+                      disabled={loadingProfileId === profile.id}
+                      aria-label={`Admin-tilgang for ${nameOf(profile)}`}
+                    />
+                  ) : (
+                    profile.isAdmin && <Shield className="size-4 text-warm mx-auto" aria-label="Admin" />
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      <Dialog open={!!pendingAdmin} onOpenChange={(open) => !open && setPendingAdmin(null)}>
+        <DialogContent>
+          {pendingAdmin && (
+            <>
+              <DialogHeader>
+                <DialogTitle>
+                  {pendingAdmin.admin
+                    ? `Gi admin-tilgang til ${nameOf(pendingAdmin.profile)}?`
+                    : `Fjerne admin-tilgang fra ${nameOf(pendingAdmin.profile)}?`}
+                </DialogTitle>
+                <DialogDescription>
+                  {pendingAdmin.admin
+                    ? "Personen får tilgang til hele adminpanelet: arrangementer, runder, baner, spillere og import. Bare eiere kan gi og fjerne admin-tilgang."
+                    : "Personen mister tilgang til adminpanelet med en gang."}
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <button
+                  onClick={() => setPendingAdmin(null)}
+                  className="inline-flex items-center justify-center rounded-md border border-border bg-transparent px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
+                >
+                  Avbryt
+                </button>
+                <button
+                  onClick={confirmAdminChange}
+                  disabled={loadingProfileId === pendingAdmin.profile.id}
+                  className={
+                    pendingAdmin.admin
+                      ? "inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+                      : "inline-flex items-center justify-center rounded-md bg-destructive px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-destructive/90 disabled:opacity-50"
+                  }
+                >
+                  {pendingAdmin.admin ? "Gi admin" : "Fjern admin"}
+                </button>
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
